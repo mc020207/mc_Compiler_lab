@@ -47,8 +47,12 @@ y.tab.o: y.tab.c
 
 printast.o: printast.c fdmjast.h util.h 
 	@cc -g -c printast.c
+
+y.output:
+	yacc -v parser.yacc
+
 clean: 
-	@rm -f a.out b.out lex.yy.o lex.yy.c y.tab.o y.tab.c y.tab.h util.o fdmjast.o complier.o interpreter.o main.ll out.ll lib.ll printast.o
+	@rm -f a.out b.out lex.yy.o lex.yy.c y.tab.o y.tab.c y.tab.h util.o fdmjast.o complier.o interpreter.o main.ll out.ll lib.ll printast.o y.output
 
 
 

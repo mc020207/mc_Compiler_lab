@@ -17,25 +17,45 @@ extern int  yywrap();
 {
     A_pos token; // 例：符号
     A_pos key; // 关键字
-    A_exp expr; // 例：自定义的类
+    A_type type;
     A_prog prog;
+    A_mainMethod mainMethod;
+    A_classDecl classDecl;
+    A_classDeclList classDeclList;
+    A_methodDecl methodDecl;
+    A_methodDeclList methodDeclList;
+    A_formal formal;
+    A_formalList formalList;
+    A_varDecl varDecl;
+    A_varDeclList varDeclList;
+    A_stmList stmList;
     A_stm stm;
-    A_stmList stmlist;
-    A_mainMethod mainmethod;
+    A_exp exp;
+    A_expList expList;
 }
 
 // token的类
 // %token <name in union> token_name_1 token_name_2
 %token <token> OP_PLUS OP_MINUS OP_MULTIPLY OP_DIVTION
-%token <expr> NUMBER
-%token <key> PUTINT PUTCH MAIN INT PUBLIC
-%token <expr> IDENTIFIER
+%token <key> PUTINT PUTCH MAIN INT PUBLIC CLASS IF WHILE CONTINUE BREAK RETURN STARTTIME STOPTIME TTRUE FFALSE LENGTH THIS NEW
+%token <exp> IDENTIFIER NUMBER
 // 非终结符的类
-%type <expr> EXPR
-%type <stm> STM
-%type <stmlist> STMLIST
-%type <prog> PROG
-%type <mainmethod> MAINMETHOD
+%type<type> TYPE
+%type<prog> PROG
+%type<mainMethod> MAINMETHOD
+%type<classDecl> CLASSDECL
+%type<classDeclList> CLASSDECLLIST
+%type<methodDecl> METHODDECL
+%type<methodDeclList> METHODDECLLIST
+%type<formal> FORMAL
+%type<formalList> FORMALLIST
+%type<varDecl> VARDECL
+%type<varDeclList> VARDECLLIST
+%type<stmList> STMLIST
+%type<stm> STM
+%type<exp> EXP
+%type<expList> EXPLIST
+
 
 %left OP_PLUS OP_MINUS
 %left OP_MULTIPLY OP_DIVTION
@@ -44,18 +64,12 @@ extern int  yywrap();
 %start PROG
 %%
 
-PROG : MAINMETHOD
+PROG : MAINMETHOD CLASSDECLLIST
     {
-        root=A_Prog($1->pos,$1,NULL);
+        root=A_Prog($1->pos,$1,$2);
         $$=root;
     }
     
-
-MAINMETHOD : PUBLIC INT MAIN '(' ')' '{' STMLIST '}' 
-    {
-        $$=A_MainMethod($1,NULL,$7);
-    }
-
 STMLIST : STM  STMLIST
     {
         $$=A_StmList($1,$2);
@@ -65,37 +79,87 @@ STMLIST : STM  STMLIST
         $$=NULL;
     }
 
-STM : IDENTIFIER '=' EXPR ';'
+CLASSDECLLIST : CLASSDECL CLASSDECLLIST
+    {
+        $$=A_ClassDeclList($1,$2);
+    }
+    |
+    {
+        $$=NULL:
+    }
+
+METHODDECLLIST : METHODDECL METHODDECLLIST
+    {
+        $$=A_MethodDeclList($1,$2);
+    }
+    |
+    {
+        $$=NULL;
+    }
+
+FORMALLIST : FORMAL FORMALLIST
+    {
+        $$=A_FormalList($1,$2);
+    }
+    |
+    {
+        $$=NULL;
+    }
+
+VARDECLLIST : VARDECL VARDECLLIST
+    {
+        $$=A_VarDeclList($1,$2);
+    }
+    |
+    {
+        $$=NULL;
+    }
+
+EXPLIST : EXP EXPLIST
+    {
+        $$=A_ExpList($1,$2);
+    }
+    |
+    {
+        $$=NULL;
+    }
+
+MAINMETHOD : PUBLIC INT MAIN '(' ')' '{' STMLIST '}' 
+    {
+        $$=A_MainMethod($1,NULL,$7);
+    }
+
+STM : IDENTIFIER '=' EXP ';'
     {
         $$=A_AssignStm($1->pos,$1,NULL,$3);
     }  
     |
-    PUTINT '(' EXPR ')' ';'
+    PUTINT '(' EXP ')' ';'
     {
         $$=A_Putint($1,$3);
     }
     |
-    PUTCH '(' EXPR ')' ';'
+    PUTCH '(' EXP ')' ';'
     {
         $$=A_Putint($1,$3);
     }
 
-EXPR : EXPR OP_PLUS EXPR
+EXP : EXP OP_PLUS EXP
     {
         $$=A_OpExp($1->pos,$1,A_plus,$3);
     }
     |
-    EXPR OP_MINUS EXPR
+    EXP OP_MINUS EXP
     {
         $$=A_OpExp($1->pos,$1,A_minus,$3);
     }
     |
-    EXPR OP_MULTIPLY EXPR
+    EXP OP_MULTIPLY EXP
     {
         $$=A_OpExp($1->pos,$1,A_times,$3);
     }
     |
-    EXPR OP_DIVTION EXPR
+    EXP OP_DIVTION EXP
     {
         $$=A_OpExp($1->pos,$1,A_div,$3);
     }
@@ -110,18 +174,18 @@ EXPR : EXPR OP_PLUS EXPR
         $$=$1;
     }
     |
-    OP_MINUS EXPR %prec UMINUS
+    OP_MINUS EXP %prec UMINUS
     {
         $$=A_MinusExp($1,$2);
     }
     |
-    '(' EXPR ')'
+    '(' EXP ')'
     {
         // $$=A_EscExp($2->pos, NULL , $2);
         $$=$2;
     }
     |
-    '(' '{' STMLIST '}'  EXPR ')'
+    '(' '{' STMLIST '}'  EXP ')'
     {
         if ($3==NULL) $$=A_EscExp(NULL, $3 , $5);
         else $$=A_EscExp($3->head->pos, $3 , $5);
