@@ -24,6 +24,12 @@ $(TESTCASE_DIR)/%.out: $(TESTCASE_DIR)/%.main.o lex.yy.o y.tab.o fdmjast.o util.
 $(TESTCASE_DIR)/%.main.o: main.c fdmjast.h fdmjast.c util.h util.c printast.h printast.c y.tab.h y.tab.c lex.yy.o y.tab.o main.c main.o fdmjast.o util.o printast.o
 	@cc -g -c main.c -o $@
 
+a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o
+	@cc -g main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o -o a.out
+
+main.o: main.c fdmjast.h fdmjast.c util.h util.c printast.h printast.c y.tab.h y.tab.c lex.yy.o y.tab.o main.c main.o fdmjast.o util.o printast.o
+	@cc -g -c main.c -o main.o
+
 lex.yy.c: lexer.lex y.tab.h y.tab.c
 	@lex lexer.lex
 	

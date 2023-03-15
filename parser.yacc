@@ -31,7 +31,7 @@ extern int  yywrap();
     A_stmList stmList;
     A_stm stm;
     A_exp exp;
-    A_exp numberRest
+    A_exp numberRest;
     A_expList expList;
 }
 
@@ -93,7 +93,7 @@ CLASSDECLLIST : CLASSDECL CLASSDECLLIST
     }
     |
     {
-        $$=NULL:
+        $$=NULL;
     }
 
 METHODDECLLIST : METHODDECL METHODDECLLIST
@@ -116,7 +116,7 @@ FORMALLIST : TYPE ID FORMALRESTLIST
 
 FORMALRESTLIST : FORMALREST FORMALRESTLIST
     {
-        
+
     }
     |
     {
@@ -180,20 +180,20 @@ NUMBERRESTLIST : NUMBERREST NUMBERRESTLIST
 
 NUMBERREST : ',' NUMBER
     {
-        $$=$2
+        $$=$2;
     }
 
-MAINMETHOD : PUBLIC INT MAIN '(' ')' '{' STMLIST '}' 
+MAINMETHOD : PUBLIC INT MAIN '(' ')' '{' VARDECLLIST STMLIST '}' 
     {
-        $$=A_MainMethod($1,NULL,$7);
+        $$=A_MainMethod($1,$7,$8);
     }
 
-CLASSDECL : CLASS ID EXTENDS ID '{' VARDECLLIST METHODDECLLIST '}'
+CLASSDECL : PUBLIC CLASS ID EXTENDS ID '{' VARDECLLIST METHODDECLLIST '}'
     {   
         
     }
     |
-    CLASS ID '{' VARDECLLIST METHODDECLLIST '}'
+    PUBLIC CLASS ID '{' VARDECLLIST METHODDECLLIST '}'
     {
 
     }
@@ -245,7 +245,7 @@ TYPE : CLASS ID
 
 STM : '{' STMLIST '}'
     {
-
+        
     }
     |
     IF '(' EXP ')' STM ELSE STM %prec IF_ELSE_PREC
@@ -260,7 +260,7 @@ STM : '{' STMLIST '}'
     |
     WHILE '(' EXP ')' STM 
     {
-
+        
     }
     |
     WHILE '(' EXP ')' ';'

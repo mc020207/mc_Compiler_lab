@@ -145,24 +145,24 @@ int line=1,pos=0;
     pos+=yyleng;
     return EXTENDS;
 }
-<INITIAL>"("|")"|":"|"="|","|";"|"{"|"}"|"."|"!" {
+<INITIAL>"("|")"|":"|"="|","|";"|"{"|"}"|"."|"!"|"["|"]" {
     pos+=yyleng;
     c = yytext[0];
     return(c);
 }
 <INITIAL>[a-z_A-Z][a-z_A-Z0-9]* {
     // printf("ID\n");
-    yylval.expr = A_IdExp(A_Pos(line,pos),String(yytext));
+    yylval.exp = A_IdExp(A_Pos(line,pos),String(yytext));
     pos+=yyleng; 
-    return IDENTIFIER;
+    return ID;
 }
 <INITIAL>[1-9][0-9]* {
-    yylval.expr=A_NumConst(A_Pos(line,pos),calculate(yytext,yyleng));
+    yylval.exp=A_NumConst(A_Pos(line,pos),calculate(yytext,yyleng));
     pos+=yyleng; 
     return NUMBER;
 }
 <INITIAL>0 {
-    yylval.expr = A_NumConst(A_Pos(line,pos),0);
+    yylval.exp = A_NumConst(A_Pos(line,pos),0);
     pos+=yyleng;
     return NUMBER;
 }
