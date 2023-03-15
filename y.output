@@ -1,0 +1,2784 @@
+State 67 conflicts: 2 shift/reduce
+State 87 conflicts: 6 shift/reduce
+State 123 conflicts: 2 shift/reduce
+State 124 conflicts: 2 shift/reduce
+State 125 conflicts: 2 shift/reduce
+State 126 conflicts: 2 shift/reduce
+State 151 conflicts: 1 shift/reduce
+State 161 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: PROG $end
+
+    1 PROG: MAINMETHOD CLASSDECLLIST
+
+    2 STMLIST: STM STMLIST
+    3        | %empty
+
+    4 CLASSDECLLIST: CLASSDECL CLASSDECLLIST
+    5              | %empty
+
+    6 METHODDECLLIST: METHODDECL METHODDECLLIST
+    7               | %empty
+
+    8 FORMALLIST: TYPE ID FORMALRESTLIST
+    9           | %empty
+
+   10 FORMALRESTLIST: FORMALREST FORMALRESTLIST
+   11               | %empty
+
+   12 FORMALREST: ',' TYPE ID
+
+   13 VARDECLLIST: VARDECL VARDECLLIST
+   14            | %empty
+
+   15 EXPLIST: EXP EXPRESTLIST
+   16        | %empty
+
+   17 EXPRESTLIST: EXPREST EXPRESTLIST
+   18            | %empty
+
+   19 EXPREST: ',' EXP
+
+   20 NUMBERLIST: NUMBER NUMBERRESTLIST
+   21           | %empty
+
+   22 NUMBERRESTLIST: NUMBERREST NUMBERRESTLIST
+   23               | %empty
+
+   24 NUMBERREST: ',' NUMBER
+
+   25 MAINMETHOD: PUBLIC INT MAIN '(' ')' '{' STMLIST '}'
+
+   26 CLASSDECL: CLASS ID EXTENDS ID '{' VARDECLLIST METHODDECLLIST '}'
+   27          | CLASS ID '{' VARDECLLIST METHODDECLLIST '}'
+
+   28 VARDECL: CLASS ID ID ';'
+   29        | INT ID ';'
+   30        | INT ID '=' NUMBER ';'
+   31        | INT '[' ']' ID ';'
+   32        | INT '[' ']' ID '=' '{' NUMBERLIST '}' ';'
+
+   33 METHODDECL: PUBLIC TYPE ID '(' FORMALLIST ')' '{' VARDECLLIST STMLIST '}'
+
+   34 TYPE: CLASS ID
+   35     | INT
+   36     | INT '[' ']'
+
+   37 STM: '{' STMLIST '}'
+   38    | IF '(' EXP ')' STM ELSE STM
+   39    | IF '(' EXP ')' STM
+   40    | WHILE '(' EXP ')' STM
+   41    | WHILE '(' EXP ')' ';'
+   42    | EXP '=' EXP ';'
+   43    | EXP '[' EXP ']' '=' EXP ';'
+   44    | EXP '[' EXP ']' '=' '{' EXPLIST '}' ';'
+   45    | EXP '.' ID '(' EXPLIST ')' ';'
+   46    | CONTINUE ';'
+   47    | BREAK ';'
+   48    | RETURN EXP ';'
+   49    | PUTINT '(' EXP ')' ';'
+   50    | PUTCH '(' EXP ')' ';'
+   51    | PUTARRAY '(' EXP ',' EXP ')' ';'
+   52    | STARTTIME '(' ')' ';'
+   53    | STOPTIME '(' ')' ';'
+
+   54 EXP: EXP OP_PLUS EXP
+   55    | EXP OP_MINUS EXP
+   56    | EXP OP_MULTIPLY EXP
+   57    | EXP OP_DIVTION EXP
+   58    | EXP '[' EXP ']'
+   59    | EXP '.' ID '(' EXPLIST ')'
+   60    | EXP '.' ID
+   61    | NUMBER
+   62    | TTRUE
+   63    | FFALSE
+   64    | LENGTH '(' EXP ')'
+   65    | ID
+   66    | THIS
+   67    | NEW INT '[' EXP ']'
+   68    | NEW ID '(' ')'
+   69    | '!' EXP
+   70    | OP_MINUS EXP
+   71    | '(' EXP ')'
+   72    | '(' '{' STMLIST '}' EXP ')'
+   73    | GETINT '(' ')'
+   74    | GETCH '(' ')'
+   75    | GETARRAY '(' EXP ')'
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '!' (33) 69
+    '(' (40) 25 33 38 39 40 41 45 49 50 51 52 53 59 64 68 71 72 73 74 75
+    ')' (41) 25 33 38 39 40 41 45 49 50 51 52 53 59 64 68 71 72 73 74 75
+    ',' (44) 12 19 24 51
+    '.' (46) 45 59 60
+    ';' (59) 28 29 30 31 32 41 42 43 44 45 46 47 48 49 50 51 52 53
+    '=' (61) 30 32 42 43 44
+    '[' (91) 31 32 36 43 44 58 67
+    ']' (93) 31 32 36 43 44 58 67
+    '{' (123) 25 26 27 32 33 37 44 72
+    '}' (125) 25 26 27 32 33 37 44 72
+    error (256)
+    OP_PLUS <token> (258) 54
+    OP_MINUS <token> (259) 55 70
+    OP_MULTIPLY <token> (260) 56
+    OP_DIVTION <token> (261) 57
+    PUTINT <key> (262) 49
+    PUTCH <key> (263) 50
+    PUTARRAY <key> (264) 51
+    GETINT <key> (265) 73
+    GETCH <key> (266) 74
+    GETARRAY <key> (267) 75
+    MAIN <key> (268) 25
+    INT <key> (269) 25 29 30 31 32 35 36 67
+    PUBLIC <key> (270) 25 33
+    CLASS <key> (271) 26 27 28 34
+    IF <key> (272) 38 39
+    ELSE <key> (273) 38
+    WHILE <key> (274) 40 41
+    CONTINUE <key> (275) 46
+    BREAK <key> (276) 47
+    RETURN <key> (277) 48
+    STARTTIME <key> (278) 52
+    STOPTIME <key> (279) 53
+    TTRUE <key> (280) 62
+    FFALSE <key> (281) 63
+    LENGTH <key> (282) 64
+    THIS <key> (283) 66
+    NEW <key> (284) 67 68
+    EXTENDS <key> (285) 26
+    ID <exp> (286) 8 12 26 27 28 29 30 31 32 33 34 45 59 60 65 68
+    NUMBER <exp> (287) 20 24 30 61
+    UMINUS (288)
+
+
+Nonterminals, with rules where they appear
+
+    $accept (45)
+        on left: 0
+    PROG <prog> (46)
+        on left: 1
+        on right: 0
+    STMLIST <stmList> (47)
+        on left: 2 3
+        on right: 2 25 33 37 72
+    CLASSDECLLIST <classDeclList> (48)
+        on left: 4 5
+        on right: 1 4
+    METHODDECLLIST <methodDeclList> (49)
+        on left: 6 7
+        on right: 6 26 27
+    FORMALLIST <formalList> (50)
+        on left: 8 9
+        on right: 33
+    FORMALRESTLIST <formalList> (51)
+        on left: 10 11
+        on right: 8 10
+    FORMALREST <formal> (52)
+        on left: 12
+        on right: 10
+    VARDECLLIST <varDeclList> (53)
+        on left: 13 14
+        on right: 13 26 27 33
+    EXPLIST <expList> (54)
+        on left: 15 16
+        on right: 44 45 59
+    EXPRESTLIST <expList> (55)
+        on left: 17 18
+        on right: 15 17
+    EXPREST <exp> (56)
+        on left: 19
+        on right: 17
+    NUMBERLIST <expList> (57)
+        on left: 20 21
+        on right: 32
+    NUMBERRESTLIST <expList> (58)
+        on left: 22 23
+        on right: 20 22
+    NUMBERREST <exp> (59)
+        on left: 24
+        on right: 22
+    MAINMETHOD <mainMethod> (60)
+        on left: 25
+        on right: 1
+    CLASSDECL <classDecl> (61)
+        on left: 26 27
+        on right: 4
+    VARDECL <varDecl> (62)
+        on left: 28 29 30 31 32
+        on right: 13
+    METHODDECL <methodDecl> (63)
+        on left: 33
+        on right: 6
+    TYPE <type> (64)
+        on left: 34 35 36
+        on right: 8 12 33
+    STM <stm> (65)
+        on left: 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53
+        on right: 2 38 39 40
+    EXP <exp> (66)
+        on left: 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75
+        on right: 15 19 38 39 40 41 42 43 44 45 48 49 50 51 54 55 56 57 58 59 60 64 67 69 70 71 72 75
+
+
+State 0
+
+    0 $accept: . PROG $end
+
+    PUBLIC  shift, and go to state 1
+
+    PROG        go to state 2
+    MAINMETHOD  go to state 3
+
+
+State 1
+
+   25 MAINMETHOD: PUBLIC . INT MAIN '(' ')' '{' STMLIST '}'
+
+    INT  shift, and go to state 4
+
+
+State 2
+
+    0 $accept: PROG . $end
+
+    $end  shift, and go to state 5
+
+
+State 3
+
+    1 PROG: MAINMETHOD . CLASSDECLLIST
+
+    CLASS  shift, and go to state 6
+
+    $default  reduce using rule 5 (CLASSDECLLIST)
+
+    CLASSDECLLIST  go to state 7
+    CLASSDECL      go to state 8
+
+
+State 4
+
+   25 MAINMETHOD: PUBLIC INT . MAIN '(' ')' '{' STMLIST '}'
+
+    MAIN  shift, and go to state 9
+
+
+State 5
+
+    0 $accept: PROG $end .
+
+    $default  accept
+
+
+State 6
+
+   26 CLASSDECL: CLASS . ID EXTENDS ID '{' VARDECLLIST METHODDECLLIST '}'
+   27          | CLASS . ID '{' VARDECLLIST METHODDECLLIST '}'
+
+    ID  shift, and go to state 10
+
+
+State 7
+
+    1 PROG: MAINMETHOD CLASSDECLLIST .
+
+    $default  reduce using rule 1 (PROG)
+
+
+State 8
+
+    4 CLASSDECLLIST: CLASSDECL . CLASSDECLLIST
+
+    CLASS  shift, and go to state 6
+
+    $default  reduce using rule 5 (CLASSDECLLIST)
+
+    CLASSDECLLIST  go to state 11
+    CLASSDECL      go to state 8
+
+
+State 9
+
+   25 MAINMETHOD: PUBLIC INT MAIN . '(' ')' '{' STMLIST '}'
+
+    '('  shift, and go to state 12
+
+
+State 10
+
+   26 CLASSDECL: CLASS ID . EXTENDS ID '{' VARDECLLIST METHODDECLLIST '}'
+   27          | CLASS ID . '{' VARDECLLIST METHODDECLLIST '}'
+
+    EXTENDS  shift, and go to state 13
+    '{'      shift, and go to state 14
+
+
+State 11
+
+    4 CLASSDECLLIST: CLASSDECL CLASSDECLLIST .
+
+    $default  reduce using rule 4 (CLASSDECLLIST)
+
+
+State 12
+
+   25 MAINMETHOD: PUBLIC INT MAIN '(' . ')' '{' STMLIST '}'
+
+    ')'  shift, and go to state 15
+
+
+State 13
+
+   26 CLASSDECL: CLASS ID EXTENDS . ID '{' VARDECLLIST METHODDECLLIST '}'
+
+    ID  shift, and go to state 16
+
+
+State 14
+
+   27 CLASSDECL: CLASS ID '{' . VARDECLLIST METHODDECLLIST '}'
+
+    INT    shift, and go to state 17
+    CLASS  shift, and go to state 18
+
+    $default  reduce using rule 14 (VARDECLLIST)
+
+    VARDECLLIST  go to state 19
+    VARDECL      go to state 20
+
+
+State 15
+
+   25 MAINMETHOD: PUBLIC INT MAIN '(' ')' . '{' STMLIST '}'
+
+    '{'  shift, and go to state 21
+
+
+State 16
+
+   26 CLASSDECL: CLASS ID EXTENDS ID . '{' VARDECLLIST METHODDECLLIST '}'
+
+    '{'  shift, and go to state 22
+
+
+State 17
+
+   29 VARDECL: INT . ID ';'
+   30        | INT . ID '=' NUMBER ';'
+   31        | INT . '[' ']' ID ';'
+   32        | INT . '[' ']' ID '=' '{' NUMBERLIST '}' ';'
+
+    ID   shift, and go to state 23
+    '['  shift, and go to state 24
+
+
+State 18
+
+   28 VARDECL: CLASS . ID ID ';'
+
+    ID  shift, and go to state 25
+
+
+State 19
+
+   27 CLASSDECL: CLASS ID '{' VARDECLLIST . METHODDECLLIST '}'
+
+    PUBLIC  shift, and go to state 26
+
+    $default  reduce using rule 7 (METHODDECLLIST)
+
+    METHODDECLLIST  go to state 27
+    METHODDECL      go to state 28
+
+
+State 20
+
+   13 VARDECLLIST: VARDECL . VARDECLLIST
+
+    INT    shift, and go to state 17
+    CLASS  shift, and go to state 18
+
+    $default  reduce using rule 14 (VARDECLLIST)
+
+    VARDECLLIST  go to state 29
+    VARDECL      go to state 20
+
+
+State 21
+
+   25 MAINMETHOD: PUBLIC INT MAIN '(' ')' '{' . STMLIST '}'
+
+    OP_MINUS   shift, and go to state 30
+    PUTINT     shift, and go to state 31
+    PUTCH      shift, and go to state 32
+    PUTARRAY   shift, and go to state 33
+    GETINT     shift, and go to state 34
+    GETCH      shift, and go to state 35
+    GETARRAY   shift, and go to state 36
+    IF         shift, and go to state 37
+    WHILE      shift, and go to state 38
+    CONTINUE   shift, and go to state 39
+    BREAK      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    STARTTIME  shift, and go to state 42
+    STOPTIME   shift, and go to state 43
+    TTRUE      shift, and go to state 44
+    FFALSE     shift, and go to state 45
+    LENGTH     shift, and go to state 46
+    THIS       shift, and go to state 47
+    NEW        shift, and go to state 48
+    ID         shift, and go to state 49
+    NUMBER     shift, and go to state 50
+    '('        shift, and go to state 51
+    '{'        shift, and go to state 52
+    '!'        shift, and go to state 53
+
+    $default  reduce using rule 3 (STMLIST)
+
+    STMLIST  go to state 54
+    STM      go to state 55
+    EXP      go to state 56
+
+
+State 22
+
+   26 CLASSDECL: CLASS ID EXTENDS ID '{' . VARDECLLIST METHODDECLLIST '}'
+
+    INT    shift, and go to state 17
+    CLASS  shift, and go to state 18
+
+    $default  reduce using rule 14 (VARDECLLIST)
+
+    VARDECLLIST  go to state 57
+    VARDECL      go to state 20
+
+
+State 23
+
+   29 VARDECL: INT ID . ';'
+   30        | INT ID . '=' NUMBER ';'
+
+    ';'  shift, and go to state 58
+    '='  shift, and go to state 59
+
+
+State 24
+
+   31 VARDECL: INT '[' . ']' ID ';'
+   32        | INT '[' . ']' ID '=' '{' NUMBERLIST '}' ';'
+
+    ']'  shift, and go to state 60
+
+
+State 25
+
+   28 VARDECL: CLASS ID . ID ';'
+
+    ID  shift, and go to state 61
+
+
+State 26
+
+   33 METHODDECL: PUBLIC . TYPE ID '(' FORMALLIST ')' '{' VARDECLLIST STMLIST '}'
+
+    INT    shift, and go to state 62
+    CLASS  shift, and go to state 63
+
+    TYPE  go to state 64
+
+
+State 27
+
+   27 CLASSDECL: CLASS ID '{' VARDECLLIST METHODDECLLIST . '}'
+
+    '}'  shift, and go to state 65
+
+
+State 28
+
+    6 METHODDECLLIST: METHODDECL . METHODDECLLIST
+
+    PUBLIC  shift, and go to state 26
+
+    $default  reduce using rule 7 (METHODDECLLIST)
+
+    METHODDECLLIST  go to state 66
+    METHODDECL      go to state 28
+
+
+State 29
+
+   13 VARDECLLIST: VARDECL VARDECLLIST .
+
+    $default  reduce using rule 13 (VARDECLLIST)
+
+
+State 30
+
+   70 EXP: OP_MINUS . EXP
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 67
+
+
+State 31
+
+   49 STM: PUTINT . '(' EXP ')' ';'
+
+    '('  shift, and go to state 68
+
+
+State 32
+
+   50 STM: PUTCH . '(' EXP ')' ';'
+
+    '('  shift, and go to state 69
+
+
+State 33
+
+   51 STM: PUTARRAY . '(' EXP ',' EXP ')' ';'
+
+    '('  shift, and go to state 70
+
+
+State 34
+
+   73 EXP: GETINT . '(' ')'
+
+    '('  shift, and go to state 71
+
+
+State 35
+
+   74 EXP: GETCH . '(' ')'
+
+    '('  shift, and go to state 72
+
+
+State 36
+
+   75 EXP: GETARRAY . '(' EXP ')'
+
+    '('  shift, and go to state 73
+
+
+State 37
+
+   38 STM: IF . '(' EXP ')' STM ELSE STM
+   39    | IF . '(' EXP ')' STM
+
+    '('  shift, and go to state 74
+
+
+State 38
+
+   40 STM: WHILE . '(' EXP ')' STM
+   41    | WHILE . '(' EXP ')' ';'
+
+    '('  shift, and go to state 75
+
+
+State 39
+
+   46 STM: CONTINUE . ';'
+
+    ';'  shift, and go to state 76
+
+
+State 40
+
+   47 STM: BREAK . ';'
+
+    ';'  shift, and go to state 77
+
+
+State 41
+
+   48 STM: RETURN . EXP ';'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 78
+
+
+State 42
+
+   52 STM: STARTTIME . '(' ')' ';'
+
+    '('  shift, and go to state 79
+
+
+State 43
+
+   53 STM: STOPTIME . '(' ')' ';'
+
+    '('  shift, and go to state 80
+
+
+State 44
+
+   62 EXP: TTRUE .
+
+    $default  reduce using rule 62 (EXP)
+
+
+State 45
+
+   63 EXP: FFALSE .
+
+    $default  reduce using rule 63 (EXP)
+
+
+State 46
+
+   64 EXP: LENGTH . '(' EXP ')'
+
+    '('  shift, and go to state 81
+
+
+State 47
+
+   66 EXP: THIS .
+
+    $default  reduce using rule 66 (EXP)
+
+
+State 48
+
+   67 EXP: NEW . INT '[' EXP ']'
+   68    | NEW . ID '(' ')'
+
+    INT  shift, and go to state 82
+    ID   shift, and go to state 83
+
+
+State 49
+
+   65 EXP: ID .
+
+    $default  reduce using rule 65 (EXP)
+
+
+State 50
+
+   61 EXP: NUMBER .
+
+    $default  reduce using rule 61 (EXP)
+
+
+State 51
+
+   71 EXP: '(' . EXP ')'
+   72    | '(' . '{' STMLIST '}' EXP ')'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '{'       shift, and go to state 84
+    '!'       shift, and go to state 53
+
+    EXP  go to state 85
+
+
+State 52
+
+   37 STM: '{' . STMLIST '}'
+
+    OP_MINUS   shift, and go to state 30
+    PUTINT     shift, and go to state 31
+    PUTCH      shift, and go to state 32
+    PUTARRAY   shift, and go to state 33
+    GETINT     shift, and go to state 34
+    GETCH      shift, and go to state 35
+    GETARRAY   shift, and go to state 36
+    IF         shift, and go to state 37
+    WHILE      shift, and go to state 38
+    CONTINUE   shift, and go to state 39
+    BREAK      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    STARTTIME  shift, and go to state 42
+    STOPTIME   shift, and go to state 43
+    TTRUE      shift, and go to state 44
+    FFALSE     shift, and go to state 45
+    LENGTH     shift, and go to state 46
+    THIS       shift, and go to state 47
+    NEW        shift, and go to state 48
+    ID         shift, and go to state 49
+    NUMBER     shift, and go to state 50
+    '('        shift, and go to state 51
+    '{'        shift, and go to state 52
+    '!'        shift, and go to state 53
+
+    $default  reduce using rule 3 (STMLIST)
+
+    STMLIST  go to state 86
+    STM      go to state 55
+    EXP      go to state 56
+
+
+State 53
+
+   69 EXP: '!' . EXP
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 87
+
+
+State 54
+
+   25 MAINMETHOD: PUBLIC INT MAIN '(' ')' '{' STMLIST . '}'
+
+    '}'  shift, and go to state 88
+
+
+State 55
+
+    2 STMLIST: STM . STMLIST
+
+    OP_MINUS   shift, and go to state 30
+    PUTINT     shift, and go to state 31
+    PUTCH      shift, and go to state 32
+    PUTARRAY   shift, and go to state 33
+    GETINT     shift, and go to state 34
+    GETCH      shift, and go to state 35
+    GETARRAY   shift, and go to state 36
+    IF         shift, and go to state 37
+    WHILE      shift, and go to state 38
+    CONTINUE   shift, and go to state 39
+    BREAK      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    STARTTIME  shift, and go to state 42
+    STOPTIME   shift, and go to state 43
+    TTRUE      shift, and go to state 44
+    FFALSE     shift, and go to state 45
+    LENGTH     shift, and go to state 46
+    THIS       shift, and go to state 47
+    NEW        shift, and go to state 48
+    ID         shift, and go to state 49
+    NUMBER     shift, and go to state 50
+    '('        shift, and go to state 51
+    '{'        shift, and go to state 52
+    '!'        shift, and go to state 53
+
+    $default  reduce using rule 3 (STMLIST)
+
+    STMLIST  go to state 89
+    STM      go to state 55
+    EXP      go to state 56
+
+
+State 56
+
+   42 STM: EXP . '=' EXP ';'
+   43    | EXP . '[' EXP ']' '=' EXP ';'
+   44    | EXP . '[' EXP ']' '=' '{' EXPLIST '}' ';'
+   45    | EXP . '.' ID '(' EXPLIST ')' ';'
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    '='          shift, and go to state 94
+    '['          shift, and go to state 95
+    '.'          shift, and go to state 96
+
+
+State 57
+
+   26 CLASSDECL: CLASS ID EXTENDS ID '{' VARDECLLIST . METHODDECLLIST '}'
+
+    PUBLIC  shift, and go to state 26
+
+    $default  reduce using rule 7 (METHODDECLLIST)
+
+    METHODDECLLIST  go to state 97
+    METHODDECL      go to state 28
+
+
+State 58
+
+   29 VARDECL: INT ID ';' .
+
+    $default  reduce using rule 29 (VARDECL)
+
+
+State 59
+
+   30 VARDECL: INT ID '=' . NUMBER ';'
+
+    NUMBER  shift, and go to state 98
+
+
+State 60
+
+   31 VARDECL: INT '[' ']' . ID ';'
+   32        | INT '[' ']' . ID '=' '{' NUMBERLIST '}' ';'
+
+    ID  shift, and go to state 99
+
+
+State 61
+
+   28 VARDECL: CLASS ID ID . ';'
+
+    ';'  shift, and go to state 100
+
+
+State 62
+
+   35 TYPE: INT .
+   36     | INT . '[' ']'
+
+    '['  shift, and go to state 101
+
+    $default  reduce using rule 35 (TYPE)
+
+
+State 63
+
+   34 TYPE: CLASS . ID
+
+    ID  shift, and go to state 102
+
+
+State 64
+
+   33 METHODDECL: PUBLIC TYPE . ID '(' FORMALLIST ')' '{' VARDECLLIST STMLIST '}'
+
+    ID  shift, and go to state 103
+
+
+State 65
+
+   27 CLASSDECL: CLASS ID '{' VARDECLLIST METHODDECLLIST '}' .
+
+    $default  reduce using rule 27 (CLASSDECL)
+
+
+State 66
+
+    6 METHODDECLLIST: METHODDECL METHODDECLLIST .
+
+    $default  reduce using rule 6 (METHODDECLLIST)
+
+
+State 67
+
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+   70    | OP_MINUS EXP .
+
+    '['  shift, and go to state 104
+    '.'  shift, and go to state 105
+
+    '['       [reduce using rule 70 (EXP)]
+    '.'       [reduce using rule 70 (EXP)]
+    $default  reduce using rule 70 (EXP)
+
+
+State 68
+
+   49 STM: PUTINT '(' . EXP ')' ';'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 106
+
+
+State 69
+
+   50 STM: PUTCH '(' . EXP ')' ';'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 107
+
+
+State 70
+
+   51 STM: PUTARRAY '(' . EXP ',' EXP ')' ';'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 108
+
+
+State 71
+
+   73 EXP: GETINT '(' . ')'
+
+    ')'  shift, and go to state 109
+
+
+State 72
+
+   74 EXP: GETCH '(' . ')'
+
+    ')'  shift, and go to state 110
+
+
+State 73
+
+   75 EXP: GETARRAY '(' . EXP ')'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 111
+
+
+State 74
+
+   38 STM: IF '(' . EXP ')' STM ELSE STM
+   39    | IF '(' . EXP ')' STM
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 112
+
+
+State 75
+
+   40 STM: WHILE '(' . EXP ')' STM
+   41    | WHILE '(' . EXP ')' ';'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 113
+
+
+State 76
+
+   46 STM: CONTINUE ';' .
+
+    $default  reduce using rule 46 (STM)
+
+
+State 77
+
+   47 STM: BREAK ';' .
+
+    $default  reduce using rule 47 (STM)
+
+
+State 78
+
+   48 STM: RETURN EXP . ';'
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    ';'          shift, and go to state 114
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+
+State 79
+
+   52 STM: STARTTIME '(' . ')' ';'
+
+    ')'  shift, and go to state 115
+
+
+State 80
+
+   53 STM: STOPTIME '(' . ')' ';'
+
+    ')'  shift, and go to state 116
+
+
+State 81
+
+   64 EXP: LENGTH '(' . EXP ')'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 117
+
+
+State 82
+
+   67 EXP: NEW INT . '[' EXP ']'
+
+    '['  shift, and go to state 118
+
+
+State 83
+
+   68 EXP: NEW ID . '(' ')'
+
+    '('  shift, and go to state 119
+
+
+State 84
+
+   72 EXP: '(' '{' . STMLIST '}' EXP ')'
+
+    OP_MINUS   shift, and go to state 30
+    PUTINT     shift, and go to state 31
+    PUTCH      shift, and go to state 32
+    PUTARRAY   shift, and go to state 33
+    GETINT     shift, and go to state 34
+    GETCH      shift, and go to state 35
+    GETARRAY   shift, and go to state 36
+    IF         shift, and go to state 37
+    WHILE      shift, and go to state 38
+    CONTINUE   shift, and go to state 39
+    BREAK      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    STARTTIME  shift, and go to state 42
+    STOPTIME   shift, and go to state 43
+    TTRUE      shift, and go to state 44
+    FFALSE     shift, and go to state 45
+    LENGTH     shift, and go to state 46
+    THIS       shift, and go to state 47
+    NEW        shift, and go to state 48
+    ID         shift, and go to state 49
+    NUMBER     shift, and go to state 50
+    '('        shift, and go to state 51
+    '{'        shift, and go to state 52
+    '!'        shift, and go to state 53
+
+    $default  reduce using rule 3 (STMLIST)
+
+    STMLIST  go to state 120
+    STM      go to state 55
+    EXP      go to state 56
+
+
+State 85
+
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+   71    | '(' EXP . ')'
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    ')'          shift, and go to state 121
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+
+State 86
+
+   37 STM: '{' STMLIST . '}'
+
+    '}'  shift, and go to state 122
+
+
+State 87
+
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+   69    | '!' EXP .
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+    OP_PLUS      [reduce using rule 69 (EXP)]
+    OP_MINUS     [reduce using rule 69 (EXP)]
+    OP_MULTIPLY  [reduce using rule 69 (EXP)]
+    OP_DIVTION   [reduce using rule 69 (EXP)]
+    '['          [reduce using rule 69 (EXP)]
+    '.'          [reduce using rule 69 (EXP)]
+    $default     reduce using rule 69 (EXP)
+
+
+State 88
+
+   25 MAINMETHOD: PUBLIC INT MAIN '(' ')' '{' STMLIST '}' .
+
+    $default  reduce using rule 25 (MAINMETHOD)
+
+
+State 89
+
+    2 STMLIST: STM STMLIST .
+
+    $default  reduce using rule 2 (STMLIST)
+
+
+State 90
+
+   54 EXP: EXP OP_PLUS . EXP
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 123
+
+
+State 91
+
+   55 EXP: EXP OP_MINUS . EXP
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 124
+
+
+State 92
+
+   56 EXP: EXP OP_MULTIPLY . EXP
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 125
+
+
+State 93
+
+   57 EXP: EXP OP_DIVTION . EXP
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 126
+
+
+State 94
+
+   42 STM: EXP '=' . EXP ';'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 127
+
+
+State 95
+
+   43 STM: EXP '[' . EXP ']' '=' EXP ';'
+   44    | EXP '[' . EXP ']' '=' '{' EXPLIST '}' ';'
+   58 EXP: EXP '[' . EXP ']'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 128
+
+
+State 96
+
+   45 STM: EXP '.' . ID '(' EXPLIST ')' ';'
+   59 EXP: EXP '.' . ID '(' EXPLIST ')'
+   60    | EXP '.' . ID
+
+    ID  shift, and go to state 129
+
+
+State 97
+
+   26 CLASSDECL: CLASS ID EXTENDS ID '{' VARDECLLIST METHODDECLLIST . '}'
+
+    '}'  shift, and go to state 130
+
+
+State 98
+
+   30 VARDECL: INT ID '=' NUMBER . ';'
+
+    ';'  shift, and go to state 131
+
+
+State 99
+
+   31 VARDECL: INT '[' ']' ID . ';'
+   32        | INT '[' ']' ID . '=' '{' NUMBERLIST '}' ';'
+
+    ';'  shift, and go to state 132
+    '='  shift, and go to state 133
+
+
+State 100
+
+   28 VARDECL: CLASS ID ID ';' .
+
+    $default  reduce using rule 28 (VARDECL)
+
+
+State 101
+
+   36 TYPE: INT '[' . ']'
+
+    ']'  shift, and go to state 134
+
+
+State 102
+
+   34 TYPE: CLASS ID .
+
+    $default  reduce using rule 34 (TYPE)
+
+
+State 103
+
+   33 METHODDECL: PUBLIC TYPE ID . '(' FORMALLIST ')' '{' VARDECLLIST STMLIST '}'
+
+    '('  shift, and go to state 135
+
+
+State 104
+
+   58 EXP: EXP '[' . EXP ']'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 136
+
+
+State 105
+
+   59 EXP: EXP '.' . ID '(' EXPLIST ')'
+   60    | EXP '.' . ID
+
+    ID  shift, and go to state 137
+
+
+State 106
+
+   49 STM: PUTINT '(' EXP . ')' ';'
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    ')'          shift, and go to state 138
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+
+State 107
+
+   50 STM: PUTCH '(' EXP . ')' ';'
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    ')'          shift, and go to state 139
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+
+State 108
+
+   51 STM: PUTARRAY '(' EXP . ',' EXP ')' ';'
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    ','          shift, and go to state 140
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+
+State 109
+
+   73 EXP: GETINT '(' ')' .
+
+    $default  reduce using rule 73 (EXP)
+
+
+State 110
+
+   74 EXP: GETCH '(' ')' .
+
+    $default  reduce using rule 74 (EXP)
+
+
+State 111
+
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+   75    | GETARRAY '(' EXP . ')'
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    ')'          shift, and go to state 141
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+
+State 112
+
+   38 STM: IF '(' EXP . ')' STM ELSE STM
+   39    | IF '(' EXP . ')' STM
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    ')'          shift, and go to state 142
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+
+State 113
+
+   40 STM: WHILE '(' EXP . ')' STM
+   41    | WHILE '(' EXP . ')' ';'
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    ')'          shift, and go to state 143
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+
+State 114
+
+   48 STM: RETURN EXP ';' .
+
+    $default  reduce using rule 48 (STM)
+
+
+State 115
+
+   52 STM: STARTTIME '(' ')' . ';'
+
+    ';'  shift, and go to state 144
+
+
+State 116
+
+   53 STM: STOPTIME '(' ')' . ';'
+
+    ';'  shift, and go to state 145
+
+
+State 117
+
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+   64    | LENGTH '(' EXP . ')'
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    ')'          shift, and go to state 146
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+
+State 118
+
+   67 EXP: NEW INT '[' . EXP ']'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 147
+
+
+State 119
+
+   68 EXP: NEW ID '(' . ')'
+
+    ')'  shift, and go to state 148
+
+
+State 120
+
+   72 EXP: '(' '{' STMLIST . '}' EXP ')'
+
+    '}'  shift, and go to state 149
+
+
+State 121
+
+   71 EXP: '(' EXP ')' .
+
+    $default  reduce using rule 71 (EXP)
+
+
+State 122
+
+   37 STM: '{' STMLIST '}' .
+
+    $default  reduce using rule 37 (STM)
+
+
+State 123
+
+   54 EXP: EXP . OP_PLUS EXP
+   54    | EXP OP_PLUS EXP .
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+    '['       [reduce using rule 54 (EXP)]
+    '.'       [reduce using rule 54 (EXP)]
+    $default  reduce using rule 54 (EXP)
+
+
+State 124
+
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   55    | EXP OP_MINUS EXP .
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+    '['       [reduce using rule 55 (EXP)]
+    '.'       [reduce using rule 55 (EXP)]
+    $default  reduce using rule 55 (EXP)
+
+
+State 125
+
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   56    | EXP OP_MULTIPLY EXP .
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    '['  shift, and go to state 104
+    '.'  shift, and go to state 105
+
+    '['       [reduce using rule 56 (EXP)]
+    '.'       [reduce using rule 56 (EXP)]
+    $default  reduce using rule 56 (EXP)
+
+
+State 126
+
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   57    | EXP OP_DIVTION EXP .
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    '['  shift, and go to state 104
+    '.'  shift, and go to state 105
+
+    '['       [reduce using rule 57 (EXP)]
+    '.'       [reduce using rule 57 (EXP)]
+    $default  reduce using rule 57 (EXP)
+
+
+State 127
+
+   42 STM: EXP '=' EXP . ';'
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    ';'          shift, and go to state 150
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+
+State 128
+
+   43 STM: EXP '[' EXP . ']' '=' EXP ';'
+   44    | EXP '[' EXP . ']' '=' '{' EXPLIST '}' ';'
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   58    | EXP '[' EXP . ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    '['          shift, and go to state 104
+    ']'          shift, and go to state 151
+    '.'          shift, and go to state 105
+
+
+State 129
+
+   45 STM: EXP '.' ID . '(' EXPLIST ')' ';'
+   59 EXP: EXP '.' ID . '(' EXPLIST ')'
+   60    | EXP '.' ID .
+
+    '('  shift, and go to state 152
+
+    $default  reduce using rule 60 (EXP)
+
+
+State 130
+
+   26 CLASSDECL: CLASS ID EXTENDS ID '{' VARDECLLIST METHODDECLLIST '}' .
+
+    $default  reduce using rule 26 (CLASSDECL)
+
+
+State 131
+
+   30 VARDECL: INT ID '=' NUMBER ';' .
+
+    $default  reduce using rule 30 (VARDECL)
+
+
+State 132
+
+   31 VARDECL: INT '[' ']' ID ';' .
+
+    $default  reduce using rule 31 (VARDECL)
+
+
+State 133
+
+   32 VARDECL: INT '[' ']' ID '=' . '{' NUMBERLIST '}' ';'
+
+    '{'  shift, and go to state 153
+
+
+State 134
+
+   36 TYPE: INT '[' ']' .
+
+    $default  reduce using rule 36 (TYPE)
+
+
+State 135
+
+   33 METHODDECL: PUBLIC TYPE ID '(' . FORMALLIST ')' '{' VARDECLLIST STMLIST '}'
+
+    INT    shift, and go to state 62
+    CLASS  shift, and go to state 63
+
+    $default  reduce using rule 9 (FORMALLIST)
+
+    FORMALLIST  go to state 154
+    TYPE        go to state 155
+
+
+State 136
+
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   58    | EXP '[' EXP . ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    '['          shift, and go to state 104
+    ']'          shift, and go to state 156
+    '.'          shift, and go to state 105
+
+
+State 137
+
+   59 EXP: EXP '.' ID . '(' EXPLIST ')'
+   60    | EXP '.' ID .
+
+    '('  shift, and go to state 157
+
+    $default  reduce using rule 60 (EXP)
+
+
+State 138
+
+   49 STM: PUTINT '(' EXP ')' . ';'
+
+    ';'  shift, and go to state 158
+
+
+State 139
+
+   50 STM: PUTCH '(' EXP ')' . ';'
+
+    ';'  shift, and go to state 159
+
+
+State 140
+
+   51 STM: PUTARRAY '(' EXP ',' . EXP ')' ';'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 160
+
+
+State 141
+
+   75 EXP: GETARRAY '(' EXP ')' .
+
+    $default  reduce using rule 75 (EXP)
+
+
+State 142
+
+   38 STM: IF '(' EXP ')' . STM ELSE STM
+   39    | IF '(' EXP ')' . STM
+
+    OP_MINUS   shift, and go to state 30
+    PUTINT     shift, and go to state 31
+    PUTCH      shift, and go to state 32
+    PUTARRAY   shift, and go to state 33
+    GETINT     shift, and go to state 34
+    GETCH      shift, and go to state 35
+    GETARRAY   shift, and go to state 36
+    IF         shift, and go to state 37
+    WHILE      shift, and go to state 38
+    CONTINUE   shift, and go to state 39
+    BREAK      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    STARTTIME  shift, and go to state 42
+    STOPTIME   shift, and go to state 43
+    TTRUE      shift, and go to state 44
+    FFALSE     shift, and go to state 45
+    LENGTH     shift, and go to state 46
+    THIS       shift, and go to state 47
+    NEW        shift, and go to state 48
+    ID         shift, and go to state 49
+    NUMBER     shift, and go to state 50
+    '('        shift, and go to state 51
+    '{'        shift, and go to state 52
+    '!'        shift, and go to state 53
+
+    STM  go to state 161
+    EXP  go to state 56
+
+
+State 143
+
+   40 STM: WHILE '(' EXP ')' . STM
+   41    | WHILE '(' EXP ')' . ';'
+
+    OP_MINUS   shift, and go to state 30
+    PUTINT     shift, and go to state 31
+    PUTCH      shift, and go to state 32
+    PUTARRAY   shift, and go to state 33
+    GETINT     shift, and go to state 34
+    GETCH      shift, and go to state 35
+    GETARRAY   shift, and go to state 36
+    IF         shift, and go to state 37
+    WHILE      shift, and go to state 38
+    CONTINUE   shift, and go to state 39
+    BREAK      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    STARTTIME  shift, and go to state 42
+    STOPTIME   shift, and go to state 43
+    TTRUE      shift, and go to state 44
+    FFALSE     shift, and go to state 45
+    LENGTH     shift, and go to state 46
+    THIS       shift, and go to state 47
+    NEW        shift, and go to state 48
+    ID         shift, and go to state 49
+    NUMBER     shift, and go to state 50
+    '('        shift, and go to state 51
+    '{'        shift, and go to state 52
+    ';'        shift, and go to state 162
+    '!'        shift, and go to state 53
+
+    STM  go to state 163
+    EXP  go to state 56
+
+
+State 144
+
+   52 STM: STARTTIME '(' ')' ';' .
+
+    $default  reduce using rule 52 (STM)
+
+
+State 145
+
+   53 STM: STOPTIME '(' ')' ';' .
+
+    $default  reduce using rule 53 (STM)
+
+
+State 146
+
+   64 EXP: LENGTH '(' EXP ')' .
+
+    $default  reduce using rule 64 (EXP)
+
+
+State 147
+
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+   67    | NEW INT '[' EXP . ']'
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    '['          shift, and go to state 104
+    ']'          shift, and go to state 164
+    '.'          shift, and go to state 105
+
+
+State 148
+
+   68 EXP: NEW ID '(' ')' .
+
+    $default  reduce using rule 68 (EXP)
+
+
+State 149
+
+   72 EXP: '(' '{' STMLIST '}' . EXP ')'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 165
+
+
+State 150
+
+   42 STM: EXP '=' EXP ';' .
+
+    $default  reduce using rule 42 (STM)
+
+
+State 151
+
+   43 STM: EXP '[' EXP ']' . '=' EXP ';'
+   44    | EXP '[' EXP ']' . '=' '{' EXPLIST '}' ';'
+   58 EXP: EXP '[' EXP ']' .
+
+    '='  shift, and go to state 166
+
+    '='       [reduce using rule 58 (EXP)]
+    $default  reduce using rule 58 (EXP)
+
+
+State 152
+
+   45 STM: EXP '.' ID '(' . EXPLIST ')' ';'
+   59 EXP: EXP '.' ID '(' . EXPLIST ')'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    $default  reduce using rule 16 (EXPLIST)
+
+    EXPLIST  go to state 167
+    EXP      go to state 168
+
+
+State 153
+
+   32 VARDECL: INT '[' ']' ID '=' '{' . NUMBERLIST '}' ';'
+
+    NUMBER  shift, and go to state 169
+
+    $default  reduce using rule 21 (NUMBERLIST)
+
+    NUMBERLIST  go to state 170
+
+
+State 154
+
+   33 METHODDECL: PUBLIC TYPE ID '(' FORMALLIST . ')' '{' VARDECLLIST STMLIST '}'
+
+    ')'  shift, and go to state 171
+
+
+State 155
+
+    8 FORMALLIST: TYPE . ID FORMALRESTLIST
+
+    ID  shift, and go to state 172
+
+
+State 156
+
+   58 EXP: EXP '[' EXP ']' .
+
+    $default  reduce using rule 58 (EXP)
+
+
+State 157
+
+   59 EXP: EXP '.' ID '(' . EXPLIST ')'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    $default  reduce using rule 16 (EXPLIST)
+
+    EXPLIST  go to state 173
+    EXP      go to state 168
+
+
+State 158
+
+   49 STM: PUTINT '(' EXP ')' ';' .
+
+    $default  reduce using rule 49 (STM)
+
+
+State 159
+
+   50 STM: PUTCH '(' EXP ')' ';' .
+
+    $default  reduce using rule 50 (STM)
+
+
+State 160
+
+   51 STM: PUTARRAY '(' EXP ',' EXP . ')' ';'
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    ')'          shift, and go to state 174
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+
+State 161
+
+   38 STM: IF '(' EXP ')' STM . ELSE STM
+   39    | IF '(' EXP ')' STM .
+
+    ELSE  shift, and go to state 175
+
+    ELSE      [reduce using rule 39 (STM)]
+    $default  reduce using rule 39 (STM)
+
+
+State 162
+
+   41 STM: WHILE '(' EXP ')' ';' .
+
+    $default  reduce using rule 41 (STM)
+
+
+State 163
+
+   40 STM: WHILE '(' EXP ')' STM .
+
+    $default  reduce using rule 40 (STM)
+
+
+State 164
+
+   67 EXP: NEW INT '[' EXP ']' .
+
+    $default  reduce using rule 67 (EXP)
+
+
+State 165
+
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+   72    | '(' '{' STMLIST '}' EXP . ')'
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    ')'          shift, and go to state 176
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+
+State 166
+
+   43 STM: EXP '[' EXP ']' '=' . EXP ';'
+   44    | EXP '[' EXP ']' '=' . '{' EXPLIST '}' ';'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '{'       shift, and go to state 177
+    '!'       shift, and go to state 53
+
+    EXP  go to state 178
+
+
+State 167
+
+   45 STM: EXP '.' ID '(' EXPLIST . ')' ';'
+   59 EXP: EXP '.' ID '(' EXPLIST . ')'
+
+    ')'  shift, and go to state 179
+
+
+State 168
+
+   15 EXPLIST: EXP . EXPRESTLIST
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    ','          shift, and go to state 180
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+    $default  reduce using rule 18 (EXPRESTLIST)
+
+    EXPRESTLIST  go to state 181
+    EXPREST      go to state 182
+
+
+State 169
+
+   20 NUMBERLIST: NUMBER . NUMBERRESTLIST
+
+    ','  shift, and go to state 183
+
+    $default  reduce using rule 23 (NUMBERRESTLIST)
+
+    NUMBERRESTLIST  go to state 184
+    NUMBERREST      go to state 185
+
+
+State 170
+
+   32 VARDECL: INT '[' ']' ID '=' '{' NUMBERLIST . '}' ';'
+
+    '}'  shift, and go to state 186
+
+
+State 171
+
+   33 METHODDECL: PUBLIC TYPE ID '(' FORMALLIST ')' . '{' VARDECLLIST STMLIST '}'
+
+    '{'  shift, and go to state 187
+
+
+State 172
+
+    8 FORMALLIST: TYPE ID . FORMALRESTLIST
+
+    ','  shift, and go to state 188
+
+    $default  reduce using rule 11 (FORMALRESTLIST)
+
+    FORMALRESTLIST  go to state 189
+    FORMALREST      go to state 190
+
+
+State 173
+
+   59 EXP: EXP '.' ID '(' EXPLIST . ')'
+
+    ')'  shift, and go to state 191
+
+
+State 174
+
+   51 STM: PUTARRAY '(' EXP ',' EXP ')' . ';'
+
+    ';'  shift, and go to state 192
+
+
+State 175
+
+   38 STM: IF '(' EXP ')' STM ELSE . STM
+
+    OP_MINUS   shift, and go to state 30
+    PUTINT     shift, and go to state 31
+    PUTCH      shift, and go to state 32
+    PUTARRAY   shift, and go to state 33
+    GETINT     shift, and go to state 34
+    GETCH      shift, and go to state 35
+    GETARRAY   shift, and go to state 36
+    IF         shift, and go to state 37
+    WHILE      shift, and go to state 38
+    CONTINUE   shift, and go to state 39
+    BREAK      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    STARTTIME  shift, and go to state 42
+    STOPTIME   shift, and go to state 43
+    TTRUE      shift, and go to state 44
+    FFALSE     shift, and go to state 45
+    LENGTH     shift, and go to state 46
+    THIS       shift, and go to state 47
+    NEW        shift, and go to state 48
+    ID         shift, and go to state 49
+    NUMBER     shift, and go to state 50
+    '('        shift, and go to state 51
+    '{'        shift, and go to state 52
+    '!'        shift, and go to state 53
+
+    STM  go to state 193
+    EXP  go to state 56
+
+
+State 176
+
+   72 EXP: '(' '{' STMLIST '}' EXP ')' .
+
+    $default  reduce using rule 72 (EXP)
+
+
+State 177
+
+   44 STM: EXP '[' EXP ']' '=' '{' . EXPLIST '}' ';'
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    $default  reduce using rule 16 (EXPLIST)
+
+    EXPLIST  go to state 194
+    EXP      go to state 168
+
+
+State 178
+
+   43 STM: EXP '[' EXP ']' '=' EXP . ';'
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    ';'          shift, and go to state 195
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+
+State 179
+
+   45 STM: EXP '.' ID '(' EXPLIST ')' . ';'
+   59 EXP: EXP '.' ID '(' EXPLIST ')' .
+
+    ';'  shift, and go to state 196
+
+    $default  reduce using rule 59 (EXP)
+
+
+State 180
+
+   19 EXPREST: ',' . EXP
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '('       shift, and go to state 51
+    '!'       shift, and go to state 53
+
+    EXP  go to state 197
+
+
+State 181
+
+   15 EXPLIST: EXP EXPRESTLIST .
+
+    $default  reduce using rule 15 (EXPLIST)
+
+
+State 182
+
+   17 EXPRESTLIST: EXPREST . EXPRESTLIST
+
+    ','  shift, and go to state 180
+
+    $default  reduce using rule 18 (EXPRESTLIST)
+
+    EXPRESTLIST  go to state 198
+    EXPREST      go to state 182
+
+
+State 183
+
+   24 NUMBERREST: ',' . NUMBER
+
+    NUMBER  shift, and go to state 199
+
+
+State 184
+
+   20 NUMBERLIST: NUMBER NUMBERRESTLIST .
+
+    $default  reduce using rule 20 (NUMBERLIST)
+
+
+State 185
+
+   22 NUMBERRESTLIST: NUMBERREST . NUMBERRESTLIST
+
+    ','  shift, and go to state 183
+
+    $default  reduce using rule 23 (NUMBERRESTLIST)
+
+    NUMBERRESTLIST  go to state 200
+    NUMBERREST      go to state 185
+
+
+State 186
+
+   32 VARDECL: INT '[' ']' ID '=' '{' NUMBERLIST '}' . ';'
+
+    ';'  shift, and go to state 201
+
+
+State 187
+
+   33 METHODDECL: PUBLIC TYPE ID '(' FORMALLIST ')' '{' . VARDECLLIST STMLIST '}'
+
+    INT    shift, and go to state 17
+    CLASS  shift, and go to state 18
+
+    $default  reduce using rule 14 (VARDECLLIST)
+
+    VARDECLLIST  go to state 202
+    VARDECL      go to state 20
+
+
+State 188
+
+   12 FORMALREST: ',' . TYPE ID
+
+    INT    shift, and go to state 62
+    CLASS  shift, and go to state 63
+
+    TYPE  go to state 203
+
+
+State 189
+
+    8 FORMALLIST: TYPE ID FORMALRESTLIST .
+
+    $default  reduce using rule 8 (FORMALLIST)
+
+
+State 190
+
+   10 FORMALRESTLIST: FORMALREST . FORMALRESTLIST
+
+    ','  shift, and go to state 188
+
+    $default  reduce using rule 11 (FORMALRESTLIST)
+
+    FORMALRESTLIST  go to state 204
+    FORMALREST      go to state 190
+
+
+State 191
+
+   59 EXP: EXP '.' ID '(' EXPLIST ')' .
+
+    $default  reduce using rule 59 (EXP)
+
+
+State 192
+
+   51 STM: PUTARRAY '(' EXP ',' EXP ')' ';' .
+
+    $default  reduce using rule 51 (STM)
+
+
+State 193
+
+   38 STM: IF '(' EXP ')' STM ELSE STM .
+
+    $default  reduce using rule 38 (STM)
+
+
+State 194
+
+   44 STM: EXP '[' EXP ']' '=' '{' EXPLIST . '}' ';'
+
+    '}'  shift, and go to state 205
+
+
+State 195
+
+   43 STM: EXP '[' EXP ']' '=' EXP ';' .
+
+    $default  reduce using rule 43 (STM)
+
+
+State 196
+
+   45 STM: EXP '.' ID '(' EXPLIST ')' ';' .
+
+    $default  reduce using rule 45 (STM)
+
+
+State 197
+
+   19 EXPREST: ',' EXP .
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+
+    OP_PLUS      shift, and go to state 90
+    OP_MINUS     shift, and go to state 91
+    OP_MULTIPLY  shift, and go to state 92
+    OP_DIVTION   shift, and go to state 93
+    '['          shift, and go to state 104
+    '.'          shift, and go to state 105
+
+    $default  reduce using rule 19 (EXPREST)
+
+
+State 198
+
+   17 EXPRESTLIST: EXPREST EXPRESTLIST .
+
+    $default  reduce using rule 17 (EXPRESTLIST)
+
+
+State 199
+
+   24 NUMBERREST: ',' NUMBER .
+
+    $default  reduce using rule 24 (NUMBERREST)
+
+
+State 200
+
+   22 NUMBERRESTLIST: NUMBERREST NUMBERRESTLIST .
+
+    $default  reduce using rule 22 (NUMBERRESTLIST)
+
+
+State 201
+
+   32 VARDECL: INT '[' ']' ID '=' '{' NUMBERLIST '}' ';' .
+
+    $default  reduce using rule 32 (VARDECL)
+
+
+State 202
+
+   33 METHODDECL: PUBLIC TYPE ID '(' FORMALLIST ')' '{' VARDECLLIST . STMLIST '}'
+
+    OP_MINUS   shift, and go to state 30
+    PUTINT     shift, and go to state 31
+    PUTCH      shift, and go to state 32
+    PUTARRAY   shift, and go to state 33
+    GETINT     shift, and go to state 34
+    GETCH      shift, and go to state 35
+    GETARRAY   shift, and go to state 36
+    IF         shift, and go to state 37
+    WHILE      shift, and go to state 38
+    CONTINUE   shift, and go to state 39
+    BREAK      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    STARTTIME  shift, and go to state 42
+    STOPTIME   shift, and go to state 43
+    TTRUE      shift, and go to state 44
+    FFALSE     shift, and go to state 45
+    LENGTH     shift, and go to state 46
+    THIS       shift, and go to state 47
+    NEW        shift, and go to state 48
+    ID         shift, and go to state 49
+    NUMBER     shift, and go to state 50
+    '('        shift, and go to state 51
+    '{'        shift, and go to state 52
+    '!'        shift, and go to state 53
+
+    $default  reduce using rule 3 (STMLIST)
+
+    STMLIST  go to state 206
+    STM      go to state 55
+    EXP      go to state 56
+
+
+State 203
+
+   12 FORMALREST: ',' TYPE . ID
+
+    ID  shift, and go to state 207
+
+
+State 204
+
+   10 FORMALRESTLIST: FORMALREST FORMALRESTLIST .
+
+    $default  reduce using rule 10 (FORMALRESTLIST)
+
+
+State 205
+
+   44 STM: EXP '[' EXP ']' '=' '{' EXPLIST '}' . ';'
+
+    ';'  shift, and go to state 208
+
+
+State 206
+
+   33 METHODDECL: PUBLIC TYPE ID '(' FORMALLIST ')' '{' VARDECLLIST STMLIST . '}'
+
+    '}'  shift, and go to state 209
+
+
+State 207
+
+   12 FORMALREST: ',' TYPE ID .
+
+    $default  reduce using rule 12 (FORMALREST)
+
+
+State 208
+
+   44 STM: EXP '[' EXP ']' '=' '{' EXPLIST '}' ';' .
+
+    $default  reduce using rule 44 (STM)
+
+
+State 209
+
+   33 METHODDECL: PUBLIC TYPE ID '(' FORMALLIST ')' '{' VARDECLLIST STMLIST '}' .
+
+    $default  reduce using rule 33 (METHODDECL)

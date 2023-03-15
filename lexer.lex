@@ -39,6 +39,21 @@ int line=1,pos=0;
     pos+=yyleng;
     return PUTARRAY;
 }
+<INITIAL>"getint" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return GETINT;
+}
+<INITIAL>"getch" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return GETCH;
+}
+<INITIAL>"getarray" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return GETARRAY;
+}
 <INITIAL>"public" {
     // printf("public\n");
     yylval.key=A_Pos(line,pos);
@@ -64,6 +79,11 @@ int line=1,pos=0;
     yylval.key=A_Pos(line,pos);
     pos+=yyleng;
     return IF;
+}
+<INITIAL>"else" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return ELSE;
 }
 <INITIAL>"while" {
     yylval.key=A_Pos(line,pos);
@@ -120,7 +140,12 @@ int line=1,pos=0;
     pos+=yyleng;
     return NEW;
 }
-<INITIAL>"("|")"|":"|"="|","|";"|"{"|"}" {
+<INITIAL>"extends" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return EXTENDS;
+}
+<INITIAL>"("|")"|":"|"="|","|";"|"{"|"}"|"."|"!" {
     pos+=yyleng;
     c = yytext[0];
     return(c);

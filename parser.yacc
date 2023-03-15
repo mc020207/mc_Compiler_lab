@@ -31,14 +31,15 @@ extern int  yywrap();
     A_stmList stmList;
     A_stm stm;
     A_exp exp;
+    A_exp numberRest
     A_expList expList;
 }
 
 // token的类
 // %token <name in union> token_name_1 token_name_2
 %token <token> OP_PLUS OP_MINUS OP_MULTIPLY OP_DIVTION
-%token <key> PUTINT PUTCH MAIN INT PUBLIC CLASS IF WHILE CONTINUE BREAK RETURN STARTTIME STOPTIME TTRUE FFALSE LENGTH THIS NEW
-%token <exp> IDENTIFIER NUMBER
+%token <key> PUTINT PUTCH PUTARRAY GETINT GETCH GETARRAY MAIN INT PUBLIC CLASS IF ELSE WHILE CONTINUE BREAK RETURN STARTTIME STOPTIME TTRUE FFALSE LENGTH THIS NEW EXTENDS
+%token <exp> ID NUMBER
 // 非终结符的类
 %type<type> TYPE
 %type<prog> PROG
@@ -47,14 +48,14 @@ extern int  yywrap();
 %type<classDeclList> CLASSDECLLIST
 %type<methodDecl> METHODDECL
 %type<methodDeclList> METHODDECLLIST
-%type<formal> FORMAL
-%type<formalList> FORMALLIST
+%type<formal> FORMALREST
+%type<formalList> FORMALLIST FORMALRESTLIST
 %type<varDecl> VARDECL
 %type<varDeclList> VARDECLLIST
 %type<stmList> STMLIST
 %type<stm> STM
-%type<exp> EXP
-%type<expList> EXPLIST
+%type<exp> EXP NUMBERREST EXPREST
+%type<expList> EXPLIST EXPRESTLIST NUMBERLIST NUMBERRESTLIST
 
 
 %left OP_PLUS OP_MINUS
@@ -97,13 +98,27 @@ METHODDECLLIST : METHODDECL METHODDECLLIST
         $$=NULL;
     }
 
-FORMALLIST : FORMAL FORMALLIST
+FORMALLIST : TYPE ID FORMALRESTLIST
     {
-        $$=A_FormalList($1,$2);
+        
     }
     |
     {
         $$=NULL;
+    }
+
+FORMALRESTLIST : FORMALREST FORMALRESTLIST
+    {
+        
+    }
+    |
+    {
+        $$=NULL;
+    }
+    
+FORMALREST : ',' TYPE ID
+    {
+
     }
 
 VARDECLLIST : VARDECL VARDECLLIST
@@ -115,7 +130,30 @@ VARDECLLIST : VARDECL VARDECLLIST
         $$=NULL;
     }
 
-EXPLIST : EXP EXPLIST
+EXPLIST : EXP EXPRESTLIST
+    {
+        
+    }
+    |
+    {
+        $$=NULL;
+    }
+
+EXPRESTLIST : EXPREST EXPRESTLIST
+    {
+        
+    }
+    |
+    {
+        $$=NULL;
+    }
+    
+EXPREST : ',' EXP
+    {
+
+    }
+
+NUMBERLIST : NUMBER NUMBERRESTLIST
     {
         $$=A_ExpList($1,$2);
     }
@@ -124,15 +162,139 @@ EXPLIST : EXP EXPLIST
         $$=NULL;
     }
 
+NUMBERRESTLIST : NUMBERREST NUMBERRESTLIST
+    {
+        $$=A_ExpList($1,$2);
+    }
+    |
+    {
+        $$=NULL;
+    }
+
+NUMBERREST : ',' NUMBER
+    {
+        $$=$2
+    }
+
 MAINMETHOD : PUBLIC INT MAIN '(' ')' '{' STMLIST '}' 
     {
         $$=A_MainMethod($1,NULL,$7);
     }
 
-STM : IDENTIFIER '=' EXP ';'
+CLASSDECL : CLASS ID EXTENDS ID '{' VARDECLLIST METHODDECLLIST '}'
+    {   
+        
+    }
+    |
+    CLASS ID '{' VARDECLLIST METHODDECLLIST '}'
+    {
+
+    }
+
+VARDECL : CLASS ID ID ';'
+    {
+
+    }
+    |
+    INT ID ';'
+    {
+
+    }
+    |
+    INT ID '=' NUMBER ';'
+    {
+
+    }
+    |
+    INT '[' ']' ID ';'
+    {
+
+    }
+    |
+    INT '[' ']' ID '=' '{' NUMBERLIST '}' ';'
+    {
+        
+    }
+
+METHODDECL : PUBLIC TYPE ID '(' FORMALLIST ')' '{' VARDECLLIST STMLIST '}'
+    {
+
+    }
+
+TYPE : CLASS ID
+    {
+
+    }
+    |
+    INT
+    {
+
+    }
+    |
+    INT '[' ']'
+    {
+        
+    }
+
+STM : '{' STMLIST '}'
+    {
+
+    }
+    |
+    IF '(' EXP ')' STM ELSE STM
+    {
+
+    }
+    |
+    IF '(' EXP ')' STM 
+    {
+
+    }
+    |
+    WHILE '(' EXP ')' STM 
+    {
+
+    }
+    |
+    WHILE '(' EXP ')' ';'
+    {
+
+    }
+    |
+    EXP '=' EXP ';'
     {
         $$=A_AssignStm($1->pos,$1,NULL,$3);
     }  
+    |
+    EXP '[' EXP ']' '=' EXP ';'
+    {
+
+    }
+    |
+    EXP '[' EXP ']' '=' '{' EXPLIST '}' ';'
+    {
+
+    }
+    |
+    EXP '.' ID '(' EXPLIST ')' ';'
+    {
+
+    }
+    |
+    CONTINUE ';'
+    {
+
+    }
+    |
+    BREAK ';'
+    {
+
+    }
+    |
+    RETURN EXP ';'
+    {
+
+    }
     |
     PUTINT '(' EXP ')' ';'
     {
@@ -142,6 +304,21 @@ STM : IDENTIFIER '=' EXP ';'
     PUTCH '(' EXP ')' ';'
     {
         $$=A_Putint($1,$3);
+    }
+    |
+    PUTARRAY '(' EXP ',' EXP ')' ';'
+    {
+
+    }
+    |
+    STARTTIME '(' ')' ';'
+    {
+
+    }
+    |
+    STOPTIME  '(' ')' ';'
+    {
+
     }
 
 EXP : EXP OP_PLUS EXP
@@ -164,14 +341,65 @@ EXP : EXP OP_PLUS EXP
         $$=A_OpExp($1->pos,$1,A_div,$3);
     }
     |
+    EXP '[' EXP ']'
+    {
+
+    }
+    |
+    EXP '.' ID '(' EXPLIST ')'
+    {
+
+    }
+    |
+    EXP '.' ID
+    
+    {
+
+    }
+    |
     NUMBER
     {
         $$=$1;
     }
     |
-    IDENTIFIER
+    TTRUE 
+    {
+
+    }
+    |
+    FFALSE
+    {
+
+    }
+    |
+    LENGTH '(' EXP ')'
+    {
+
+    }
+    |
+    ID
     {
         $$=$1;
+    }
+    |
+    THIS
+    {
+
+    }
+    |
+    NEW INT '[' EXP ']'
+    {
+
+    }
+    |
+    NEW ID '('  ')' 
+    {
+
+    }
+    |
+    '!' EXP 
+    {
+
     }
     |
     OP_MINUS EXP %prec UMINUS
@@ -181,7 +409,6 @@ EXP : EXP OP_PLUS EXP
     |
     '(' EXP ')'
     {
-        // $$=A_EscExp($2->pos, NULL , $2);
         $$=$2;
     }
     |
@@ -189,6 +416,21 @@ EXP : EXP OP_PLUS EXP
     {
         if ($3==NULL) $$=A_EscExp(NULL, $3 , $5);
         else $$=A_EscExp($3->head->pos, $3 , $5);
+    }
+    |
+    GETINT '(' ')'
+    {
+        
+    }
+    |
+    GETCH '(' ')'
+    {
+        
+    }
+    |
+    GETARRAY '(' EXP ')'
+    {
+
     }
 %%
 
