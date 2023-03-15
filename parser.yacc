@@ -58,9 +58,16 @@ extern int  yywrap();
 %type<expList> EXPLIST EXPRESTLIST NUMBERLIST NUMBERRESTLIST
 
 
+%left IF_ELSE_PREC
+%left IF_PREC
+%right '='
 %left OP_PLUS OP_MINUS
 %left OP_MULTIPLY OP_DIVTION
-%left UMINUS
+%right UMINUS
+%right '!'
+%left '[' ']'
+%left '.'
+
 
 %start PROG
 %%
@@ -241,12 +248,12 @@ STM : '{' STMLIST '}'
 
     }
     |
-    IF '(' EXP ')' STM ELSE STM
+    IF '(' EXP ')' STM ELSE STM %prec IF_ELSE_PREC
     {
 
     }
     |
-    IF '(' EXP ')' STM 
+    IF '(' EXP ')' STM %prec IF_PREC
     {
 
     }

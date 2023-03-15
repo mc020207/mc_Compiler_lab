@@ -1,10 +1,9 @@
-State 67 conflicts: 2 shift/reduce
-State 87 conflicts: 6 shift/reduce
-State 123 conflicts: 2 shift/reduce
-State 124 conflicts: 2 shift/reduce
-State 125 conflicts: 2 shift/reduce
-State 126 conflicts: 2 shift/reduce
-State 151 conflicts: 1 shift/reduce
+Rules useless in parser due to conflicts
+
+   43 STM: EXP '[' EXP ']' '=' EXP ';'
+   44    | EXP '[' EXP ']' '=' '{' EXPLIST '}' ';'
+
+
 State 161 conflicts: 1 shift/reduce
 
 
@@ -154,74 +153,76 @@ Terminals, with rules where they appear
     EXTENDS <key> (285) 26
     ID <exp> (286) 8 12 26 27 28 29 30 31 32 33 34 45 59 60 65 68
     NUMBER <exp> (287) 20 24 30 61
-    UMINUS (288)
+    IF_ELSE_PREC (288)
+    IF_PREC (289)
+    UMINUS (290)
 
 
 Nonterminals, with rules where they appear
 
-    $accept (45)
+    $accept (47)
         on left: 0
-    PROG <prog> (46)
+    PROG <prog> (48)
         on left: 1
         on right: 0
-    STMLIST <stmList> (47)
+    STMLIST <stmList> (49)
         on left: 2 3
         on right: 2 25 33 37 72
-    CLASSDECLLIST <classDeclList> (48)
+    CLASSDECLLIST <classDeclList> (50)
         on left: 4 5
         on right: 1 4
-    METHODDECLLIST <methodDeclList> (49)
+    METHODDECLLIST <methodDeclList> (51)
         on left: 6 7
         on right: 6 26 27
-    FORMALLIST <formalList> (50)
+    FORMALLIST <formalList> (52)
         on left: 8 9
         on right: 33
-    FORMALRESTLIST <formalList> (51)
+    FORMALRESTLIST <formalList> (53)
         on left: 10 11
         on right: 8 10
-    FORMALREST <formal> (52)
+    FORMALREST <formal> (54)
         on left: 12
         on right: 10
-    VARDECLLIST <varDeclList> (53)
+    VARDECLLIST <varDeclList> (55)
         on left: 13 14
         on right: 13 26 27 33
-    EXPLIST <expList> (54)
+    EXPLIST <expList> (56)
         on left: 15 16
         on right: 44 45 59
-    EXPRESTLIST <expList> (55)
+    EXPRESTLIST <expList> (57)
         on left: 17 18
         on right: 15 17
-    EXPREST <exp> (56)
+    EXPREST <exp> (58)
         on left: 19
         on right: 17
-    NUMBERLIST <expList> (57)
+    NUMBERLIST <expList> (59)
         on left: 20 21
         on right: 32
-    NUMBERRESTLIST <expList> (58)
+    NUMBERRESTLIST <expList> (60)
         on left: 22 23
         on right: 20 22
-    NUMBERREST <exp> (59)
+    NUMBERREST <exp> (61)
         on left: 24
         on right: 22
-    MAINMETHOD <mainMethod> (60)
+    MAINMETHOD <mainMethod> (62)
         on left: 25
         on right: 1
-    CLASSDECL <classDecl> (61)
+    CLASSDECL <classDecl> (63)
         on left: 26 27
         on right: 4
-    VARDECL <varDecl> (62)
+    VARDECL <varDecl> (64)
         on left: 28 29 30 31 32
         on right: 13
-    METHODDECL <methodDecl> (63)
+    METHODDECL <methodDecl> (65)
         on left: 33
         on right: 6
-    TYPE <type> (64)
+    TYPE <type> (66)
         on left: 34 35 36
         on right: 8 12 33
-    STM <stm> (65)
+    STM <stm> (67)
         on left: 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53
         on right: 2 38 39 40
-    EXP <exp> (66)
+    EXP <exp> (68)
         on left: 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75
         on right: 15 19 38 39 40 41 42 43 44 45 48 49 50 51 54 55 56 57 58 59 60 64 67 69 70 71 72 75
 
@@ -435,9 +436,9 @@ State 21
     NEW        shift, and go to state 48
     ID         shift, and go to state 49
     NUMBER     shift, and go to state 50
-    '('        shift, and go to state 51
-    '{'        shift, and go to state 52
-    '!'        shift, and go to state 53
+    '!'        shift, and go to state 51
+    '('        shift, and go to state 52
+    '{'        shift, and go to state 53
 
     $default  reduce using rule 3 (STMLIST)
 
@@ -464,8 +465,8 @@ State 23
    29 VARDECL: INT ID . ';'
    30        | INT ID . '=' NUMBER ';'
 
-    ';'  shift, and go to state 58
-    '='  shift, and go to state 59
+    '='  shift, and go to state 58
+    ';'  shift, and go to state 59
 
 
 State 24
@@ -534,8 +535,8 @@ State 30
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 67
 
@@ -627,8 +628,8 @@ State 41
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 78
 
@@ -700,6 +701,27 @@ State 50
 
 State 51
 
+   69 EXP: '!' . EXP
+
+    OP_MINUS  shift, and go to state 30
+    GETINT    shift, and go to state 34
+    GETCH     shift, and go to state 35
+    GETARRAY  shift, and go to state 36
+    TTRUE     shift, and go to state 44
+    FFALSE    shift, and go to state 45
+    LENGTH    shift, and go to state 46
+    THIS      shift, and go to state 47
+    NEW       shift, and go to state 48
+    ID        shift, and go to state 49
+    NUMBER    shift, and go to state 50
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
+
+    EXP  go to state 84
+
+
+State 52
+
    71 EXP: '(' . EXP ')'
    72    | '(' . '{' STMLIST '}' EXP ')'
 
@@ -714,14 +736,14 @@ State 51
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '{'       shift, and go to state 84
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
+    '{'       shift, and go to state 85
 
-    EXP  go to state 85
+    EXP  go to state 86
 
 
-State 52
+State 53
 
    37 STM: '{' . STMLIST '}'
 
@@ -746,36 +768,15 @@ State 52
     NEW        shift, and go to state 48
     ID         shift, and go to state 49
     NUMBER     shift, and go to state 50
-    '('        shift, and go to state 51
-    '{'        shift, and go to state 52
-    '!'        shift, and go to state 53
+    '!'        shift, and go to state 51
+    '('        shift, and go to state 52
+    '{'        shift, and go to state 53
 
     $default  reduce using rule 3 (STMLIST)
 
-    STMLIST  go to state 86
+    STMLIST  go to state 87
     STM      go to state 55
     EXP      go to state 56
-
-
-State 53
-
-   69 EXP: '!' . EXP
-
-    OP_MINUS  shift, and go to state 30
-    GETINT    shift, and go to state 34
-    GETCH     shift, and go to state 35
-    GETARRAY  shift, and go to state 36
-    TTRUE     shift, and go to state 44
-    FFALSE    shift, and go to state 45
-    LENGTH    shift, and go to state 46
-    THIS      shift, and go to state 47
-    NEW       shift, and go to state 48
-    ID        shift, and go to state 49
-    NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
-
-    EXP  go to state 87
 
 
 State 54
@@ -810,9 +811,9 @@ State 55
     NEW        shift, and go to state 48
     ID         shift, and go to state 49
     NUMBER     shift, and go to state 50
-    '('        shift, and go to state 51
-    '{'        shift, and go to state 52
-    '!'        shift, and go to state 53
+    '!'        shift, and go to state 51
+    '('        shift, and go to state 52
+    '{'        shift, and go to state 53
 
     $default  reduce using rule 3 (STMLIST)
 
@@ -858,16 +859,16 @@ State 57
 
 State 58
 
-   29 VARDECL: INT ID ';' .
+   30 VARDECL: INT ID '=' . NUMBER ';'
 
-    $default  reduce using rule 29 (VARDECL)
+    NUMBER  shift, and go to state 98
 
 
 State 59
 
-   30 VARDECL: INT ID '=' . NUMBER ';'
+   29 VARDECL: INT ID ';' .
 
-    NUMBER  shift, and go to state 98
+    $default  reduce using rule 29 (VARDECL)
 
 
 State 60
@@ -937,8 +938,6 @@ State 67
     '['  shift, and go to state 104
     '.'  shift, and go to state 105
 
-    '['       [reduce using rule 70 (EXP)]
-    '.'       [reduce using rule 70 (EXP)]
     $default  reduce using rule 70 (EXP)
 
 
@@ -957,8 +956,8 @@ State 68
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 106
 
@@ -978,8 +977,8 @@ State 69
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 107
 
@@ -999,8 +998,8 @@ State 70
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 108
 
@@ -1034,8 +1033,8 @@ State 73
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 111
 
@@ -1056,8 +1055,8 @@ State 74
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 112
 
@@ -1078,8 +1077,8 @@ State 75
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 113
 
@@ -1113,9 +1112,9 @@ State 78
     OP_MINUS     shift, and go to state 91
     OP_MULTIPLY  shift, and go to state 92
     OP_DIVTION   shift, and go to state 93
-    ';'          shift, and go to state 114
     '['          shift, and go to state 104
     '.'          shift, and go to state 105
+    ';'          shift, and go to state 114
 
 
 State 79
@@ -1147,8 +1146,8 @@ State 81
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 117
 
@@ -1168,6 +1167,23 @@ State 83
 
 
 State 84
+
+   54 EXP: EXP . OP_PLUS EXP
+   55    | EXP . OP_MINUS EXP
+   56    | EXP . OP_MULTIPLY EXP
+   57    | EXP . OP_DIVTION EXP
+   58    | EXP . '[' EXP ']'
+   59    | EXP . '.' ID '(' EXPLIST ')'
+   60    | EXP . '.' ID
+   69    | '!' EXP .
+
+    '['  shift, and go to state 104
+    '.'  shift, and go to state 105
+
+    $default  reduce using rule 69 (EXP)
+
+
+State 85
 
    72 EXP: '(' '{' . STMLIST '}' EXP ')'
 
@@ -1192,9 +1208,9 @@ State 84
     NEW        shift, and go to state 48
     ID         shift, and go to state 49
     NUMBER     shift, and go to state 50
-    '('        shift, and go to state 51
-    '{'        shift, and go to state 52
-    '!'        shift, and go to state 53
+    '!'        shift, and go to state 51
+    '('        shift, and go to state 52
+    '{'        shift, and go to state 53
 
     $default  reduce using rule 3 (STMLIST)
 
@@ -1203,7 +1219,7 @@ State 84
     EXP      go to state 56
 
 
-State 85
+State 86
 
    54 EXP: EXP . OP_PLUS EXP
    55    | EXP . OP_MINUS EXP
@@ -1218,43 +1234,16 @@ State 85
     OP_MINUS     shift, and go to state 91
     OP_MULTIPLY  shift, and go to state 92
     OP_DIVTION   shift, and go to state 93
-    ')'          shift, and go to state 121
     '['          shift, and go to state 104
     '.'          shift, and go to state 105
-
-
-State 86
-
-   37 STM: '{' STMLIST . '}'
-
-    '}'  shift, and go to state 122
+    ')'          shift, and go to state 121
 
 
 State 87
 
-   54 EXP: EXP . OP_PLUS EXP
-   55    | EXP . OP_MINUS EXP
-   56    | EXP . OP_MULTIPLY EXP
-   57    | EXP . OP_DIVTION EXP
-   58    | EXP . '[' EXP ']'
-   59    | EXP . '.' ID '(' EXPLIST ')'
-   60    | EXP . '.' ID
-   69    | '!' EXP .
+   37 STM: '{' STMLIST . '}'
 
-    OP_PLUS      shift, and go to state 90
-    OP_MINUS     shift, and go to state 91
-    OP_MULTIPLY  shift, and go to state 92
-    OP_DIVTION   shift, and go to state 93
-    '['          shift, and go to state 104
-    '.'          shift, and go to state 105
-
-    OP_PLUS      [reduce using rule 69 (EXP)]
-    OP_MINUS     [reduce using rule 69 (EXP)]
-    OP_MULTIPLY  [reduce using rule 69 (EXP)]
-    OP_DIVTION   [reduce using rule 69 (EXP)]
-    '['          [reduce using rule 69 (EXP)]
-    '.'          [reduce using rule 69 (EXP)]
-    $default     reduce using rule 69 (EXP)
+    '}'  shift, and go to state 122
 
 
 State 88
@@ -1286,8 +1275,8 @@ State 90
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 123
 
@@ -1307,8 +1296,8 @@ State 91
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 124
 
@@ -1328,8 +1317,8 @@ State 92
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 125
 
@@ -1349,8 +1338,8 @@ State 93
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 126
 
@@ -1370,8 +1359,8 @@ State 94
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 127
 
@@ -1393,8 +1382,8 @@ State 95
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 128
 
@@ -1427,8 +1416,8 @@ State 99
    31 VARDECL: INT '[' ']' ID . ';'
    32        | INT '[' ']' ID . '=' '{' NUMBERLIST '}' ';'
 
-    ';'  shift, and go to state 132
-    '='  shift, and go to state 133
+    '='  shift, and go to state 132
+    ';'  shift, and go to state 133
 
 
 State 100
@@ -1474,8 +1463,8 @@ State 104
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 136
 
@@ -1503,9 +1492,9 @@ State 106
     OP_MINUS     shift, and go to state 91
     OP_MULTIPLY  shift, and go to state 92
     OP_DIVTION   shift, and go to state 93
-    ')'          shift, and go to state 138
     '['          shift, and go to state 104
     '.'          shift, and go to state 105
+    ')'          shift, and go to state 138
 
 
 State 107
@@ -1523,9 +1512,9 @@ State 107
     OP_MINUS     shift, and go to state 91
     OP_MULTIPLY  shift, and go to state 92
     OP_DIVTION   shift, and go to state 93
-    ')'          shift, and go to state 139
     '['          shift, and go to state 104
     '.'          shift, and go to state 105
+    ')'          shift, and go to state 139
 
 
 State 108
@@ -1543,9 +1532,9 @@ State 108
     OP_MINUS     shift, and go to state 91
     OP_MULTIPLY  shift, and go to state 92
     OP_DIVTION   shift, and go to state 93
-    ','          shift, and go to state 140
     '['          shift, and go to state 104
     '.'          shift, and go to state 105
+    ','          shift, and go to state 140
 
 
 State 109
@@ -1577,9 +1566,9 @@ State 111
     OP_MINUS     shift, and go to state 91
     OP_MULTIPLY  shift, and go to state 92
     OP_DIVTION   shift, and go to state 93
-    ')'          shift, and go to state 141
     '['          shift, and go to state 104
     '.'          shift, and go to state 105
+    ')'          shift, and go to state 141
 
 
 State 112
@@ -1598,9 +1587,9 @@ State 112
     OP_MINUS     shift, and go to state 91
     OP_MULTIPLY  shift, and go to state 92
     OP_DIVTION   shift, and go to state 93
-    ')'          shift, and go to state 142
     '['          shift, and go to state 104
     '.'          shift, and go to state 105
+    ')'          shift, and go to state 142
 
 
 State 113
@@ -1619,9 +1608,9 @@ State 113
     OP_MINUS     shift, and go to state 91
     OP_MULTIPLY  shift, and go to state 92
     OP_DIVTION   shift, and go to state 93
-    ')'          shift, and go to state 143
     '['          shift, and go to state 104
     '.'          shift, and go to state 105
+    ')'          shift, and go to state 143
 
 
 State 114
@@ -1660,9 +1649,9 @@ State 117
     OP_MINUS     shift, and go to state 91
     OP_MULTIPLY  shift, and go to state 92
     OP_DIVTION   shift, and go to state 93
-    ')'          shift, and go to state 146
     '['          shift, and go to state 104
     '.'          shift, and go to state 105
+    ')'          shift, and go to state 146
 
 
 State 118
@@ -1680,8 +1669,8 @@ State 118
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 147
 
@@ -1730,8 +1719,6 @@ State 123
     '['          shift, and go to state 104
     '.'          shift, and go to state 105
 
-    '['       [reduce using rule 54 (EXP)]
-    '.'       [reduce using rule 54 (EXP)]
     $default  reduce using rule 54 (EXP)
 
 
@@ -1751,8 +1738,6 @@ State 124
     '['          shift, and go to state 104
     '.'          shift, and go to state 105
 
-    '['       [reduce using rule 55 (EXP)]
-    '.'       [reduce using rule 55 (EXP)]
     $default  reduce using rule 55 (EXP)
 
 
@@ -1770,8 +1755,6 @@ State 125
     '['  shift, and go to state 104
     '.'  shift, and go to state 105
 
-    '['       [reduce using rule 56 (EXP)]
-    '.'       [reduce using rule 56 (EXP)]
     $default  reduce using rule 56 (EXP)
 
 
@@ -1789,8 +1772,6 @@ State 126
     '['  shift, and go to state 104
     '.'  shift, and go to state 105
 
-    '['       [reduce using rule 57 (EXP)]
-    '.'       [reduce using rule 57 (EXP)]
     $default  reduce using rule 57 (EXP)
 
 
@@ -1809,9 +1790,9 @@ State 127
     OP_MINUS     shift, and go to state 91
     OP_MULTIPLY  shift, and go to state 92
     OP_DIVTION   shift, and go to state 93
-    ';'          shift, and go to state 150
     '['          shift, and go to state 104
     '.'          shift, and go to state 105
+    ';'          shift, and go to state 150
 
 
 State 128
@@ -1863,16 +1844,16 @@ State 131
 
 State 132
 
-   31 VARDECL: INT '[' ']' ID ';' .
+   32 VARDECL: INT '[' ']' ID '=' . '{' NUMBERLIST '}' ';'
 
-    $default  reduce using rule 31 (VARDECL)
+    '{'  shift, and go to state 153
 
 
 State 133
 
-   32 VARDECL: INT '[' ']' ID '=' . '{' NUMBERLIST '}' ';'
+   31 VARDECL: INT '[' ']' ID ';' .
 
-    '{'  shift, and go to state 153
+    $default  reduce using rule 31 (VARDECL)
 
 
 State 134
@@ -1954,8 +1935,8 @@ State 140
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 160
 
@@ -1993,9 +1974,9 @@ State 142
     NEW        shift, and go to state 48
     ID         shift, and go to state 49
     NUMBER     shift, and go to state 50
-    '('        shift, and go to state 51
-    '{'        shift, and go to state 52
-    '!'        shift, and go to state 53
+    '!'        shift, and go to state 51
+    '('        shift, and go to state 52
+    '{'        shift, and go to state 53
 
     STM  go to state 161
     EXP  go to state 56
@@ -2027,10 +2008,10 @@ State 143
     NEW        shift, and go to state 48
     ID         shift, and go to state 49
     NUMBER     shift, and go to state 50
-    '('        shift, and go to state 51
-    '{'        shift, and go to state 52
+    '!'        shift, and go to state 51
+    '('        shift, and go to state 52
+    '{'        shift, and go to state 53
     ';'        shift, and go to state 162
-    '!'        shift, and go to state 53
 
     STM  go to state 163
     EXP  go to state 56
@@ -2099,8 +2080,8 @@ State 149
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     EXP  go to state 165
 
@@ -2118,9 +2099,6 @@ State 151
    44    | EXP '[' EXP ']' . '=' '{' EXPLIST '}' ';'
    58 EXP: EXP '[' EXP ']' .
 
-    '='  shift, and go to state 166
-
-    '='       [reduce using rule 58 (EXP)]
     $default  reduce using rule 58 (EXP)
 
 
@@ -2140,38 +2118,38 @@ State 152
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     $default  reduce using rule 16 (EXPLIST)
 
-    EXPLIST  go to state 167
-    EXP      go to state 168
+    EXPLIST  go to state 166
+    EXP      go to state 167
 
 
 State 153
 
    32 VARDECL: INT '[' ']' ID '=' '{' . NUMBERLIST '}' ';'
 
-    NUMBER  shift, and go to state 169
+    NUMBER  shift, and go to state 168
 
     $default  reduce using rule 21 (NUMBERLIST)
 
-    NUMBERLIST  go to state 170
+    NUMBERLIST  go to state 169
 
 
 State 154
 
    33 METHODDECL: PUBLIC TYPE ID '(' FORMALLIST . ')' '{' VARDECLLIST STMLIST '}'
 
-    ')'  shift, and go to state 171
+    ')'  shift, and go to state 170
 
 
 State 155
 
     8 FORMALLIST: TYPE . ID FORMALRESTLIST
 
-    ID  shift, and go to state 172
+    ID  shift, and go to state 171
 
 
 State 156
@@ -2196,13 +2174,13 @@ State 157
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
     $default  reduce using rule 16 (EXPLIST)
 
-    EXPLIST  go to state 173
-    EXP      go to state 168
+    EXPLIST  go to state 172
+    EXP      go to state 167
 
 
 State 158
@@ -2234,9 +2212,9 @@ State 160
     OP_MINUS     shift, and go to state 91
     OP_MULTIPLY  shift, and go to state 92
     OP_DIVTION   shift, and go to state 93
-    ')'          shift, and go to state 174
     '['          shift, and go to state 104
     '.'          shift, and go to state 105
+    ')'          shift, and go to state 173
 
 
 State 161
@@ -2244,7 +2222,7 @@ State 161
    38 STM: IF '(' EXP ')' STM . ELSE STM
    39    | IF '(' EXP ')' STM .
 
-    ELSE  shift, and go to state 175
+    ELSE  shift, and go to state 174
 
     ELSE      [reduce using rule 39 (STM)]
     $default  reduce using rule 39 (STM)
@@ -2286,43 +2264,20 @@ State 165
     OP_MINUS     shift, and go to state 91
     OP_MULTIPLY  shift, and go to state 92
     OP_DIVTION   shift, and go to state 93
-    ')'          shift, and go to state 176
     '['          shift, and go to state 104
     '.'          shift, and go to state 105
+    ')'          shift, and go to state 175
 
 
 State 166
 
-   43 STM: EXP '[' EXP ']' '=' . EXP ';'
-   44    | EXP '[' EXP ']' '=' . '{' EXPLIST '}' ';'
-
-    OP_MINUS  shift, and go to state 30
-    GETINT    shift, and go to state 34
-    GETCH     shift, and go to state 35
-    GETARRAY  shift, and go to state 36
-    TTRUE     shift, and go to state 44
-    FFALSE    shift, and go to state 45
-    LENGTH    shift, and go to state 46
-    THIS      shift, and go to state 47
-    NEW       shift, and go to state 48
-    ID        shift, and go to state 49
-    NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '{'       shift, and go to state 177
-    '!'       shift, and go to state 53
-
-    EXP  go to state 178
-
-
-State 167
-
    45 STM: EXP '.' ID '(' EXPLIST . ')' ';'
    59 EXP: EXP '.' ID '(' EXPLIST . ')'
 
-    ')'  shift, and go to state 179
+    ')'  shift, and go to state 176
 
 
-State 168
+State 167
 
    15 EXPLIST: EXP . EXPRESTLIST
    54 EXP: EXP . OP_PLUS EXP
@@ -2337,69 +2292,69 @@ State 168
     OP_MINUS     shift, and go to state 91
     OP_MULTIPLY  shift, and go to state 92
     OP_DIVTION   shift, and go to state 93
-    ','          shift, and go to state 180
     '['          shift, and go to state 104
     '.'          shift, and go to state 105
+    ','          shift, and go to state 177
 
     $default  reduce using rule 18 (EXPRESTLIST)
 
-    EXPRESTLIST  go to state 181
-    EXPREST      go to state 182
+    EXPRESTLIST  go to state 178
+    EXPREST      go to state 179
+
+
+State 168
+
+   20 NUMBERLIST: NUMBER . NUMBERRESTLIST
+
+    ','  shift, and go to state 180
+
+    $default  reduce using rule 23 (NUMBERRESTLIST)
+
+    NUMBERRESTLIST  go to state 181
+    NUMBERREST      go to state 182
 
 
 State 169
 
-   20 NUMBERLIST: NUMBER . NUMBERRESTLIST
+   32 VARDECL: INT '[' ']' ID '=' '{' NUMBERLIST . '}' ';'
 
-    ','  shift, and go to state 183
-
-    $default  reduce using rule 23 (NUMBERRESTLIST)
-
-    NUMBERRESTLIST  go to state 184
-    NUMBERREST      go to state 185
+    '}'  shift, and go to state 183
 
 
 State 170
 
-   32 VARDECL: INT '[' ']' ID '=' '{' NUMBERLIST . '}' ';'
+   33 METHODDECL: PUBLIC TYPE ID '(' FORMALLIST ')' . '{' VARDECLLIST STMLIST '}'
 
-    '}'  shift, and go to state 186
+    '{'  shift, and go to state 184
 
 
 State 171
 
-   33 METHODDECL: PUBLIC TYPE ID '(' FORMALLIST ')' . '{' VARDECLLIST STMLIST '}'
+    8 FORMALLIST: TYPE ID . FORMALRESTLIST
 
-    '{'  shift, and go to state 187
+    ','  shift, and go to state 185
+
+    $default  reduce using rule 11 (FORMALRESTLIST)
+
+    FORMALRESTLIST  go to state 186
+    FORMALREST      go to state 187
 
 
 State 172
 
-    8 FORMALLIST: TYPE ID . FORMALRESTLIST
+   59 EXP: EXP '.' ID '(' EXPLIST . ')'
 
-    ','  shift, and go to state 188
-
-    $default  reduce using rule 11 (FORMALRESTLIST)
-
-    FORMALRESTLIST  go to state 189
-    FORMALREST      go to state 190
+    ')'  shift, and go to state 188
 
 
 State 173
 
-   59 EXP: EXP '.' ID '(' EXPLIST . ')'
+   51 STM: PUTARRAY '(' EXP ',' EXP ')' . ';'
 
-    ')'  shift, and go to state 191
+    ';'  shift, and go to state 189
 
 
 State 174
-
-   51 STM: PUTARRAY '(' EXP ',' EXP ')' . ';'
-
-    ';'  shift, and go to state 192
-
-
-State 175
 
    38 STM: IF '(' EXP ')' STM ELSE . STM
 
@@ -2424,76 +2379,32 @@ State 175
     NEW        shift, and go to state 48
     ID         shift, and go to state 49
     NUMBER     shift, and go to state 50
-    '('        shift, and go to state 51
-    '{'        shift, and go to state 52
-    '!'        shift, and go to state 53
+    '!'        shift, and go to state 51
+    '('        shift, and go to state 52
+    '{'        shift, and go to state 53
 
-    STM  go to state 193
+    STM  go to state 190
     EXP  go to state 56
 
 
-State 176
+State 175
 
    72 EXP: '(' '{' STMLIST '}' EXP ')' .
 
     $default  reduce using rule 72 (EXP)
 
 
-State 177
-
-   44 STM: EXP '[' EXP ']' '=' '{' . EXPLIST '}' ';'
-
-    OP_MINUS  shift, and go to state 30
-    GETINT    shift, and go to state 34
-    GETCH     shift, and go to state 35
-    GETARRAY  shift, and go to state 36
-    TTRUE     shift, and go to state 44
-    FFALSE    shift, and go to state 45
-    LENGTH    shift, and go to state 46
-    THIS      shift, and go to state 47
-    NEW       shift, and go to state 48
-    ID        shift, and go to state 49
-    NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
-
-    $default  reduce using rule 16 (EXPLIST)
-
-    EXPLIST  go to state 194
-    EXP      go to state 168
-
-
-State 178
-
-   43 STM: EXP '[' EXP ']' '=' EXP . ';'
-   54 EXP: EXP . OP_PLUS EXP
-   55    | EXP . OP_MINUS EXP
-   56    | EXP . OP_MULTIPLY EXP
-   57    | EXP . OP_DIVTION EXP
-   58    | EXP . '[' EXP ']'
-   59    | EXP . '.' ID '(' EXPLIST ')'
-   60    | EXP . '.' ID
-
-    OP_PLUS      shift, and go to state 90
-    OP_MINUS     shift, and go to state 91
-    OP_MULTIPLY  shift, and go to state 92
-    OP_DIVTION   shift, and go to state 93
-    ';'          shift, and go to state 195
-    '['          shift, and go to state 104
-    '.'          shift, and go to state 105
-
-
-State 179
+State 176
 
    45 STM: EXP '.' ID '(' EXPLIST ')' . ';'
    59 EXP: EXP '.' ID '(' EXPLIST ')' .
 
-    ';'  shift, and go to state 196
+    ';'  shift, and go to state 191
 
     $default  reduce using rule 59 (EXP)
 
 
-State 180
+State 177
 
    19 EXPREST: ',' . EXP
 
@@ -2508,65 +2419,65 @@ State 180
     NEW       shift, and go to state 48
     ID        shift, and go to state 49
     NUMBER    shift, and go to state 50
-    '('       shift, and go to state 51
-    '!'       shift, and go to state 53
+    '!'       shift, and go to state 51
+    '('       shift, and go to state 52
 
-    EXP  go to state 197
+    EXP  go to state 192
 
 
-State 181
+State 178
 
    15 EXPLIST: EXP EXPRESTLIST .
 
     $default  reduce using rule 15 (EXPLIST)
 
 
-State 182
+State 179
 
    17 EXPRESTLIST: EXPREST . EXPRESTLIST
 
-    ','  shift, and go to state 180
+    ','  shift, and go to state 177
 
     $default  reduce using rule 18 (EXPRESTLIST)
 
-    EXPRESTLIST  go to state 198
-    EXPREST      go to state 182
+    EXPRESTLIST  go to state 193
+    EXPREST      go to state 179
 
 
-State 183
+State 180
 
    24 NUMBERREST: ',' . NUMBER
 
-    NUMBER  shift, and go to state 199
+    NUMBER  shift, and go to state 194
 
 
-State 184
+State 181
 
    20 NUMBERLIST: NUMBER NUMBERRESTLIST .
 
     $default  reduce using rule 20 (NUMBERLIST)
 
 
-State 185
+State 182
 
    22 NUMBERRESTLIST: NUMBERREST . NUMBERRESTLIST
 
-    ','  shift, and go to state 183
+    ','  shift, and go to state 180
 
     $default  reduce using rule 23 (NUMBERRESTLIST)
 
-    NUMBERRESTLIST  go to state 200
-    NUMBERREST      go to state 185
+    NUMBERRESTLIST  go to state 195
+    NUMBERREST      go to state 182
 
 
-State 186
+State 183
 
    32 VARDECL: INT '[' ']' ID '=' '{' NUMBERLIST '}' . ';'
 
-    ';'  shift, and go to state 201
+    ';'  shift, and go to state 196
 
 
-State 187
+State 184
 
    33 METHODDECL: PUBLIC TYPE ID '(' FORMALLIST ')' '{' . VARDECLLIST STMLIST '}'
 
@@ -2575,82 +2486,68 @@ State 187
 
     $default  reduce using rule 14 (VARDECLLIST)
 
-    VARDECLLIST  go to state 202
+    VARDECLLIST  go to state 197
     VARDECL      go to state 20
 
 
-State 188
+State 185
 
    12 FORMALREST: ',' . TYPE ID
 
     INT    shift, and go to state 62
     CLASS  shift, and go to state 63
 
-    TYPE  go to state 203
+    TYPE  go to state 198
 
 
-State 189
+State 186
 
     8 FORMALLIST: TYPE ID FORMALRESTLIST .
 
     $default  reduce using rule 8 (FORMALLIST)
 
 
-State 190
+State 187
 
    10 FORMALRESTLIST: FORMALREST . FORMALRESTLIST
 
-    ','  shift, and go to state 188
+    ','  shift, and go to state 185
 
     $default  reduce using rule 11 (FORMALRESTLIST)
 
-    FORMALRESTLIST  go to state 204
-    FORMALREST      go to state 190
+    FORMALRESTLIST  go to state 199
+    FORMALREST      go to state 187
 
 
-State 191
+State 188
 
    59 EXP: EXP '.' ID '(' EXPLIST ')' .
 
     $default  reduce using rule 59 (EXP)
 
 
-State 192
+State 189
 
    51 STM: PUTARRAY '(' EXP ',' EXP ')' ';' .
 
     $default  reduce using rule 51 (STM)
 
 
-State 193
+State 190
 
    38 STM: IF '(' EXP ')' STM ELSE STM .
 
     $default  reduce using rule 38 (STM)
 
 
-State 194
-
-   44 STM: EXP '[' EXP ']' '=' '{' EXPLIST . '}' ';'
-
-    '}'  shift, and go to state 205
-
-
-State 195
-
-   43 STM: EXP '[' EXP ']' '=' EXP ';' .
-
-    $default  reduce using rule 43 (STM)
-
-
-State 196
+State 191
 
    45 STM: EXP '.' ID '(' EXPLIST ')' ';' .
 
     $default  reduce using rule 45 (STM)
 
 
-State 197
+State 192
 
    19 EXPREST: ',' EXP .
    54 EXP: EXP . OP_PLUS EXP
@@ -2671,35 +2568,35 @@ State 197
     $default  reduce using rule 19 (EXPREST)
 
 
-State 198
+State 193
 
    17 EXPRESTLIST: EXPREST EXPRESTLIST .
 
     $default  reduce using rule 17 (EXPRESTLIST)
 
 
-State 199
+State 194
 
    24 NUMBERREST: ',' NUMBER .
 
     $default  reduce using rule 24 (NUMBERREST)
 
 
-State 200
+State 195
 
    22 NUMBERRESTLIST: NUMBERREST NUMBERRESTLIST .
 
     $default  reduce using rule 22 (NUMBERRESTLIST)
 
 
-State 201
+State 196
 
    32 VARDECL: INT '[' ']' ID '=' '{' NUMBERLIST '}' ';' .
 
     $default  reduce using rule 32 (VARDECL)
 
 
-State 202
+State 197
 
    33 METHODDECL: PUBLIC TYPE ID '(' FORMALLIST ')' '{' VARDECLLIST . STMLIST '}'
 
@@ -2724,60 +2621,46 @@ State 202
     NEW        shift, and go to state 48
     ID         shift, and go to state 49
     NUMBER     shift, and go to state 50
-    '('        shift, and go to state 51
-    '{'        shift, and go to state 52
-    '!'        shift, and go to state 53
+    '!'        shift, and go to state 51
+    '('        shift, and go to state 52
+    '{'        shift, and go to state 53
 
     $default  reduce using rule 3 (STMLIST)
 
-    STMLIST  go to state 206
+    STMLIST  go to state 200
     STM      go to state 55
     EXP      go to state 56
 
 
-State 203
+State 198
 
    12 FORMALREST: ',' TYPE . ID
 
-    ID  shift, and go to state 207
+    ID  shift, and go to state 201
 
 
-State 204
+State 199
 
    10 FORMALRESTLIST: FORMALREST FORMALRESTLIST .
 
     $default  reduce using rule 10 (FORMALRESTLIST)
 
 
-State 205
-
-   44 STM: EXP '[' EXP ']' '=' '{' EXPLIST '}' . ';'
-
-    ';'  shift, and go to state 208
-
-
-State 206
+State 200
 
    33 METHODDECL: PUBLIC TYPE ID '(' FORMALLIST ')' '{' VARDECLLIST STMLIST . '}'
 
-    '}'  shift, and go to state 209
+    '}'  shift, and go to state 202
 
 
-State 207
+State 201
 
    12 FORMALREST: ',' TYPE ID .
 
     $default  reduce using rule 12 (FORMALREST)
 
 
-State 208
-
-   44 STM: EXP '[' EXP ']' '=' '{' EXPLIST '}' ';' .
-
-    $default  reduce using rule 44 (STM)
-
-
-State 209
+State 202
 
    33 METHODDECL: PUBLIC TYPE ID '(' FORMALLIST ')' '{' VARDECLLIST STMLIST '}' .
 
