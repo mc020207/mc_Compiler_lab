@@ -37,9 +37,9 @@ extern int  yywrap();
 
 // token的类
 // %token <name in union> token_name_1 token_name_2
-%token <token> OP_PLUS OP_MINUS OP_MULTIPLY OP_DIVTION
+%token <token> OP_PLUS OP_MINUS OP_MULTIPLY OP_DIVTION OP_LESS OP_LE OP_GREAT OP_GE OP_EQ OP_NEQ OP_OR OP_AND
 %token <key> PUTINT PUTCH PUTARRAY GETINT GETCH GETARRAY MAIN INT PUBLIC CLASS IF ELSE WHILE CONTINUE BREAK RETURN STARTTIME STOPTIME TTRUE FFALSE LENGTH THIS NEW EXTENDS
-%token <exp> ID NUMBER
+%token <exp> ID NUM
 // 非终结符的类
 %type<type> TYPE
 %type<prog> PROG
@@ -54,20 +54,22 @@ extern int  yywrap();
 %type<varDeclList> VARDECLLIST
 %type<stmList> STMLIST
 %type<stm> STM
-%type<exp> EXP NUMBERREST EXPREST
+%type<exp> EXP NUMBER NUMBERREST EXPREST
 %type<expList> EXPLIST EXPRESTLIST NUMBERLIST NUMBERRESTLIST
 
 
-%left IF_ELSE_PREC
-%left IF_PREC
+
 %right '='
+%left OP_OR
+%left OP_AND
+%left OP_EQ OP_NEQ
+%left OP_LE OP_LESS OP_GREAT OP_GE
 %left OP_PLUS OP_MINUS
 %left OP_MULTIPLY OP_DIVTION
-%right UMINUS
-%right '!'
-%left '[' ']'
+%right '!' UMINUS
+%left '[' ']' '(' ')'
 %left '.'
-
+%left ELSE
 
 %start PROG
 %%
@@ -243,17 +245,27 @@ TYPE : CLASS ID
         
     }
 
+NUMBER : NUM
+    {
+
+    }
+    |
+    OP_MINUS NUM
+    {
+
+    }
+
 STM : '{' STMLIST '}'
     {
         
     }
     |
-    IF '(' EXP ')' STM ELSE STM %prec IF_ELSE_PREC
+    IF '(' EXP ')' STM ELSE STM
     {
 
     }
     |
-    IF '(' EXP ')' STM %prec IF_PREC
+    IF '(' EXP ')' STM
     {
 
     }
@@ -348,6 +360,46 @@ EXP : EXP OP_PLUS EXP
         $$=A_OpExp($1->pos,$1,A_div,$3);
     }
     |
+    EXP OP_LESS EXP
+    {
+        
+    }
+    |
+    EXP OP_LE EXP
+    {
+        
+    }
+    |
+    EXP OP_GREAT EXP
+    {
+        
+    }
+    |
+    EXP OP_GE EXP
+    {
+        
+    }
+    |
+    EXP OP_EQ EXP
+    {
+        
+    }
+    |
+    EXP OP_NEQ EXP
+    {
+        
+    }
+    |
+    EXP OP_OR EXP
+    {
+        
+    }
+    |
+    EXP OP_AND EXP
+    {
+        
+    }
+    |
     EXP '[' EXP ']'
     {
 
@@ -364,7 +416,7 @@ EXP : EXP OP_PLUS EXP
 
     }
     |
-    NUMBER
+    NUM
     {
         $$=$1;
     }

@@ -22,6 +22,14 @@ int line=1,pos=0;
 <INITIAL>"-" {yylval.token = A_Pos(line,pos); pos+=yyleng; return OP_MINUS;}
 <INITIAL>"*" {yylval.token = A_Pos(line,pos); pos+=yyleng; return OP_MULTIPLY; }
 <INITIAL>"/" {yylval.token = A_Pos(line,pos); pos+=yyleng; return OP_DIVTION; }
+<INITIAL>"<" {yylval.token = A_Pos(line,pos); pos+=yyleng; return OP_LESS; }
+<INITIAL>"<=" {yylval.token = A_Pos(line,pos); pos+=yyleng; return OP_LE; }
+<INITIAL>">" {yylval.token = A_Pos(line,pos); pos+=yyleng; return OP_GREAT; }
+<INITIAL>">=" {yylval.token = A_Pos(line,pos); pos+=yyleng; return OP_GE; }
+<INITIAL>"==" {yylval.token = A_Pos(line,pos); pos+=yyleng; return OP_EQ; }
+<INITIAL>"!=" {yylval.token = A_Pos(line,pos); pos+=yyleng; return OP_NEQ; }
+<INITIAL>"||" {yylval.token = A_Pos(line,pos); pos+=yyleng; return OP_OR; }
+<INITIAL>"&&" {yylval.token = A_Pos(line,pos); pos+=yyleng; return OP_AND; }
 <INITIAL>"//" {pos+=yyleng;BEGIN COMMENT1;}
 <INITIAL>"/*" {pos+=yyleng;BEGIN COMMENT2;}
 <INITIAL>"putint" {
@@ -159,12 +167,12 @@ int line=1,pos=0;
 <INITIAL>[1-9][0-9]* {
     yylval.exp=A_NumConst(A_Pos(line,pos),calculate(yytext,yyleng));
     pos+=yyleng; 
-    return NUMBER;
+    return NUM;
 }
 <INITIAL>0 {
     yylval.exp = A_NumConst(A_Pos(line,pos),0);
     pos+=yyleng;
-    return NUMBER;
+    return NUM;
 }
 <INITIAL>. {
     pos+=yyleng;
