@@ -1,0 +1,18 @@
+public int main() {
+    int a; 
+    class c1 c;
+
+    a=2;
+    c=new c1();
+    putint(c.plusone(a));
+    putint(c.plusone(c.plusone(a)));
+    return c.x;
+}
+
+public class c1 {
+    int x=2;
+    public int plusone(int x) {
+        return x+1;
+    }
+}
+

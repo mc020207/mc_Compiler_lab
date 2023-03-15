@@ -1,0 +1,17 @@
+public int main() {
+    int i=0; 
+    int[] a; 
+
+    starttime();
+    a=new int[8];
+    while (!({a[i]=i; i=i+1;} 0))
+      if (i>=8) break;
+    putarray(8,a);
+    while (true) {
+      i=getint();
+      if (i) break;
+      if (!i) break;
+    }
+    stoptime();
+    return a[7];
+}

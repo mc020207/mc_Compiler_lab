@@ -1,0 +1,17 @@
+public int main() {
+    int i=3;
+    int[] a={9,8,7,6,5,4,3,2,1,0};
+    return new c1().m1(a,i);
+}
+
+public class c1 {
+    int max=-100;
+
+    public int m1(int[] a, int i) {
+        while (length(a)>i) {
+            if (a[i]>max) this.max=a[i];
+            i=i+1;
+        }
+        return this.max;
+    }
+}

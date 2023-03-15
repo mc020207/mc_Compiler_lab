@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "stdio.h": "c",
+        "util.h": "c",
+        "iostream": "cpp",
+        "slp.h": "c",
+        "print_slp.h": "c",
+        "libsysy.h": "c"
+    }
+}

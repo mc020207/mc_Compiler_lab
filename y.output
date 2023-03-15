@@ -1,0 +1,541 @@
+Grammar
+
+    0 $accept: PROG $end
+
+    1 PROG: MAINMETHOD
+
+    2 MAINMETHOD: PUBLIC INT MAIN '(' ')' '{' STMLIST '}'
+
+    3 STMLIST: STM STMLIST
+    4        | %empty
+
+    5 STM: IDENTIFIER '=' EXPR
+    6    | PUTINT '(' EXPR ')' ';'
+    7    | PUTCH '(' EXPR ')' ';'
+
+    8 EXPR: EXPR OP_PLUS EXPR
+    9     | EXPR OP_MINUS EXPR
+   10     | EXPR OP_MULTIPLY EXPR
+   11     | EXPR OP_DIVTION EXPR
+   12     | NUMBER
+   13     | IDENTIFIER
+   14     | OP_MINUS EXPR
+   15     | '(' EXPR ')'
+   16     | '(' '{' STMLIST '}' EXPR ')'
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '(' (40) 2 6 7 15 16
+    ')' (41) 2 6 7 15 16
+    ';' (59) 6 7
+    '=' (61) 5
+    '{' (123) 2 16
+    '}' (125) 2 16
+    error (256)
+    OP_PLUS <token> (258) 8
+    OP_MINUS <token> (259) 9 14
+    OP_MULTIPLY <token> (260) 10
+    OP_DIVTION <token> (261) 11
+    NUMBER <token> (262) 12
+    PUTINT <key> (263) 6
+    PUTCH <key> (264) 7
+    MAIN <key> (265) 2
+    INT <key> (266) 2
+    PUBLIC <key> (267) 2
+    IDENTIFIER <expr> (268) 5 13
+    UMINUS (269)
+
+
+Nonterminals, with rules where they appear
+
+    $accept (21)
+        on left: 0
+    PROG <prog> (22)
+        on left: 1
+        on right: 0
+    MAINMETHOD <mainmethod> (23)
+        on left: 2
+        on right: 1
+    STMLIST <stmlist> (24)
+        on left: 3 4
+        on right: 2 3 16
+    STM <stm> (25)
+        on left: 5 6 7
+        on right: 3
+    EXPR <expr> (26)
+        on left: 8 9 10 11 12 13 14 15 16
+        on right: 5 6 7 8 9 10 11 14 15 16
+
+
+State 0
+
+    0 $accept: . PROG $end
+
+    PUBLIC  shift, and go to state 1
+
+    PROG        go to state 2
+    MAINMETHOD  go to state 3
+
+
+State 1
+
+    2 MAINMETHOD: PUBLIC . INT MAIN '(' ')' '{' STMLIST '}'
+
+    INT  shift, and go to state 4
+
+
+State 2
+
+    0 $accept: PROG . $end
+
+    $end  shift, and go to state 5
+
+
+State 3
+
+    1 PROG: MAINMETHOD .
+
+    $default  reduce using rule 1 (PROG)
+
+
+State 4
+
+    2 MAINMETHOD: PUBLIC INT . MAIN '(' ')' '{' STMLIST '}'
+
+    MAIN  shift, and go to state 6
+
+
+State 5
+
+    0 $accept: PROG $end .
+
+    $default  accept
+
+
+State 6
+
+    2 MAINMETHOD: PUBLIC INT MAIN . '(' ')' '{' STMLIST '}'
+
+    '('  shift, and go to state 7
+
+
+State 7
+
+    2 MAINMETHOD: PUBLIC INT MAIN '(' . ')' '{' STMLIST '}'
+
+    ')'  shift, and go to state 8
+
+
+State 8
+
+    2 MAINMETHOD: PUBLIC INT MAIN '(' ')' . '{' STMLIST '}'
+
+    '{'  shift, and go to state 9
+
+
+State 9
+
+    2 MAINMETHOD: PUBLIC INT MAIN '(' ')' '{' . STMLIST '}'
+
+    PUTINT      shift, and go to state 10
+    PUTCH       shift, and go to state 11
+    IDENTIFIER  shift, and go to state 12
+
+    $default  reduce using rule 4 (STMLIST)
+
+    STMLIST  go to state 13
+    STM      go to state 14
+
+
+State 10
+
+    6 STM: PUTINT . '(' EXPR ')' ';'
+
+    '('  shift, and go to state 15
+
+
+State 11
+
+    7 STM: PUTCH . '(' EXPR ')' ';'
+
+    '('  shift, and go to state 16
+
+
+State 12
+
+    5 STM: IDENTIFIER . '=' EXPR
+
+    '='  shift, and go to state 17
+
+
+State 13
+
+    2 MAINMETHOD: PUBLIC INT MAIN '(' ')' '{' STMLIST . '}'
+
+    '}'  shift, and go to state 18
+
+
+State 14
+
+    3 STMLIST: STM . STMLIST
+
+    PUTINT      shift, and go to state 10
+    PUTCH       shift, and go to state 11
+    IDENTIFIER  shift, and go to state 12
+
+    $default  reduce using rule 4 (STMLIST)
+
+    STMLIST  go to state 19
+    STM      go to state 14
+
+
+State 15
+
+    6 STM: PUTINT '(' . EXPR ')' ';'
+
+    OP_MINUS    shift, and go to state 20
+    NUMBER      shift, and go to state 21
+    IDENTIFIER  shift, and go to state 22
+    '('         shift, and go to state 23
+
+    EXPR  go to state 24
+
+
+State 16
+
+    7 STM: PUTCH '(' . EXPR ')' ';'
+
+    OP_MINUS    shift, and go to state 20
+    NUMBER      shift, and go to state 21
+    IDENTIFIER  shift, and go to state 22
+    '('         shift, and go to state 23
+
+    EXPR  go to state 25
+
+
+State 17
+
+    5 STM: IDENTIFIER '=' . EXPR
+
+    OP_MINUS    shift, and go to state 20
+    NUMBER      shift, and go to state 21
+    IDENTIFIER  shift, and go to state 22
+    '('         shift, and go to state 23
+
+    EXPR  go to state 26
+
+
+State 18
+
+    2 MAINMETHOD: PUBLIC INT MAIN '(' ')' '{' STMLIST '}' .
+
+    $default  reduce using rule 2 (MAINMETHOD)
+
+
+State 19
+
+    3 STMLIST: STM STMLIST .
+
+    $default  reduce using rule 3 (STMLIST)
+
+
+State 20
+
+   14 EXPR: OP_MINUS . EXPR
+
+    OP_MINUS    shift, and go to state 20
+    NUMBER      shift, and go to state 21
+    IDENTIFIER  shift, and go to state 22
+    '('         shift, and go to state 23
+
+    EXPR  go to state 27
+
+
+State 21
+
+   12 EXPR: NUMBER .
+
+    $default  reduce using rule 12 (EXPR)
+
+
+State 22
+
+   13 EXPR: IDENTIFIER .
+
+    $default  reduce using rule 13 (EXPR)
+
+
+State 23
+
+   15 EXPR: '(' . EXPR ')'
+   16     | '(' . '{' STMLIST '}' EXPR ')'
+
+    OP_MINUS    shift, and go to state 20
+    NUMBER      shift, and go to state 21
+    IDENTIFIER  shift, and go to state 22
+    '('         shift, and go to state 23
+    '{'         shift, and go to state 28
+
+    EXPR  go to state 29
+
+
+State 24
+
+    6 STM: PUTINT '(' EXPR . ')' ';'
+    8 EXPR: EXPR . OP_PLUS EXPR
+    9     | EXPR . OP_MINUS EXPR
+   10     | EXPR . OP_MULTIPLY EXPR
+   11     | EXPR . OP_DIVTION EXPR
+
+    OP_PLUS      shift, and go to state 30
+    OP_MINUS     shift, and go to state 31
+    OP_MULTIPLY  shift, and go to state 32
+    OP_DIVTION   shift, and go to state 33
+    ')'          shift, and go to state 34
+
+
+State 25
+
+    7 STM: PUTCH '(' EXPR . ')' ';'
+    8 EXPR: EXPR . OP_PLUS EXPR
+    9     | EXPR . OP_MINUS EXPR
+   10     | EXPR . OP_MULTIPLY EXPR
+   11     | EXPR . OP_DIVTION EXPR
+
+    OP_PLUS      shift, and go to state 30
+    OP_MINUS     shift, and go to state 31
+    OP_MULTIPLY  shift, and go to state 32
+    OP_DIVTION   shift, and go to state 33
+    ')'          shift, and go to state 35
+
+
+State 26
+
+    5 STM: IDENTIFIER '=' EXPR .
+    8 EXPR: EXPR . OP_PLUS EXPR
+    9     | EXPR . OP_MINUS EXPR
+   10     | EXPR . OP_MULTIPLY EXPR
+   11     | EXPR . OP_DIVTION EXPR
+
+    OP_PLUS      shift, and go to state 30
+    OP_MINUS     shift, and go to state 31
+    OP_MULTIPLY  shift, and go to state 32
+    OP_DIVTION   shift, and go to state 33
+
+    $default  reduce using rule 5 (STM)
+
+
+State 27
+
+    8 EXPR: EXPR . OP_PLUS EXPR
+    9     | EXPR . OP_MINUS EXPR
+   10     | EXPR . OP_MULTIPLY EXPR
+   11     | EXPR . OP_DIVTION EXPR
+   14     | OP_MINUS EXPR .
+
+    $default  reduce using rule 14 (EXPR)
+
+
+State 28
+
+   16 EXPR: '(' '{' . STMLIST '}' EXPR ')'
+
+    PUTINT      shift, and go to state 10
+    PUTCH       shift, and go to state 11
+    IDENTIFIER  shift, and go to state 12
+
+    $default  reduce using rule 4 (STMLIST)
+
+    STMLIST  go to state 36
+    STM      go to state 14
+
+
+State 29
+
+    8 EXPR: EXPR . OP_PLUS EXPR
+    9     | EXPR . OP_MINUS EXPR
+   10     | EXPR . OP_MULTIPLY EXPR
+   11     | EXPR . OP_DIVTION EXPR
+   15     | '(' EXPR . ')'
+
+    OP_PLUS      shift, and go to state 30
+    OP_MINUS     shift, and go to state 31
+    OP_MULTIPLY  shift, and go to state 32
+    OP_DIVTION   shift, and go to state 33
+    ')'          shift, and go to state 37
+
+
+State 30
+
+    8 EXPR: EXPR OP_PLUS . EXPR
+
+    OP_MINUS    shift, and go to state 20
+    NUMBER      shift, and go to state 21
+    IDENTIFIER  shift, and go to state 22
+    '('         shift, and go to state 23
+
+    EXPR  go to state 38
+
+
+State 31
+
+    9 EXPR: EXPR OP_MINUS . EXPR
+
+    OP_MINUS    shift, and go to state 20
+    NUMBER      shift, and go to state 21
+    IDENTIFIER  shift, and go to state 22
+    '('         shift, and go to state 23
+
+    EXPR  go to state 39
+
+
+State 32
+
+   10 EXPR: EXPR OP_MULTIPLY . EXPR
+
+    OP_MINUS    shift, and go to state 20
+    NUMBER      shift, and go to state 21
+    IDENTIFIER  shift, and go to state 22
+    '('         shift, and go to state 23
+
+    EXPR  go to state 40
+
+
+State 33
+
+   11 EXPR: EXPR OP_DIVTION . EXPR
+
+    OP_MINUS    shift, and go to state 20
+    NUMBER      shift, and go to state 21
+    IDENTIFIER  shift, and go to state 22
+    '('         shift, and go to state 23
+
+    EXPR  go to state 41
+
+
+State 34
+
+    6 STM: PUTINT '(' EXPR ')' . ';'
+
+    ';'  shift, and go to state 42
+
+
+State 35
+
+    7 STM: PUTCH '(' EXPR ')' . ';'
+
+    ';'  shift, and go to state 43
+
+
+State 36
+
+   16 EXPR: '(' '{' STMLIST . '}' EXPR ')'
+
+    '}'  shift, and go to state 44
+
+
+State 37
+
+   15 EXPR: '(' EXPR ')' .
+
+    $default  reduce using rule 15 (EXPR)
+
+
+State 38
+
+    8 EXPR: EXPR . OP_PLUS EXPR
+    8     | EXPR OP_PLUS EXPR .
+    9     | EXPR . OP_MINUS EXPR
+   10     | EXPR . OP_MULTIPLY EXPR
+   11     | EXPR . OP_DIVTION EXPR
+
+    OP_MULTIPLY  shift, and go to state 32
+    OP_DIVTION   shift, and go to state 33
+
+    $default  reduce using rule 8 (EXPR)
+
+
+State 39
+
+    8 EXPR: EXPR . OP_PLUS EXPR
+    9     | EXPR . OP_MINUS EXPR
+    9     | EXPR OP_MINUS EXPR .
+   10     | EXPR . OP_MULTIPLY EXPR
+   11     | EXPR . OP_DIVTION EXPR
+
+    OP_MULTIPLY  shift, and go to state 32
+    OP_DIVTION   shift, and go to state 33
+
+    $default  reduce using rule 9 (EXPR)
+
+
+State 40
+
+    8 EXPR: EXPR . OP_PLUS EXPR
+    9     | EXPR . OP_MINUS EXPR
+   10     | EXPR . OP_MULTIPLY EXPR
+   10     | EXPR OP_MULTIPLY EXPR .
+   11     | EXPR . OP_DIVTION EXPR
+
+    $default  reduce using rule 10 (EXPR)
+
+
+State 41
+
+    8 EXPR: EXPR . OP_PLUS EXPR
+    9     | EXPR . OP_MINUS EXPR
+   10     | EXPR . OP_MULTIPLY EXPR
+   11     | EXPR . OP_DIVTION EXPR
+   11     | EXPR OP_DIVTION EXPR .
+
+    $default  reduce using rule 11 (EXPR)
+
+
+State 42
+
+    6 STM: PUTINT '(' EXPR ')' ';' .
+
+    $default  reduce using rule 6 (STM)
+
+
+State 43
+
+    7 STM: PUTCH '(' EXPR ')' ';' .
+
+    $default  reduce using rule 7 (STM)
+
+
+State 44
+
+   16 EXPR: '(' '{' STMLIST '}' . EXPR ')'
+
+    OP_MINUS    shift, and go to state 20
+    NUMBER      shift, and go to state 21
+    IDENTIFIER  shift, and go to state 22
+    '('         shift, and go to state 23
+
+    EXPR  go to state 45
+
+
+State 45
+
+    8 EXPR: EXPR . OP_PLUS EXPR
+    9     | EXPR . OP_MINUS EXPR
+   10     | EXPR . OP_MULTIPLY EXPR
+   11     | EXPR . OP_DIVTION EXPR
+   16     | '(' '{' STMLIST '}' EXPR . ')'
+
+    OP_PLUS      shift, and go to state 30
+    OP_MINUS     shift, and go to state 31
+    OP_MULTIPLY  shift, and go to state 32
+    OP_DIVTION   shift, and go to state 33
+    ')'          shift, and go to state 46
+
+
+State 46
+
+   16 EXPR: '(' '{' STMLIST '}' EXPR ')' .
+
+    $default  reduce using rule 16 (EXPR)

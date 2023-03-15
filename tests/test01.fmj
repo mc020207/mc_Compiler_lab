@@ -1,0 +1,5 @@
+public int main() {
+    int a=2; 
+    putint(a+1);
+    return a*3+2;
+}
