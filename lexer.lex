@@ -34,6 +34,11 @@ int line=1,pos=0;
     pos+=yyleng;
     return PUTCH;
 }
+<INITIAL>"putarray" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return PUTARRAY;
+}
 <INITIAL>"public" {
     // printf("public\n");
     yylval.key=A_Pos(line,pos);
@@ -54,6 +59,66 @@ int line=1,pos=0;
     yylval.key=A_Pos(line,pos);
     pos+=yyleng;
     return CLASS;
+}
+<INITIAL>"if" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return IF;
+}
+<INITIAL>"while" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return WHILE;
+}
+<INITIAL>"continue" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return CONTINUE;
+}
+<INITIAL>"break" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return BREAK;
+}
+<INITIAL>"return" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return RETURN;
+}
+<INITIAL>"starttime" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return STARTTIME;
+}
+<INITIAL>"stoptime" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return STOPTIME;
+}
+<INITIAL>"true" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return TTRUE;
+}
+<INITIAL>"false" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return FFALSE;
+}
+<INITIAL>"length" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return LENGTH;
+}
+<INITIAL>"this" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return THIS;
+}
+<INITIAL>"new" {
+    yylval.key=A_Pos(line,pos);
+    pos+=yyleng;
+    return NEW;
 }
 <INITIAL>"("|")"|":"|"="|","|";"|"{"|"}" {
     pos+=yyleng;
