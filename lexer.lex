@@ -154,12 +154,12 @@ int line=1,pos=0;
     return EXTENDS;
 }
 <INITIAL>"("|")"|":"|"="|","|";"|"{"|"}"|"."|"!"|"["|"]" {
+    yylval.token=A_Pos(line,pos);
     pos+=yyleng;
     c = yytext[0];
     return(c);
 }
 <INITIAL>[a-z_A-Z][a-z_A-Z0-9]* {
-    // printf("ID\n");
     yylval.exp = A_IdExp(A_Pos(line,pos),String(yytext));
     pos+=yyleng; 
     return ID;

@@ -31,13 +31,12 @@ extern int  yywrap();
     A_stmList stmList;
     A_stm stm;
     A_exp exp;
-    A_exp numberRest;
     A_expList expList;
 }
 
 // token的类
 // %token <name in union> token_name_1 token_name_2
-%token <token> OP_PLUS OP_MINUS OP_MULTIPLY OP_DIVTION OP_LESS OP_LE OP_GREAT OP_GE OP_EQ OP_NEQ OP_OR OP_AND
+%token <token> OP_PLUS OP_MINUS OP_MULTIPLY OP_DIVTION OP_LESS OP_LE OP_GREAT OP_GE OP_EQ OP_NEQ OP_OR OP_AND '(' ')' ':' '=' ',' ';' '{' '}' '.' '!' '[' ']'
 %token <key> PUTINT PUTCH PUTARRAY GETINT GETCH GETARRAY MAIN INT PUBLIC CLASS IF ELSE WHILE CONTINUE BREAK RETURN STARTTIME STOPTIME TTRUE FFALSE LENGTH THIS NEW EXTENDS
 %token <exp> ID NUM
 // 非终结符的类
@@ -69,7 +68,7 @@ extern int  yywrap();
 %right '!' UMINUS
 %left '[' ']' '(' ')'
 %left '.'
-%left ELSE
+%right ELSE
 
 %start PROG
 %%
@@ -285,12 +284,12 @@ STM : '{' STMLIST '}'
         $$=A_AssignStm($1->pos,$1,NULL,$3);
     }  
     |
-    EXP '[' EXP ']' '=' EXP ';'
+    /* EXP '[' EXP ']' '=' EXP ';'
     {
 
     }
-    |
-    EXP '[' EXP ']' '=' '{' EXPLIST '}' ';'
+    | */
+    EXP '[' ']' '=' '{' EXPLIST '}' ';'
     {
 
     }

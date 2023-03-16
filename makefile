@@ -24,6 +24,18 @@ $(TESTCASE_DIR)/%.out: $(TESTCASE_DIR)/%.main.o lex.yy.o y.tab.o fdmjast.o util.
 $(TESTCASE_DIR)/%.main.o: main.c fdmjast.h fdmjast.c util.h util.c printast.h printast.c y.tab.h y.tab.c lex.yy.o y.tab.o main.c main.o fdmjast.o util.o printast.o
 	@cc -g -c main.c -o $@
 
+testgrammar : a.out
+	@./a.out <./tests/test01.fmj
+	@./a.out <./tests/test02.fmj
+	@./a.out <./tests/test03.fmj
+	@./a.out <./tests/test04.fmj
+	@./a.out <./tests/test05.fmj
+	@./a.out <./tests/test06.fmj
+	@./a.out <./tests/test07.fmj
+	@./a.out <./tests/test08.fmj
+	@./a.out <./tests/test09.fmj
+	@./a.out <./tests/test10.fmj
+
 a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o
 	@cc -g main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o -o a.out
 
