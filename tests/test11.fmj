@@ -1,0 +1,4 @@
+// This was test 1 for HW1
+public int main() {
+    putint(10000000);
+}

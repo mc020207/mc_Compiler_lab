@@ -1,0 +1,4 @@
+public int main() {
+    a=216;
+    putint(a);
+}

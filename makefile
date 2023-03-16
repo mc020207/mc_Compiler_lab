@@ -1,40 +1,22 @@
 TESTCASE_DIR := tests
-TESTCASES = $(wildcard $(TESTCASE_DIR)/*.fdmj)
-EXEUTABLES = $(patsubst $(TESTCASE_DIR)/%.fdmj,$(TESTCASE_DIR)/%.o,$(TESTCASES))
-MAINFILES = $(patsubst $(TESTCASE_DIR)/%.fdmj,$(TESTCASE_DIR)/%.o,$(TESTCASES))
-EXPECTS = $(patsubst $(TESTCASE_DIR)/%.fdmj,$(TESTCASE_DIR)/%.exp,$(TESTCASES))
-OUTS = $(patsubst $(TESTCASE_DIR)/%.fdmj,$(TESTCASE_DIR)/%.out,$(TESTCASES))
-OUTPUTS = $(patsubst $(TESTCASE_DIR)/%.fdmj,$(TESTCASE_DIR)/%.output,$(TESTCASES))
-LLFILES = $(patsubst $(TESTCASE_DIR)/%.fdmj,$(TESTCASE_DIR)/%.ll,$(TESTCASES))
+TESTCASES = $(wildcard $(TESTCASE_DIR)/*.fmj)
+EXEUTABLES = $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.o,$(TESTCASES))
+MAINFILES = $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.o,$(TESTCASES))
+EXPECTS = $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.exp,$(TESTCASES))
+OUTS = $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.out,$(TESTCASES))
+OUTPUTS = $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.output,$(TESTCASES))
+LLFILES = $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.ll,$(TESTCASES))
 
 .SECONDARY: $(LLFILES)
-runcomp: $(patsubst $(TESTCASE_DIR)/%.fdmj,$(TESTCASE_DIR)/%.output,$(TESTCASES)) clean
+runcomp: $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.output,$(TESTCASES)) clean
 
-$(TESTCASE_DIR)/%.output: $(TESTCASE_DIR)/%.fdmj $(TESTCASE_DIR)/%.exp $(TESTCASE_DIR)/%.out
-	@./$(word 3,$^) < $(word 1,$^) > $@
-	@echo TEST $*
-	@diff $@ $(word 2,$^)
-	@echo PASS $*
+$(TESTCASE_DIR)/%.output: $(TESTCASE_DIR)/%.fmj a.out check.out
+	@./a.out < $(word 1,$^) > $@
+	@./check.out $(word 1,$^) $@
 	@rm -rf $@
-	@echo 
 
-$(TESTCASE_DIR)/%.out: $(TESTCASE_DIR)/%.main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o
-	@cc -g $^ -o $@
-
-$(TESTCASE_DIR)/%.main.o: main.c fdmjast.h fdmjast.c util.h util.c printast.h printast.c y.tab.h y.tab.c lex.yy.o y.tab.o main.c main.o fdmjast.o util.o printast.o
-	@cc -g -c main.c -o $@
-
-testgrammar : a.out
-	@./a.out <./tests/test01.fmj
-	@./a.out <./tests/test02.fmj
-	@./a.out <./tests/test03.fmj
-	@./a.out <./tests/test04.fmj
-	@./a.out <./tests/test05.fmj
-	@./a.out <./tests/test06.fmj
-	@./a.out <./tests/test07.fmj
-	@./a.out <./tests/test08.fmj
-	@./a.out <./tests/test09.fmj
-	@./a.out <./tests/test10.fmj
+check.out:
+	@ g++ check.cpp -o check.out
 
 a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o
 	@cc -g main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o -o a.out
@@ -70,7 +52,7 @@ y.output:
 	yacc -v parser.yacc
 
 clean: 
-	@rm -f a.out b.out lex.yy.o lex.yy.c y.tab.o y.tab.c y.tab.h util.o fdmjast.o complier.o interpreter.o main.ll out.ll lib.ll printast.o y.output main.o
+	@rm -f a.out b.out lex.yy.o lex.yy.c y.tab.o y.tab.c y.tab.h util.o fdmjast.o complier.o interpreter.o main.ll out.ll lib.ll printast.o y.output main.o check.out
 
 
 

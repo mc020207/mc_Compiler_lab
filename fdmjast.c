@@ -205,7 +205,7 @@ A_stm A_Putarray(A_pos pos, A_exp e1, A_exp e2) {
     s->pos=pos;
     s->kind=A_putarray;
     s->u.putarray.e1=e1;
-    s->u.putarray.e2=e1;
+    s->u.putarray.e2=e2;
     return s;
 }
 

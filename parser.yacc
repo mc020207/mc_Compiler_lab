@@ -108,7 +108,7 @@ METHODDECLLIST : METHODDECL METHODDECLLIST
 
 FORMALLIST : TYPE ID FORMALRESTLIST
     {
-        
+        $$=A_FormalList(A_Formal($1->pos,$1,$2->u.v),$3);
     }
     |
     {
@@ -117,7 +117,7 @@ FORMALLIST : TYPE ID FORMALRESTLIST
 
 FORMALRESTLIST : FORMALREST FORMALRESTLIST
     {
-
+        $$=A_FormalList($1,$2);
     }
     |
     {
@@ -126,7 +126,7 @@ FORMALRESTLIST : FORMALREST FORMALRESTLIST
     
 FORMALREST : ',' TYPE ID
     {
-
+        $$=A_Formal($1,$2,$3->u.v);
     }
 
 VARDECLLIST : VARDECL VARDECLLIST
@@ -140,7 +140,7 @@ VARDECLLIST : VARDECL VARDECLLIST
 
 EXPLIST : EXP EXPRESTLIST
     {
-        
+        $$=A_ExpList($1, $2);
     }
     |
     {
@@ -149,7 +149,7 @@ EXPLIST : EXP EXPRESTLIST
 
 EXPRESTLIST : EXPREST EXPRESTLIST
     {
-        
+        $$=A_ExpList($1, $2);
     }
     |
     {
@@ -158,7 +158,7 @@ EXPRESTLIST : EXPREST EXPRESTLIST
     
 EXPREST : ',' EXP
     {
-
+        $$=$2;
     }
 
 NUMBERLIST : NUMBER NUMBERRESTLIST
@@ -191,92 +191,92 @@ MAINMETHOD : PUBLIC INT MAIN '(' ')' '{' VARDECLLIST STMLIST '}'
 
 CLASSDECL : PUBLIC CLASS ID EXTENDS ID '{' VARDECLLIST METHODDECLLIST '}'
     {   
-        
+        $$=A_ClassDecl($1, $3->u.v, $5->u.v, $7, $8);
     }
     |
     PUBLIC CLASS ID '{' VARDECLLIST METHODDECLLIST '}'
     {
-
+        $$=A_ClassDecl($1, $3->u.v, NULL , $5 , $6);
     }
 
 VARDECL : CLASS ID ID ';'
     {
-
+        $$=A_VarDecl($1, A_Type($1,A_idType,$2->u.v), $3->u.v, NULL);
     }
     |
     INT ID ';'
     {
-
+        $$=A_VarDecl($1, A_Type($1,A_intType,NULL), $2->u.v, NULL);
     }
     |
     INT ID '=' NUMBER ';'
     {
-
+        $$=A_VarDecl($1, A_Type($1,A_intType,NULL), $2->u.v, A_ExpList($4,NULL));
     }
     |
     INT '[' ']' ID ';'
     {
-
+        $$=A_VarDecl($1, A_Type($1,A_intArrType,NULL), $4->u.v, NULL);
     }
     |
     INT '[' ']' ID '=' '{' NUMBERLIST '}' ';'
     {
-        
+        $$=A_VarDecl($1, A_Type($1,A_intArrType,NULL), $4->u.v, $7);
     }
 
 METHODDECL : PUBLIC TYPE ID '(' FORMALLIST ')' '{' VARDECLLIST STMLIST '}'
     {
-
+        $$=A_MethodDecl($1, $2, $3->u.v, $5, $8, $9);
     }
 
 TYPE : CLASS ID
     {
-
+        $$=A_Type($1,A_idType,$2->u.v);
     }
     |
     INT
     {
-
+        $$=A_Type($1,A_intType,NULL);
     }
     |
     INT '[' ']'
     {
-        
+        $$=A_Type($1,A_intArrType,NULL);
     }
 
 NUMBER : NUM
     {
-
+        $$=$1;
     }
     |
     OP_MINUS NUM
     {
-
+        $$=A_NumConst($1,-$2->u.num);
     }
 
 STM : '{' STMLIST '}'
     {
-        
+        $$=A_NestedStm($1,$2);
     }
     |
     IF '(' EXP ')' STM ELSE STM
     {
-
+        $$=A_IfStm($1,$3,$5,$7);
     }
     |
     IF '(' EXP ')' STM
     {
-
+        $$=A_IfStm($1,$3,$5,NULL);
     }
     |
     WHILE '(' EXP ')' STM 
     {
-        
+        $$=A_WhileStm($1,$3,$5);
     }
     |
     WHILE '(' EXP ')' ';'
     {
-
+        $$=A_WhileStm($1,$3,NULL);
     }
     |
     EXP '=' EXP ';'
@@ -291,27 +291,27 @@ STM : '{' STMLIST '}'
     | */
     EXP '[' ']' '=' '{' EXPLIST '}' ';'
     {
-
+        $$=A_ArrayInit($1->pos,$1, $6); 
     }
     |
     EXP '.' ID '(' EXPLIST ')' ';'
     {
-
+        $$=A_CallStm($1->pos,$1,$3->u.v,$5);
     }
     |
     CONTINUE ';'
     {
-
+        $$=A_Continue($1);
     }
     |
     BREAK ';'
     {
-
+        $$=A_Break($1);
     }
     |
     RETURN EXP ';'
     {
-
+        $$=A_Return($1,$2);
     }
     |
     PUTINT '(' EXP ')' ';'
@@ -326,17 +326,17 @@ STM : '{' STMLIST '}'
     |
     PUTARRAY '(' EXP ',' EXP ')' ';'
     {
-
+        $$=A_Putarray($1,$3,$5);
     }
     |
     STARTTIME '(' ')' ';'
     {
-
+        $$=A_Starttime($1);
     }
     |
     STOPTIME  '(' ')' ';'
     {
-
+        $$=A_Stoptime($1);
     }
 
 EXP : EXP OP_PLUS EXP
@@ -361,60 +361,64 @@ EXP : EXP OP_PLUS EXP
     |
     EXP OP_LESS EXP
     {
-        
+        $$=A_OpExp($1->pos,$1,A_less,$3);
     }
     |
     EXP OP_LE EXP
     {
-        
+        $$=A_OpExp($1->pos,$1,A_le,$3);
     }
     |
     EXP OP_GREAT EXP
     {
-        
+        $$=A_OpExp($1->pos,$1,A_great,$3);
     }
     |
     EXP OP_GE EXP
     {
-        
+        $$=A_OpExp($1->pos,$1,A_ge,$3);
     }
     |
     EXP OP_EQ EXP
     {
-        
+        $$=A_OpExp($1->pos,$1,A_eq,$3);
     }
     |
     EXP OP_NEQ EXP
     {
-        
+        $$=A_OpExp($1->pos,$1,A_neq,$3);
     }
     |
     EXP OP_OR EXP
     {
-        
+        $$=A_OpExp($1->pos,$1,A_or,$3);
     }
     |
     EXP OP_AND EXP
     {
-        
+        $$=A_OpExp($1->pos,$1,A_and,$3);
     }
     |
     EXP '[' EXP ']'
     {
-
+        $$=A_ArrayExp($1->pos,$1,$3);
     }
     |
     EXP '.' ID '(' EXPLIST ')'
-    {
-
+    {   
+        $$=A_CallExp($1->pos,$1,$3->u.v,$5);
     }
     |
     EXP '.' ID
-    
     {
-
+        $$=A_ClassVarExp($1->pos,$1,$3->u.v,NULL);
     }
     |
+    /* EXP '.' ID '[' EXP ']'
+    {
+        $$=A_ClassVarExp($1->pos,$1,$3->u.v,$5);
+    }
+    | */
     NUM
     {
         $$=$1;
@@ -422,17 +426,17 @@ EXP : EXP OP_PLUS EXP
     |
     TTRUE 
     {
-
+        $$=A_BoolConst($1,TRUE);
     }
     |
     FFALSE
     {
-
+        $$=A_BoolConst($1,FALSE);
     }
     |
     LENGTH '(' EXP ')'
     {
-
+        $$=A_LengthExp($1,$3);
     }
     |
     ID
@@ -442,22 +446,22 @@ EXP : EXP OP_PLUS EXP
     |
     THIS
     {
-
+        $$=A_ThisExp($1);
     }
     |
     NEW INT '[' EXP ']'
     {
-
+        $$=A_NewIntArrExp($1,$4);
     }
     |
     NEW ID '('  ')' 
     {
-
+        $$=A_NewObjExp($1,$2->u.v);
     }
     |
     '!' EXP 
     {
-
+        $$=A_NotExp($1,$2);
     }
     |
     OP_MINUS EXP %prec UMINUS
@@ -467,6 +471,7 @@ EXP : EXP OP_PLUS EXP
     |
     '(' EXP ')'
     {
+        $2->pos=$1;
         $$=$2;
     }
     |
@@ -478,17 +483,17 @@ EXP : EXP OP_PLUS EXP
     |
     GETINT '(' ')'
     {
-        
+        $$=A_Getint($1);
     }
     |
     GETCH '(' ')'
     {
-        
+        $$=A_Getch($1);
     }
     |
     GETARRAY '(' EXP ')'
     {
-
+        $$=A_Getarray($1,$3);
     }
 %%
 

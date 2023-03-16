@@ -5,6 +5,7 @@
         "iostream": "cpp",
         "slp.h": "c",
         "print_slp.h": "c",
-        "libsysy.h": "c"
+        "libsysy.h": "c",
+        "ostream": "cpp"
     }
 }

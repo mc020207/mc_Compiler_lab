@@ -10,7 +10,7 @@ extern int yyparse();
 
 int main(int argc, const char * argv[]) {
     yyparse();
-    // printA_Prog(stdout, root);
-    printf("OK!\n");
+    printA_Prog(stdout, root);
+    // printf("OK!\n");
     return 0;
 }
