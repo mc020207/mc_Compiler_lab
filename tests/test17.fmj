@@ -1,0 +1,17 @@
+public int main () {
+int[] a;
+a=new int[10+2];
+a[2]=80;
+if (true)
+{
+}
+else
+{
+}
+return a[9];
+}
+public class c1 {
+int[] i1={2, 3};
+public int m1() {
+}
+}

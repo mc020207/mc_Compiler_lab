@@ -1,0 +1,9 @@
+public int main () {
+return new c1().i1[1];
+}
+public class c1 {
+int[] i1={2, 3, 4};
+public int fun() {
+return a[9];
+}
+}

@@ -1,0 +1,16 @@
+public int main () {
+int[] a;
+class c1 cv;
+a=new int[10+2];
+a[2]=80;
+if (a[0]<1)
+new c1().m1();
+return a[9];
+}
+public class c1 {
+int[] i1={2, 3};
+public int m1(int x) {
+i1[1]=x;
+return x;
+}
+}
