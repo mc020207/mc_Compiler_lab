@@ -30,7 +30,7 @@ int main(int argc,char *argv[]){
     string s,t,x;
     while (fa>>x) s+=x;
     while (fb>>x) t+=x;
-    if (!comp(s,t)){
+    if (!comp(s,t)&&!comp(t,s)){
         cout<<s<<endl<<t<<endl;
         clog<<argv[1]<<" "<<"False"<<endl;
     }else{

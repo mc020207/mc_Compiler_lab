@@ -371,7 +371,7 @@ EXP : EXP OP_PLUS EXP
     |
     EXP OP_GREAT EXP
     {
-        $$=A_OpExp($1->pos,$1,A_great,$3);
+        $$=A_OpExp($1->pos,$1,A_greater,$3);
     }
     |
     EXP OP_GE EXP
@@ -386,7 +386,7 @@ EXP : EXP OP_PLUS EXP
     |
     EXP OP_NEQ EXP
     {
-        $$=A_OpExp($1->pos,$1,A_neq,$3);
+        $$=A_NotExp($1->pos,A_OpExp($1->pos,$1,A_eq,$3));
     }
     |
     EXP OP_OR EXP
