@@ -386,7 +386,7 @@ EXP : EXP OP_PLUS EXP
     |
     EXP OP_NEQ EXP
     {
-        $$=A_NotExp($1->pos,A_OpExp($1->pos,$1,A_eq,$3));
+        $$=A_OpExp($1->pos,$1,A_ne,$3);
     }
     |
     EXP OP_OR EXP

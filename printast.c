@@ -484,6 +484,7 @@ void printA_OpExp(FILE *out, A_exp e) {
     case A_greater: fprintf(out, ">"); break;
     case A_ge: fprintf(out, ">="); break;
     case A_eq: fprintf(out, "=="); break;
+    case A_ne: fprintf(out, "!="); break;
     case A_plus: fprintf(out, "+"); break;
     case A_minus: fprintf(out, "-"); break;
     case A_times: fprintf(out, "*"); break;
