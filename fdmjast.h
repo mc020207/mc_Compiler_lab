@@ -135,7 +135,9 @@ struct A_stm_ {
         } while_stat;
         struct {
             A_exp arr; //left must be a location for an array type
-            A_exp pos; //array position
+            // A_exp pos; //array position /* March 20, 2023
+            // This is redundant due to erasure of redundant 
+            // rule in the grammar */
             A_exp value;
         } assign;
         struct {
@@ -210,7 +212,9 @@ struct A_exp_ {
         struct {
                 A_exp obj; //this must evaluate to object
                 string var; //this is the name of the variable
-                A_exp arrpos; //this is for the array position (if it's array)
+                // A_exp arrpos; //this is for the array position (if it's array)
+                // March 20, 2023. Tthis is redundant due to erasure of 
+                // redundant rule in the grammar.
         } classvar;
         struct {
                 A_stmList ns;
@@ -245,7 +249,7 @@ A_stmList A_StmList(A_stm, A_stmList);
 A_stm A_NestedStm(A_pos, A_stmList);
 A_stm A_IfStm(A_pos, A_exp, A_stm, A_stm);//if the second A_stm is not empty, then there is an else part
 A_stm A_WhileStm(A_pos, A_exp, A_stm);
-A_stm A_AssignStm(A_pos, A_exp, A_exp, A_exp); //if second A_exp is not empty, then it's array position assignment
+A_stm A_AssignStm(A_pos, A_exp, A_exp); // Updated March 20, 2023. Removed second exp: OLD: if second A_exp is not empty, then it's array position assignment
 A_stm A_ArrayInit(A_pos, A_exp, A_expList); 
 A_stm A_CallStm(A_pos, A_exp, string, A_expList);
 A_stm A_Continue(A_pos);
@@ -261,7 +265,7 @@ A_expList A_ExpList(A_exp, A_expList);
 A_exp A_OpExp(A_pos, A_exp, A_binop, A_exp);
 A_exp A_ArrayExp(A_pos, A_exp, A_exp);
 A_exp A_CallExp(A_pos, A_exp, string, A_expList);
-A_exp A_ClassVarExp(A_pos, A_exp, string, A_exp);
+A_exp A_ClassVarExp(A_pos, A_exp, string); // Updated March 20, 2023. Remove pos
 A_exp A_NumConst(A_pos, int);
 A_exp A_BoolConst(A_pos, bool);
 A_exp A_LengthExp(A_pos, A_exp);

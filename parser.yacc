@@ -281,7 +281,7 @@ STM : '{' STMLIST '}'
     |
     EXP '=' EXP ';'
     {
-        $$=A_AssignStm($1->pos,$1,NULL,$3);
+        $$=A_AssignStm($1->pos,$1,$3);
     }  
     |
     /* EXP '[' EXP ']' '=' EXP ';'
@@ -411,7 +411,7 @@ EXP : EXP OP_PLUS EXP
     |
     EXP '.' ID
     {
-        $$=A_ClassVarExp($1->pos,$1,$3->u.v,NULL);
+        $$=A_ClassVarExp($1->pos,$1,$3->u.v);
     }
     |
     /* EXP '.' ID '[' EXP ']'

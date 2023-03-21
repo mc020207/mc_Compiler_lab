@@ -275,11 +275,13 @@ void printA_AssignStm(FILE *out, A_stm s) {
     if (s->kind != A_assignStm) fprintf(out, "Not an assign stm!\n");
     else {
         printA_Exp(out, s->u.assign.arr);
+/* March 20, 2023. Remove redundant grammar rule.. hence the ast struct
         if (s->u.assign.pos) { //this is an array position 
           fprintf(out, "[");
           printA_Exp(out, s->u.assign.pos);
           fprintf(out, "]");
         }
+*/
         fprintf(out, "=");
         printA_Exp(out, s->u.assign.value); 
         fprintf(out, ";\n");
@@ -534,11 +536,13 @@ void printA_ClassVarExp(FILE *out, A_exp e) {
     else {
        printA_Exp(out, e->u.classvar.obj);
        fprintf(out, ".%s", e->u.classvar.var);
+/* remove redundant arrpos. March 20, 2023 
        if (e->u.classvar.arrpos!=NULL) {
 	  fprintf(out, "[");
           printA_Exp(out, e->u.classvar.arrpos);
           fprintf(out, "]");
        }
+*/
     }
     return;
 }

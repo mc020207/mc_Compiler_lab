@@ -133,12 +133,24 @@ A_stm A_WhileStm(A_pos pos, A_exp e, A_stm ws) {
     return s;
 }
 
+/* March 20, 2023 redundant grammar rule removed: erase array_pos
 A_stm A_AssignStm(A_pos pos, A_exp arr, A_exp array_pos, A_exp value) {
     A_stm s=checked_malloc(sizeof(*s));
     s->pos=pos;
     s->kind=A_assignStm;
     s->u.assign.arr=arr;
     s->u.assign.pos=array_pos;
+    s->u.assign.value=value;
+    return s;
+}
+*/
+
+// March 20, 2023. updated 
+A_stm A_AssignStm(A_pos pos, A_exp arr, A_exp value) {
+    A_stm s=checked_malloc(sizeof(*s));
+    s->pos=pos;
+    s->kind=A_assignStm;
+    s->u.assign.arr=arr;
     s->u.assign.value=value;
     return s;
 }
@@ -252,6 +264,8 @@ A_exp A_CallExp(A_pos pos, A_exp obj, string fun, A_expList el) {
     return e;
 }
 
+// March 20, 2023. Remove redundant grammar rule, hence redunant ast struct
+/*
 A_exp A_ClassVarExp(A_pos pos, A_exp obj, string var, A_exp arrpos) {
     A_exp e=checked_malloc(sizeof(*e));
     e->pos=pos;
@@ -261,6 +275,17 @@ A_exp A_ClassVarExp(A_pos pos, A_exp obj, string var, A_exp arrpos) {
     e->u.classvar.arrpos=arrpos;
     return e;
 }
+*/
+
+A_exp A_ClassVarExp(A_pos pos, A_exp obj, string var) {
+    A_exp e=checked_malloc(sizeof(*e));
+    e->pos=pos;
+    e->kind=A_classVarExp;
+    e->u.classvar.obj=obj;
+    e->u.classvar.var=var;
+    return e;
+}
+
 
 A_exp A_NumConst(A_pos pos, int i) {
     A_exp e=checked_malloc(sizeof(*e));
