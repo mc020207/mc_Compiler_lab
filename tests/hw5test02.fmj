@@ -1,0 +1,7 @@
+public int main() {
+    int [] a={1,2};
+    int a;
+    a=2;
+    return a[0];
+}
+

@@ -1,3 +1,0 @@
-public int main() {
-    putint(10000000);
-}
