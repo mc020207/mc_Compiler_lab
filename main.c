@@ -356,7 +356,7 @@ int main(int argc, const char * argv[]) {
     yyparse();
     t=S_empty();
     typeCheckProg(root);
-    printA_Prog(stdout, root);
+    // printA_Prog(stdout, root);
     printf("PASS!\n");
     return 0;
 }
