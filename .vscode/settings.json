@@ -6,6 +6,7 @@
         "slp.h": "c",
         "print_slp.h": "c",
         "libsysy.h": "c",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "assert.h": "c"
     }
 }

@@ -10,18 +10,13 @@ LLFILES = $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.ll,$(TESTCASES))
 .SECONDARY: $(LLFILES)
 runcomp: $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.output,$(TESTCASES)) clean
 
-$(TESTCASE_DIR)/%.output: $(TESTCASE_DIR)/%.fmj a.out check.out
-	@./a.out < $(word 1,$^) > $@
-	@./check.out $(word 1,$^) $@
-	@rm -rf $@
+$(TESTCASE_DIR)/%.output: $(TESTCASE_DIR)/%.fmj a.out
+	./a.out < $(word 1,$^) > $@
 
-check.out:
-	@ g++ check.cpp -o check.out
+a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o
+	@cc -g main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o -o a.out
 
-a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o
-	@cc -g main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o -o a.out
-
-main.o: main.c fdmjast.h fdmjast.c util.h util.c printast.h printast.c y.tab.h y.tab.c lex.yy.o y.tab.o main.c main.o fdmjast.o util.o printast.o
+main.o: main.c fdmjast.h fdmjast.c util.h util.c printast.h printast.c y.tab.h y.tab.c lex.yy.o y.tab.o main.c main.o fdmjast.o util.o printast.o table.o types.o symbol.o
 	@cc -g -c main.c -o main.o
 
 lex.yy.c: lexer.lex y.tab.h y.tab.c
@@ -35,6 +30,13 @@ y.tab.h: parser.yacc
 
 fdmjast.o: fdmjast.c fdmjast.h util.h
 	@cc -g -c fdmjast.c
+
+types.o: types.c
+
+table.o: table.c
+	gcc -c -w -o table.o table.c
+
+symbol.o: symbol.c
 
 util.o: util.c util.h
 	@cc -g -c util.c
@@ -52,7 +54,7 @@ y.output:
 	yacc -v parser.yacc
 
 clean: 
-	@rm -f a.out b.out lex.yy.o lex.yy.c y.tab.o y.tab.c y.tab.h util.o fdmjast.o complier.o interpreter.o main.ll out.ll lib.ll printast.o y.output main.o check.out
+	@rm -f a.out b.out lex.yy.o lex.yy.c y.tab.o y.tab.c y.tab.h util.o fdmjast.o complier.o interpreter.o main.ll out.ll lib.ll printast.o y.output main.o check.out table.o types.o symbol.o
 
 
 
