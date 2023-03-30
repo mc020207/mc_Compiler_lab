@@ -12,7 +12,7 @@ runcomp: $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.output,$(TESTCASES))
 
 $(TESTCASE_DIR)/%.output: $(TESTCASE_DIR)/%.fmj a.out
 	@echo test $*
-	@./a.out < $(word 1,$^)
+	@./a.out < $(word 1,$^) >$@
 
 a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o
 	@cc -g main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o -o a.out

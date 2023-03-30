@@ -36,9 +36,9 @@ void typeCheckMainMethod(A_mainMethod x);
 void typeCheckProg(A_prog root);
 node typeCheckExp(A_exp x){
     node ans;
+    ans.location=0;
+    ans.value=Ty_Nil();
     if (x==NULL){
-        ans.location=0;
-        ans.value=Ty_Nil();
         return ans;
     }
     switch (x->kind){
@@ -149,7 +149,7 @@ node typeCheckExp(A_exp x){
         }
         case A_getch:{
             ans.location=0;
-            ans.value=Ty_String();
+            ans.value=Ty_Int();
             break;
         }
         case A_getarray:{
@@ -288,7 +288,7 @@ void typeCheckStm(A_stm x){
         }
         case A_putch:{
             node t1=typeCheckExp(x->u.e);
-            if (t1.value->kind!=Ty_string){
+            if (t1.value->kind!=Ty_int){
                 printError(x->u.e->pos,"the EXP does not have an string value");
             }
             break;
