@@ -10,6 +10,7 @@ S_table classtable; // save class type in it , key:className Value:S_table{Var/m
 S_table extends;    // save className and its treenode pointer key:calssName value:tree
 S_table classPos;   // save className and their struct
 Ty_ty returnType;
+A_classDecl nowclass;
 typedef struct node{
     bool location;
     Ty_ty value;
@@ -22,10 +23,13 @@ typedef struct tree_{
     bool finish;
 }tree_;
 node typeCheckExp(A_exp x);
-node typeCheckExpList(A_expList x,A_formalList l,bool intlist);
+node typeCheckExpList(A_expList x,Ty_fieldList l,bool intlist);
 void typeCheckStmList(A_stmList x);
 void typeCheckStm(A_stm x);
-void typeCheckClassDecl(A_classDeclList list);
+void typeCheckMethodDecl(A_methodDecl x);
+void typeCheckMethodDeclList(A_methodDeclList list);
+void typeCheckClassDecl(A_classDecl x);
+void typeCheckClassDeclList(A_classDeclList list);
 void typeCheckVarDecl(A_varDecl x,S_table table);
 void typeCheckVarDeclList(A_varDeclList x,S_table table);
 void typeCheckMainMethod(A_mainMethod x);

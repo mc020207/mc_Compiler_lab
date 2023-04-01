@@ -40,9 +40,38 @@ node typeCheckExp(A_exp x){
             break;
         }
         case A_callExp:{
+            node t1=typeCheckExp(x->u.call.obj);
+            if (t1.value->kind!=Ty_name){
+                printError(x->pos,"the EXP does not have a class value");
+            }
+            S_table table=S_look(classtable,t1.value->u.name.sym);
+            Ty_ty ty=S_look(table,S_Symbol(x->u.call.fun));
+            if (ty==NULL){
+                printError(x->pos,"the class does not have this fuction");
+            }
+            else if (ty->kind!=Ty_record){
+                printError(x->pos,"it is a Var name in this class");
+            }
+            ans.location=0;
+            ans.value=ty->u.record->head->ty;
+            typeCheckExpList(x->u.call.el,ty->u.record->tail,0);
             break;
         }
         case A_classVarExp:{
+            node t1=typeCheckExp(x->u.classvar.obj);
+            if (t1.value->kind!=Ty_name){
+                printError(x->pos,"the EXP does not have a class value");
+            }
+            S_table table=S_look(classtable,t1.value->u.name.sym);
+            Ty_ty ty=S_look(table,S_Symbol(x->u.call.fun));
+            if (ty==NULL){
+                printError(x->pos,"the class does not have this Var");
+            }
+            else if (ty->kind==Ty_record){
+                printError(x->pos,"it is a fuction name in this class");
+            }
+            ans.location=1;
+            ans.value=ty;
             break;
         }
         case A_boolConst:{
@@ -65,7 +94,11 @@ node typeCheckExp(A_exp x){
             break;
         }
         case A_thisExp:{
-            
+            ans.location=0;
+            if(nowclass==NULL){
+                printError(x->pos,"can not use \'this\' in mainmethod");
+            }
+            ans.value=Ty_Name(S_Symbol(nowclass->id),Ty_Nil());
             break;
         }
         case A_lengthExp:{
@@ -87,7 +120,11 @@ node typeCheckExp(A_exp x){
             break;
         }
         case A_newObjExp:{
-            
+            ans.location=0;
+            if (S_look(classtable,S_Symbol(x->u.v))==NULL){
+                printError(x->pos,"does not have this kind of class");
+            }
+            ans.value=Ty_Name(S_Symbol(x->u.v),Ty_Nil());
             break;
         }
         case A_notExp:{
@@ -138,7 +175,7 @@ node typeCheckExp(A_exp x){
     }
     return ans;
 }
-node typeCheckExpList(A_expList x,A_formalList l,bool intlist){
+node typeCheckExpList(A_expList x,Ty_fieldList l,bool intlist){
     node ans;ans.location=0;
     if (intlist){
         if (!x){
@@ -157,7 +194,18 @@ node typeCheckExpList(A_expList x,A_formalList l,bool intlist){
             ans.value=Ty_Array(t1.value);
         }
     }else{
-
+        if (x==NULL&&l==NULL) return ans;
+        node t1=typeCheckExp(x->head);
+        if (t1.value->kind!=l->head->ty->kind){
+            printError(x->head->pos,"the parameter list mismatch");
+        }
+        if (t1.value->kind==Ty_name&&t1.value->u.name.sym!=l->head->ty->u.name.sym){
+            printError(x->head->pos,"the parameter list mismatch");
+        }
+        if ((x->tail==NULL&&l->tail)||(x->tail&&l->tail==NULL)){
+            printError(x->head->pos,"the parameter list mismatch");
+        }
+        typeCheckExpList(x->tail,l->tail,0);
     }
     return ans;
 }
@@ -220,7 +268,19 @@ void typeCheckStm(A_stm x){
             break;
         }
         case A_callStm:{
-
+            node t1=typeCheckExp(x->u.call_stat.obj);
+            if (t1.value->kind!=Ty_name){
+                printError(x->pos,"the EXP does not have a class value");
+            }
+            S_table table=S_look(classtable,t1.value->u.name.sym);
+            Ty_ty ty=S_look(table,S_Symbol(x->u.call_stat.fun));
+            if (ty==NULL){
+                printError(x->pos,"the class does not have this fuction");
+            }
+            else if (ty->kind!=Ty_record){
+                printError(x->pos,"it is a Var name in this class");
+            }
+            typeCheckExpList(x->u.call_stat.el,ty->u.record->tail,0);
             break;
         }
         case A_continue:{
@@ -275,8 +335,61 @@ void typeCheckStm(A_stm x){
         }
     }
 }
-void typeCheckClassDecl(A_classDeclList list){
-    
+void typeCheckMethodDecl(A_methodDecl x){
+    if (t) free(t);
+    t=S_empty();
+    switch (x->t->t){
+        case A_intType:{
+            returnType=Ty_Int();
+            break;
+        } 
+        case A_idType:{
+            returnType=Ty_Name(S_Symbol(x->t->id),Ty_Nil());
+            break;
+        } 
+        case A_intArrType:{
+            returnType=Ty_Array(Ty_Int());
+            break;
+        }
+    }
+    A_formalList list=x->fl;
+    for (;list;list=list->tail){
+        A_formal now=list->head;
+        if (S_look(t,S_Symbol(now->id))){
+            printError(now->pos,"this id has been defined");
+        }
+        Ty_ty value;
+        switch (now->t->t){
+            case A_intType:{
+                S_enter(t,S_Symbol(now->id),Ty_Int());
+                break;
+            } 
+            case A_idType:{
+                S_enter(t,S_Symbol(now->id),Ty_Name(S_Symbol(now->t->id),Ty_Nil()));
+                break;
+            } 
+            case A_intArrType:{
+                S_enter(t,S_Symbol(now->id),Ty_Array(Ty_Int()));
+                break;
+            }
+        }
+    }
+    typeCheckVarDeclList(x->vdl,t);
+    typeCheckStmList(x->sl);
+}
+void typeCheckMethodDeclList(A_methodDeclList list){
+    if (list==NULL) return ;
+    typeCheckMethodDecl(list->head);
+    typeCheckMethodDeclList(list->tail);
+}
+void typeCheckClassDecl(A_classDecl x){
+    nowclass=x;
+    typeCheckMethodDeclList(x->mdl);
+}
+void typeCheckClassDeclList(A_classDeclList list){
+    if (list==NULL) return ;
+    typeCheckClassDecl(list->head);
+    typeCheckClassDeclList(list->tail);
 }
 void typeCheckVarDecl(A_varDecl x,S_table table){
     if(S_look(table,S_Symbol(x->v))){
@@ -316,6 +429,7 @@ void typeCheckVarDeclList(A_varDeclList x,S_table table){
 }
 void typeCheckMainMethod(A_mainMethod x){
     returnType=Ty_Int();
+    nowclass=NULL;
     if (t) free(t);
     t=S_empty();
     typeCheckVarDeclList(x->vdl,t);
@@ -324,7 +438,7 @@ void typeCheckMainMethod(A_mainMethod x){
 void typeCheckProg(A_prog root){
     fillTable(root->cdl);
     solveExtendsList(root->cdl);
-    typeCheckClassDecl(root->cdl);
+    typeCheckClassDeclList(root->cdl);
     typeCheckMainMethod(root->m);
 }
 Ty_fieldList getTyFieldList(A_formalList list){
