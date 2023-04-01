@@ -14,10 +14,10 @@ $(TESTCASE_DIR)/%.output: $(TESTCASE_DIR)/%.fmj a.out
 	@echo test $*
 	@./a.out < $(word 1,$^) >$@
 
-a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o
-	@cc -g main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o -o a.out
+a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o typecheck.o
+	@cc -g $^ -o a.out
 
-main.o: main.c fdmjast.h fdmjast.c util.h util.c printast.h printast.c y.tab.h y.tab.c lex.yy.o y.tab.o main.c main.o fdmjast.o util.o printast.o table.o types.o symbol.o
+main.o: main.c fdmjast.h fdmjast.c util.h util.c printast.h printast.c y.tab.h y.tab.c lex.yy.o y.tab.o main.c main.o fdmjast.o util.o printast.o table.o types.o symbol.o typecheck.o
 	@cc -g -c main.c -o main.o
 
 lex.yy.c: lexer.lex y.tab.h y.tab.c
@@ -42,6 +42,9 @@ symbol.o: symbol.c
 util.o: util.c util.h
 	@cc -g -c util.c
 
+typecheck.o: typecheck.c typecheck.h
+	@cc -g -c typecheck.c
+
 lex.yy.o: lex.yy.c y.tab.h
 	@cc -g -c lex.yy.c
 
@@ -55,7 +58,7 @@ y.output:
 	yacc -v parser.yacc
 
 clean: 
-	@rm -f a.out b.out lex.yy.o lex.yy.c y.tab.o y.tab.c y.tab.h util.o fdmjast.o complier.o interpreter.o main.ll out.ll lib.ll printast.o y.output main.o check.out table.o types.o symbol.o
+	@rm -f a.out b.out lex.yy.o lex.yy.c y.tab.o y.tab.c y.tab.h util.o fdmjast.o complier.o interpreter.o main.ll out.ll lib.ll printast.o y.output main.o check.out table.o types.o symbol.o typecheck.o
 
 
 
