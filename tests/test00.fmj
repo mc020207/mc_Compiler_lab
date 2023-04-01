@@ -1,0 +1,6 @@
+public int main() { }
+
+public class C2 extends C1 {}
+public class C3 extends C2 {}
+public class C1 extends C0 {}
+public class C0 extends C3 {}

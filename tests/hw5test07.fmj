@@ -1,3 +1,0 @@
-public int main() {
-    return (new int[10])[1];
-}

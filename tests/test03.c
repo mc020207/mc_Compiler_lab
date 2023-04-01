@@ -32,7 +32,7 @@ return
             A_OpExp(A_Pos(6,32), A_EscExp(A_Pos(6,12), 
                 A_StmList(
                   A_AssignStm(A_Pos(6,18),
-                    A_ArrayExp(A_Pos(6,1), A_IdExp(A_Pos(6,14), String("a")), A_IdExp(A_Pos(6,16), String("i"))),
+                    A_ArrayExp(A_Pos(6,0), A_IdExp(A_Pos(6,14), String("a")), A_IdExp(A_Pos(6,16), String("i"))),
                     A_IdExp(A_Pos(6,19), String("i"))
                   ),
                   A_StmList(
@@ -50,11 +50,16 @@ return
           A_StmList(
             A_Putarray(A_Pos(7,5), 
               A_NumConst(A_Pos(7,14), 8),
-              A_ArrayExp(A_Pos(7,1), A_IdExp(A_Pos(7,16), String("a")), A_NumConst(A_Pos(7,18), 0))
+              A_IdExp(A_Pos(7,16), String("a"))
             ),
             A_StmList(
               A_Return(A_Pos(8,5),
-                A_ArrayExp(A_Pos(8,1), A_IdExp(A_Pos(8,12), String("a")), A_NumConst(A_Pos(8,14), 7))
+                A_CallExp(A_Pos(8,12),
+                  A_NewObjExp(A_Pos(8,12), String("c0")), String("m"), A_ExpList(
+                    A_NumConst(A_Pos(8,23), 0),
+                    NULL
+                  )
+                )
               ),
               NULL
             )
@@ -62,6 +67,39 @@ return
         )
       )
     ), // end of main class
-    NULL // end of A_ClassDeclList
+    A_ClassDeclList( // begin of A_ClassDeclList
+      A_ClassDecl(A_Pos(11,1),
+        String("c0"),
+        NULL,
+        NULL, // end of A_VarDeclList
+        NULL // end of A_MethodDeclList
+      ), // end of ClassDecl for c0 
+      A_ClassDeclList(
+        A_ClassDecl(A_Pos(12,1),
+          String("c1"),
+          String("c0"),
+          NULL, // end of A_VarDeclList
+          A_MethodDeclList( // begin of A_MethodDeclList
+            A_MethodDecl(A_Pos(13,5), // begin of MethodDecl for m
+              A_Type(A_Pos(13,12), A_idType, String("c1")),
+              String("m"),
+              A_FormalList(
+                A_Formal(A_Pos(13,23), A_Type(A_Pos(13,23), A_intType, NULL), String("x")),
+                NULL
+              ),
+              NULL, // end of A_VarDeclList
+              A_StmList(
+                A_Return(A_Pos(14,8),
+                  A_NewObjExp(A_Pos(14,15), String("c1"))
+                ),
+                NULL
+              )
+            ), // end of MethodDecl for m
+            NULL
+          ) // end of A_MethodDeclList
+        ), // end of ClassDecl for c1 
+        NULL
+      )
+    ) // end of A_ClassDeclList
   ); // end of Prog
 }

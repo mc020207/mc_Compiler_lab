@@ -1,6 +1,0 @@
-public int main() {
-    int[] a;
-    a=-1;
-    putint(a+1);
-    return a*3+2;
-}
