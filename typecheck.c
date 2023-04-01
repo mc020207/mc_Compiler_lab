@@ -1,5 +1,6 @@
 #include "typecheck.h"
 #include <stdlib.h>
+#include <string.h>
 void printError(A_pos pos,const char* message){
     printf("error on line %d and pos %d , %s\n",pos->line,pos->pos,message);
     exit(0);
@@ -322,7 +323,7 @@ void typeCheckMainMethod(A_mainMethod x){
 }
 void typeCheckProg(A_prog root){
     fillTable(root->cdl);
-    // solveextends(root->cdl);
+    solveExtendsList(root->cdl);
     typeCheckClassDecl(root->cdl);
     typeCheckMainMethod(root->m);
 }
@@ -349,7 +350,7 @@ Ty_fieldList getTyFieldList(A_formalList list){
 void filltableMethod(A_methodDecl x,S_table table){
     A_formalList now=checked_malloc(sizeof(*now));
     if (S_look(table,S_Symbol(x->id))){
-        printError(x->pos,"this id has been used");
+        printError(x->pos,"this function name has been used");
     }
     now->head=A_Formal(NULL,x->t,NULL);now->tail=x->fl;
     getTyFieldList(now);
@@ -363,6 +364,7 @@ void filltableMethodList(A_methodDeclList list,S_table table){
 void fillTable(A_classDeclList list){
     if (!list) return ;
     A_classDecl x=list->head;
+    S_enter(classPos,S_Symbol(x->id),x);
     if (S_look(classtable,S_Symbol(x->id))){
         printError(x->pos,"this class name has been used");
     }
@@ -371,17 +373,116 @@ void fillTable(A_classDeclList list){
     filltableMethodList(x->mdl,table);
     S_enter(classtable,S_Symbol(x->id),table);
     if (x->parentID){
-        tree fa=S_look(extends,S_Symbol(x->parentID));
-        if (!fa){
-            fa=checked_malloc(sizeof(*fa));
-            fa->fa=NULL;
-            fa->vs=0;
-            fa->finish=0;
-        }
         tree now=checked_malloc(sizeof(*now));
-        now->fa=fa;
+        now->faname=S_Symbol(x->parentID);
+        now->name=S_Symbol(x->id);
         now->vs=0;
         now->finish=0;
+        S_enter(extends,S_Symbol(x->id),now);
     }
     fillTable(list->tail);
+}
+void checkExistVarList(A_varDeclList list){
+    for (;list;list=list->tail){
+        A_varDecl x=list->head;
+        if (x->t->t==A_idType){
+            if (S_look(classtable,S_Symbol(x->t->id))==NULL){
+                printError(x->t->pos,"this class does not define");
+            }
+        }
+    }
+}
+void checkExistMethodList(A_methodDeclList list){
+    for (;list;list=list->tail){
+        A_methodDecl x=list->head;
+        if (x->t->t==A_idType){
+            if (S_look(classtable,S_Symbol(x->t->id))==NULL){
+                printError(x->t->pos,"this class does not define");
+            }
+        }
+        A_formalList flist=x->fl;
+        for (;flist;flist=flist->tail){
+            A_formal fnow=flist->head;
+            if (fnow->t->t==A_idType){
+                if (S_look(classtable,S_Symbol(fnow->t->id))==NULL){
+                    printError(fnow->t->pos,"this class does not define");
+                }
+            }
+        }
+    }
+}
+void solveExtendsList(A_classDeclList list){
+    if (!list) return ;
+    solveExtends(list->head);
+    solveExtendsList(list->tail);
+}
+void solveExtends(A_classDecl x){
+    if (x->parentID==NULL){
+        checkExistVarList(x->vdl);
+        checkExistMethodList(x->mdl);
+        return ;
+    }
+    tree now=S_look(extends,S_Symbol(x->id));
+    assert(now);
+    if (now->finish) return ;
+    if (now->vs){
+        printError(x->pos,"the extends relationship has circle");
+    }
+    now->vs=1;
+    checkExistVarList(x->vdl);
+    checkExistMethodList(x->mdl);
+    A_classDecl fa=S_look(classPos,now->faname);
+    assert(fa);
+    solveExtends(fa);
+    extendsTable(x,S_look(classtable,now->name),S_look(classtable,now->faname));
+    now->finish=1;
+}
+void extendsTable(A_classDecl x,S_table to,S_table from){
+    S_symbol key=from->top;
+    if (!key) return ;
+    Ty_ty ty=S_look(from,key);
+    addKey(x,to,key,ty);
+    TAB_pop(from);
+    extendsTable(x,to,from);
+    S_enter(from,key,ty);
+    // printf("enter %s\n",S_name(key));
+}
+void addKey(A_classDecl x,S_table to,S_symbol key,Ty_ty value){
+    Ty_ty ty1=S_look(to,key);
+    if (ty1==NULL){
+        S_enter(to,key,value);
+    }else{
+        Ty_ty ty2=value;
+        if (ty1->kind==Ty_record&&ty2->kind==Ty_record){
+            compareFuctions(x,ty1,ty2,S_name(key));
+        }else{
+            if (ty1->kind!=Ty_record) findVarList(x->vdl,S_name(key));
+            else findMethodList(x->mdl,S_name(key),"this id has been used in its father class");
+        }
+    }
+}
+void compareFuctions(A_classDecl x,Ty_ty t1,Ty_ty t2,string name){
+    Ty_fieldList list1=t1->u.record,list2=t2->u.record;
+    for (;list1&&list2;list1=list1->tail,list2=list2->tail){
+        Ty_ty ty1=list1->head->ty,ty2=list2->head->ty;
+        if (ty1->kind!=ty2->kind) findMethodList(x->mdl,name,"the signature of the fuction is different from father class");
+        if (ty1->kind==Ty_name&&ty1->u.name.sym!=ty2->u.name.sym) findMethodList(x->mdl,name,"the signature of the fuction is different from father class");
+    }
+    if (list1||list2) findMethodList(x->mdl,name,"the signature of the fuction is different from father class");
+}
+void findVarList(A_varDeclList list,string name){
+    for (;list;list=list->tail){
+        A_varDecl x=list->head;
+        if (strcmp(x->v,name)==0){
+            printError(x->pos,"this id has been used in its father class");
+        }
+    }
+}
+void findMethodList(A_methodDeclList list,string name,string message){
+    for (;list;list=list->tail){
+        A_methodDecl x=list->head;
+        if (strcmp(x->id,name)==0){
+            printError(x->pos,message);
+        }
+    }
 }

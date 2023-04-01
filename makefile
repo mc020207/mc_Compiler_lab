@@ -60,7 +60,8 @@ y.output:
 clean: 
 	@rm -f a.out b.out lex.yy.o lex.yy.c y.tab.o y.tab.c y.tab.h util.o fdmjast.o complier.o interpreter.o main.ll out.ll lib.ll printast.o y.output main.o check.out table.o types.o symbol.o typecheck.o
 
-
+clean2:
+	@rm -f ./tests/*.output
 
 
 

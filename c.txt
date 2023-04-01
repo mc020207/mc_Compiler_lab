@@ -13,7 +13,7 @@ public class c1 {
 
 public class c2 extends c1 {
     int i2;
-    public int m2(int x) {
+    public int m1(int x) {
         return (this.m1(x)).c1m1;
     }
 }

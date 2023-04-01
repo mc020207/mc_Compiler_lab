@@ -16,6 +16,7 @@ int main(int argc, const char * argv[]) {
     yyparse();
     classtable=S_empty();
     extends=S_empty();
+    classPos=S_empty();
     typeCheckProg(root);
     // printA_Prog(stdout, root);
     printf("PASS!\n");

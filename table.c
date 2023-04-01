@@ -7,14 +7,9 @@
 #include "util.h"
 #include "table.h"
 
-#define TABSIZE 127
 
-typedef struct binder_ *binder;
-struct binder_ {void *key; void *value; binder next; void *prevtop;};
-struct TAB_table_ {
-  binder table[TABSIZE];
-  void *top;
-};
+
+
 
 
 static binder Binder(void *key, void *value, binder next, void *prevtop)

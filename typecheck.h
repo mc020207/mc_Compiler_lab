@@ -8,6 +8,7 @@ S_table classtable; // save class type in it , key:className Value:S_table{Var/m
                     // when save fuction use a Ty_record.
                     // in Ty_fildlist ,the first Ty in the list is the returnType
 S_table extends;    // save className and its treenode pointer key:calssName value:tree
+S_table classPos;   // save className and their struct
 Ty_ty returnType;
 typedef struct node{
     bool location;
@@ -15,7 +16,8 @@ typedef struct node{
 }node;
 typedef struct tree_* tree;
 typedef struct tree_{
-    tree fa;
+    S_symbol name;
+    S_symbol faname;
     bool vs;
     bool finish;
 }tree_;
@@ -29,3 +31,10 @@ void typeCheckVarDeclList(A_varDeclList x,S_table table);
 void typeCheckMainMethod(A_mainMethod x);
 void typeCheckProg(A_prog root);
 void fillTable(A_classDeclList list);
+void solveExtendsList(A_classDeclList list);
+void solveExtends(A_classDecl x);
+void extendsTable(A_classDecl x,S_table to,S_table from);
+void addKey(A_classDecl x,S_table to,S_symbol key,Ty_ty value);
+void findMethodList(A_methodDeclList list,string name,string message);
+void findVarList(A_varDeclList list,string name);
+void compareFuctions(A_classDecl x,Ty_ty t1,Ty_ty t2,string name);
