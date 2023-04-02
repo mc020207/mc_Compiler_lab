@@ -196,12 +196,7 @@ node typeCheckExpList(A_expList x,Ty_fieldList l,bool intlist){
     }else{
         if (x==NULL&&l==NULL) return ans;
         node t1=typeCheckExp(x->head);
-        if (t1.value->kind!=l->head->ty->kind){
-            printError(x->head->pos,"the parameter list mismatch");
-        }
-        if (t1.value->kind==Ty_name&&t1.value->u.name.sym!=l->head->ty->u.name.sym){
-            printError(x->head->pos,"the parameter list mismatch");
-        }
+        checkTwoType(x->head->pos,"the parameter list mismatch",l->head->ty,t1.value);
         if ((x->tail==NULL&&l->tail)||(x->tail&&l->tail==NULL)){
             printError(x->head->pos,"the parameter list mismatch");
         }
@@ -245,9 +240,7 @@ void typeCheckStm(A_stm x){
             }
             node t2=typeCheckExp(x->u.assign.value);
             // must be changed if class_type appear
-            if (t1.value->kind!=t2.value->kind){
-                printError(x->pos,"assign Stm's two EXP have different type");
-            }
+            checkTwoType(x->pos,"assign Stm's two EXP have different type",t1.value,t2.value);
             break;
         }
         case A_arrayInit:{
@@ -294,9 +287,13 @@ void typeCheckStm(A_stm x){
         case A_return:{
             // if fuction can return void we shoule add special check there
             node t1=typeCheckExp(x->u.e);
-            if (t1.value->kind!=returnType->kind){
-                printError(x->pos,"return a wrong type value");
-            }
+            checkTwoType(x->pos,"return a wrong type",returnType,t1.value);
+            // if (t1.value->kind!=returnType->kind){
+            //     printError(x->pos,"return a wrong type value");
+            // }
+            // if (t1.value->kind==Ty_name&&t1.value->u.name.sym!=returnType->u.name.sym){
+            //     printError(x->pos,"return a wrong type value");
+            // }
             break;
         }
         case A_putint:{
@@ -598,5 +595,20 @@ void findMethodList(A_methodDeclList list,string name,string message){
         if (strcmp(x->id,name)==0){
             printError(x->pos,message);
         }
+    }
+}
+void checkTwoType(A_pos pos,string message,Ty_ty t1,Ty_ty t2){
+    if (t1->kind!=t2->kind){
+        printError(pos,message);
+    }
+    if (t1->kind==Ty_name){
+        S_symbol now=t2->u.name.sym;
+        while (1){
+            if (t1->u.name.sym==now) return ;
+            tree x=S_look(extends,now);
+            if (!x) break;
+            now=x->faname;
+        }
+        printError(pos,message);
     }
 }

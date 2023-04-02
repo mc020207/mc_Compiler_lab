@@ -42,3 +42,4 @@ void addKey(A_classDecl x,S_table to,S_symbol key,Ty_ty value);
 void findMethodList(A_methodDeclList list,string name,string message);
 void findVarList(A_varDeclList list,string name);
 void compareFuctions(A_classDecl x,Ty_ty t1,Ty_ty t2,string name);
+void checkTwoType(A_pos pos,string message,Ty_ty t1,Ty_ty t2);
