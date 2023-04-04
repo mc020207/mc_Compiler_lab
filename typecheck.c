@@ -551,7 +551,10 @@ void solveExtends(A_classDecl x){
     checkExistVarList(x->vdl);
     checkExistMethodList(x->mdl);
     A_classDecl fa=S_look(classPos,now->faname);
-    assert(fa);
+    if (fa==NULL){
+        printError(x->pos,"the extends class does not defined");
+    }
+    // assert(fa);
     solveExtends(fa);
     extendsTable(x,S_look(classtable,now->name),S_look(classtable,now->faname));
     now->finish=1;
