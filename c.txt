@@ -1,22 +1,22 @@
 public int main() {
-    class c2 x;
-    x=new c2();
+    class c2213 x;
+    x=new c1();
     x.i2=100;
-    return x.m2(new c1());
+    return x.m1(10).m2(0);
 }
 
 public class c1 {
     int c1m1;
-    public class c1 m1(class c1 x) {
-        this.c1m1=x.c1m1;
+    public class c1 m1(int x) {
+        this.c1m1=x;
         return this;
     }
 }
 
 public class c2 extends c1 {
-    int[] i2;
-    public int m2(class c1 c) {
-        return c.m1(this).c1m1;
+    int i2;
+    public int m2(int x) {
+        return (this.m1(x)).c1m1+this.i2;
     }
 }
 

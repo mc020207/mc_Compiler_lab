@@ -341,6 +341,9 @@ void typeCheckMethodDecl(A_methodDecl x){
             break;
         } 
         case A_idType:{
+            if (S_look(classPos,S_Symbol(x->t->id))==NULL){
+                printError(x->t->pos,"this class does not defined");
+            }
             returnType=Ty_Name(S_Symbol(x->t->id),Ty_Nil());
             break;
         } 
@@ -362,6 +365,9 @@ void typeCheckMethodDecl(A_methodDecl x){
                 break;
             } 
             case A_idType:{
+                if (S_look(classPos,S_Symbol(now->t->id))==NULL){
+                    printError(now->t->pos,"this class does not defined");
+                }
                 S_enter(t,S_Symbol(now->id),Ty_Name(S_Symbol(now->t->id),Ty_Nil()));
                 break;
             } 
@@ -372,6 +378,7 @@ void typeCheckMethodDecl(A_methodDecl x){
         }
     }
     typeCheckVarDeclList(x->vdl,t);
+    checkExistVarList(x->vdl);
     typeCheckStmList(x->sl);
 }
 void typeCheckMethodDeclList(A_methodDeclList list){
@@ -430,6 +437,7 @@ void typeCheckMainMethod(A_mainMethod x){
     if (t) free(t);
     t=S_empty();
     typeCheckVarDeclList(x->vdl,t);
+    checkExistVarList(x->vdl);
     typeCheckStmList(x->sl);
 }
 void typeCheckProg(A_prog root){
