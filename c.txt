@@ -1,22 +1,26 @@
 public int main() {
-    class c2213 x;
-    x=new c1();
-    x.i2=100;
-    return x.m1(10).m2(0);
+    int[] a; 
+    int[] aa={3, 4, 5};
+    class c1 cv;
+    int ix;
+    int iy=1000;
+
+    a=new int[10+2];
+    a[2]=80;
+    if (a[0]<1)
+        new c1().m1();
+    return a[9];
 }
 
 public class c1 {
-    int c1m1;
-    public class c1 m1(int x) {
-        this.c1m1=x;
-        return this;
-    }
-}
+    int[] i1={2, 3};
 
-public class c2 extends c1213 {
-    int i2;
-    public int m2(int x) {
-        return (this.m1(x)).c1m1+this.i2;
+    public int m1(int x) {
+        i1[1]=x;
+        while (a[0]<1) {
+            new c1().m1();
+        }
+        return this.i1[0];
     }
 }
 

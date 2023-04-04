@@ -54,7 +54,7 @@ node typeCheckExp(A_exp x){
             }
             ans.location=0;
             ans.value=ty->u.record->head->ty;
-            typeCheckExpList(x->u.call.el,ty->u.record->tail,0);
+            typeCheckExpList(x->u.call.el,ty->u.record->tail,0,x->pos);
             break;
         }
         case A_classVarExp:{
@@ -175,7 +175,7 @@ node typeCheckExp(A_exp x){
     }
     return ans;
 }
-node typeCheckExpList(A_expList x,Ty_fieldList l,bool intlist){
+node typeCheckExpList(A_expList x,Ty_fieldList l,bool intlist,A_pos pos){
     node ans;ans.location=0;
     if (intlist){
         if (!x){
@@ -186,7 +186,7 @@ node typeCheckExpList(A_expList x,Ty_fieldList l,bool intlist){
         if (t1.value->kind!=Ty_int){
             printError(x->head->pos,"the EXP does not have an integer value");
         }
-        node t2=typeCheckExpList(x->tail,NULL,1);
+        node t2=typeCheckExpList(x->tail,NULL,1,pos);
         ans.location=0;
         if (t2.value->kind==Ty_nil){
             ans.value=t1.value;
@@ -195,12 +195,13 @@ node typeCheckExpList(A_expList x,Ty_fieldList l,bool intlist){
         }
     }else{
         if (x==NULL&&l==NULL) return ans;
+        if ((x==NULL&&l) || (l==NULL && x)) printError(pos,"the parameter list mismatch");
         node t1=typeCheckExp(x->head);
         checkTwoType(x->head->pos,"the parameter list mismatch",l->head->ty,t1.value);
         if ((x->tail==NULL&&l->tail)||(x->tail&&l->tail==NULL)){
             printError(x->head->pos,"the parameter list mismatch");
         }
-        typeCheckExpList(x->tail,l->tail,0);
+        typeCheckExpList(x->tail,l->tail,0,pos);
     }
     return ans;
 }
@@ -254,7 +255,7 @@ void typeCheckStm(A_stm x){
             if (x->u.array_init.init_values==NULL){
                 break;
             }
-            node t2=typeCheckExpList(x->u.array_init.init_values,NULL,1);
+            node t2=typeCheckExpList(x->u.array_init.init_values,NULL,1,NULL);
             if (!(t2.value->kind==Ty_int||(t2.value->kind==Ty_array&&t2.value->u.array->kind==Ty_int))){
                 printError(x->u.array_init.init_values->head->pos,"the EXPLIST is not a intlist");
             }
@@ -273,7 +274,7 @@ void typeCheckStm(A_stm x){
             else if (ty->kind!=Ty_record){
                 printError(x->pos,"it is a Var name in this class");
             }
-            typeCheckExpList(x->u.call_stat.el,ty->u.record->tail,0);
+            typeCheckExpList(x->u.call_stat.el,ty->u.record->tail,0,x->pos);
             break;
         }
         case A_continue:{
@@ -402,7 +403,7 @@ void typeCheckVarDecl(A_varDecl x,S_table table){
     switch (x->t->t){
         case A_intType:{
             if (x->elist){
-                node t1=typeCheckExpList(x->elist,NULL,1);
+                node t1=typeCheckExpList(x->elist,NULL,1,NULL);
                 if (t1.value->kind!=Ty_int){
                     printError(x->elist->head->pos,"the EXP does not have an integer value");
                 }
@@ -416,7 +417,7 @@ void typeCheckVarDecl(A_varDecl x,S_table table){
         } 
         case A_intArrType:{
             if (x->elist){
-                node t1=typeCheckExpList(x->elist,NULL,1);
+                node t1=typeCheckExpList(x->elist,NULL,1,NULL);
                 if (!(t1.value->kind==Ty_int||(t1.value->kind==Ty_array&&t1.value->u.array->kind==Ty_int))){
                     printError(x->elist->head->pos,"the EXPLIST is not a intlist");
                 }
@@ -443,8 +444,8 @@ void typeCheckMainMethod(A_mainMethod x){
 void typeCheckProg(A_prog root){
     fillTable(root->cdl);
     solveExtendsList(root->cdl);
-    typeCheckClassDeclList(root->cdl);
     typeCheckMainMethod(root->m);
+    typeCheckClassDeclList(root->cdl);
 }
 Ty_fieldList getTyFieldList(A_formalList list){
     if (!list) return NULL;

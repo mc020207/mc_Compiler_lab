@@ -23,7 +23,7 @@ typedef struct tree_{
     bool finish;
 }tree_;
 node typeCheckExp(A_exp x);
-node typeCheckExpList(A_expList x,Ty_fieldList l,bool intlist);
+node typeCheckExpList(A_expList x,Ty_fieldList l,bool intlist,A_pos pos);
 void typeCheckStmList(A_stmList x);
 void typeCheckStm(A_stm x);
 void typeCheckMethodDecl(A_methodDecl x);
