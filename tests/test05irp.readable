@@ -1,0 +1,106 @@
+--A Function---
+FuncDecl(main,
+[ARGS:]
+NULL
+[STMS:]
+  SEQ(
+-[Stm#1]SEQ(
+   MOVE(
+    T_TEMP(t100),
+    CONST 0),
+-[Stm#2]   MOVE(
+    T_TEMP(t101),
+    CONST 1)),
+   SEQ(
+    SEQ(
+-[Stm#3]SEQ(
+   CJUMP(LT,
+    T_TEMP(t100),
+    CONST 0,
+    L0,L1),
+-[Stm#4]SEQ(
+   LABEL L1,
+-[Stm#5]   CJUMP(GT,
+    ESEQ(
+--[Stm#6]   MOVE(
+    T_TEMP(t100),
+    CONST 1)
+   T_TEMP(t101)),
+    CONST 1,
+    L0,L2))),
+     SEQ(
+-[Stm#7]SEQ(
+   LABEL L0,
+-[Stm#8]SEQ(
+   T_EXP(
+    T_ExtCALL(putint,
+      T_TEMP(t100))),
+-[Stm#9]   JUMP( L3))),
+      SEQ(
+-[Stm#10]SEQ(
+   LABEL L2,
+   SEQ(
+    SEQ(
+-[Stm#11]SEQ(
+   CJUMP(EQ,
+    T_TEMP(t100),
+    CONST 0,
+    L5,L6),
+-[Stm#12]SEQ(
+   LABEL L5,
+-[Stm#13]   CJUMP(EQ,
+    T_TEMP(t101),
+    CONST 1,
+    L4,L6))),
+     SEQ(
+-[Stm#14]SEQ(
+   LABEL L4,
+-[Stm#15]SEQ(
+   T_EXP(
+    T_ExtCALL(putint,
+      T_TEMP(t101))),
+-[Stm#16]   JUMP( L7))),
+-[Stm#17]SEQ(
+   LABEL L6,
+-[Stm#18]   LABEL L7))),
+    SEQ(
+-[Stm#19]SEQ(
+   LABEL L8,
+-[Stm#20]SEQ(
+   CJUMP(EQ,
+    T_TEMP(t100),
+    CONST 0,
+    L9,L10),
+-[Stm#21]SEQ(
+   LABEL L9,
+-[Stm#22]SEQ(
+   MOVE(
+    T_TEMP(t100),
+    ESEQ(
+--[Stm#23]SEQ(
+   CJUMP(GT,
+    T_TEMP(t101),
+    CONST 0,
+    L12,L11),
+   SEQ(
+--[Stm#24]SEQ(
+   LABEL L11,
+--[Stm#25]SEQ(
+   MOVE(
+    T_TEMP(t102),
+    CONST 1),
+--[Stm#26]   JUMP( L13))),
+    SEQ(
+--[Stm#27]SEQ(
+   LABEL L12,
+--[Stm#28]   MOVE(
+    T_TEMP(t102),
+    CONST 0)),
+--[Stm#29]   LABEL L13)))
+     T_TEMP(t102))),
+-[Stm#30]   JUMP( L8))))),
+-[Stm#31]   LABEL L10))),
+-[Stm#32]   LABEL L3))),
+-[Stm#33]   T_Return(
+    T_TEMP(t101))))
+--End Func-----

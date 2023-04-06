@@ -1,11 +1,9 @@
 public int main() {
-    class c1 c;
-    c=new c1();
-    return c.x;
+    int i=0; T_seq(T_Move(T_temp(temp_i),T_const(0)),
+    int a; 
+    // use T_seq instead of StmList
+    a=1; // T_seq(T_Move(T_temp(temp_a),T_const(1)),
+    i=i+1; // T_seq(T_Move(T_temp(temp_i),T_Binop(T_Temp(temp_i),T_const(1))),
+    putint(a); // T_seq(T_ExtCall(String("putint"),T_temp(temp_a)),
+    return a; // T_Return(T_Temp(temp_a))))))
 }
-
-public class c5 extends c2 {int x;}
-public class c1 {int x=2;}
-public class c3 {}
-public class c4 extends c3 {}
-public class c2 extends c1 {}
