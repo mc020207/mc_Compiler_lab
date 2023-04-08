@@ -4,7 +4,7 @@
  * All types and functions declared in this header file begin with "Ty_"
  * Linked list types end with "..list"
  */
-
+#pragma once
 typedef struct Ty_ty_ *Ty_ty;
 typedef struct Ty_tyList_ *Ty_tyList;
 typedef struct Ty_field_ *Ty_field;

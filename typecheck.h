@@ -1,3 +1,4 @@
+#pragma once
 #include "fdmjast.h"
 #include "printast.h"
 #include "table.h"
@@ -22,6 +23,7 @@ typedef struct tree_{
     bool vs;
     bool finish;
 }tree_;
+void printError(A_pos pos,const char* message);
 node typeCheckExp(A_exp x);
 node typeCheckExpList(A_expList x,Ty_fieldList l,bool intlist,A_pos pos);
 void typeCheckStmList(A_stmList x);

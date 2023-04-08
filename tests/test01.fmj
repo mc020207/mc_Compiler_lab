@@ -1,5 +1,5 @@
 public int main() {
-    int i=0; T_seq(T_Move(T_temp(temp_i),T_const(0)),
+    int i=0; // T_seq(T_Move(T_temp(temp_i),T_const(0)),
     int a; 
     // use T_seq instead of StmList
     a=1; // T_seq(T_Move(T_temp(temp_a),T_const(1)),

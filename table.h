@@ -6,6 +6,7 @@
  *  each module should make "wrapper" functions that take
  *  well-typed arguments and call the TAB_ functions.
  */
+#pragma once
 #define TABSIZE 127
 typedef struct binder_ *binder;
 struct binder_ {void *key; void *value; binder next; void *prevtop;};

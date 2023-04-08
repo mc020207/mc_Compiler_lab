@@ -8,6 +8,11 @@
         "libsysy.h": "c",
         "ostream": "cpp",
         "assert.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "ast2treep.h": "c",
+        "fdmjast.h": "c",
+        "xiosbase": "c",
+        "xlocale": "c",
+        "xutility": "c"
     }
 }

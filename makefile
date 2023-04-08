@@ -14,10 +14,10 @@ $(TESTCASE_DIR)/%.output: $(TESTCASE_DIR)/%.fmj a.out
 	@echo test $*
 	@./a.out < $(word 1,$^) >$@
 
-a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o typecheck.o
+a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o typecheck.o pr_tree_readable.o treep.o temp.o ast2treep.o
 	@cc -g $^ -o a.out
 
-main.o: main.c fdmjast.h fdmjast.c util.h util.c printast.h printast.c y.tab.h y.tab.c lex.yy.o y.tab.o main.c main.o fdmjast.o util.o printast.o table.o types.o symbol.o typecheck.o
+main.o: main.c fdmjast.h fdmjast.c util.h util.c printast.h printast.c y.tab.h y.tab.c lex.yy.o y.tab.o main.c main.o fdmjast.o util.o printast.o table.o types.o symbol.o typecheck.o pr_tree_readable.o treep.o temp.o 
 	@cc -g -c main.c -o main.o
 
 lex.yy.c: lexer.lex y.tab.h y.tab.c
@@ -45,6 +45,9 @@ util.o: util.c util.h
 typecheck.o: typecheck.c typecheck.h
 	@cc -g -c typecheck.c
 
+ast2treep.o: ast2treep.c ast2treep.h
+	@cc -g -c ast2treep.c
+
 lex.yy.o: lex.yy.c y.tab.h
 	@cc -g -c lex.yy.c
 
@@ -54,11 +57,17 @@ y.tab.o: y.tab.c
 printast.o: printast.c fdmjast.h util.h 
 	@cc -g -c printast.c
 
+pr_tree_readable.o: pr_tree_readable.c
+
+temp.o: temp.c temp.h
+
+treep.o: treep.c treep.h
+
 y.output:
 	yacc -v parser.yacc
 
 clean: 
-	@rm -f a.out b.out lex.yy.o lex.yy.c y.tab.o y.tab.c y.tab.h util.o fdmjast.o complier.o interpreter.o main.ll out.ll lib.ll printast.o y.output main.o check.out table.o types.o symbol.o typecheck.o
+	@rm -f a.out b.out ./*.o lex.yy.c y.tab.c y.tab.h
 
 clean2:
 	@rm -f ./tests/*.output

@@ -1,26 +1,28 @@
 public int main() {
-    int[] a; 
-    int[] aa={3, 4, 5};
-    class c1 cv;
-    int ix;
-    int iy=1000;
+    int i; 
+    int a; 
 
-    a=new int[10+2];
-    a[2]=80;
-    if (a[0]<1)
-        new c1().m1();
-    return a[9];
-}
-
-public class c1 {
-    int[] i1={2, 3};
-
-    public int m1(int x) {
-        i1[1]=x;
-        while (a[0]<1) {
-            new c1().m1();
-        }
-        return this.i1[0];
+    if (i<0||({i=1;} a)>1) {
+       putint(i);
+    } else {
+       if (i==0 && a==1)
+          putint(a);
+       while (i==0) {
+          i=!(a>0);
+          break;
+       }
     }
+    return a;
 }
 
+
+/*
+if (a||b&&&c||d){
+   ....
+}else{
+   
+}
+
+
+t=a||b&&&c||d
+*/
