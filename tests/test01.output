@@ -1,0 +1,26 @@
+--A Function---
+FuncDecl(main,
+[ARGS:]
+NULL
+[STMS:]
+-[Stm#1]SEQ(
+   MOVE(
+    T_TEMP(t100),
+    CONST 0),
+-[Stm#2]SEQ(
+   MOVE(
+    T_TEMP(t101),
+    CONST 1),
+-[Stm#3]SEQ(
+   MOVE(
+    T_TEMP(t100),
+    BINOP(PLUS,
+     T_TEMP(t100),
+     CONST 1)),
+-[Stm#4]SEQ(
+   T_EXP(
+    T_ExtCALL(putint,
+      T_TEMP(t101))),
+-[Stm#5]   T_Return(
+    T_TEMP(t101))))))
+--End Func-----

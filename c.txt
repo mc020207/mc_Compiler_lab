@@ -1,18 +1,6 @@
 public int main() {
-    int i; 
-    int a; 
-
-    if (i<0||({i=1;} a)>1) {
-       putint(i);
-    } else {
-       if (i==0 && a==1)
-          putint(a);
-       while (i==0) {
-          i=!(a>0);
-          break;
-       }
-    }
-    return a;
+    int i=0;
+    i=(i+1||i+8);
 }
 
 

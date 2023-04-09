@@ -37,7 +37,7 @@ T_exp rel2exp(A_exp x){
     Temp_label falseLable=Temp_newlabel();
     Temp_label endLable=Temp_newlabel();
     T_stm truestm=T_Seq(T_Label(tureLable),T_Seq(T_Move(T_Temp(temp),T_Const(1)),T_Jump(endLable)));
-    T_stm falsestm=T_Seq(T_Label(tureLable),T_Seq(T_Move(T_Temp(temp),T_Const(0)),T_Jump(endLable)));
+    T_stm falsestm=T_Seq(T_Label(falseLable),T_Move(T_Temp(temp),T_Const(0)));
     T_stm ifstm=NULL;
     if (x->kind==A_notExp){
         ifstm=T_Cjump(T_eq,ast2treepExp(x->u.e),T_Const(0),tureLable,falseLable);
@@ -103,20 +103,24 @@ T_exp ast2treepExp(A_exp x){
                 Temp_temp temp=Temp_newtemp();
                 Temp_label tureLable=Temp_newlabel();
                 Temp_label falseLable=Temp_newlabel();
+                Temp_label shortcutLable=Temp_newlabel();
                 Temp_label endLable=Temp_newlabel();
-                T_stm truestm=T_Seq(T_Label(tureLable),T_Seq(T_Move(T_Temp(temp),ast2treepExp(x->u.op.right)),T_Label(endLable)));
-                T_stm falsestm=T_Seq(T_Label(tureLable),T_Seq(T_Move(T_Temp(temp),T_Const(0)),T_Label(endLable)));
-                T_stm ifstm=T_Cjump(T_ne,ast2treepExp(x->u.op.left),T_Const(0),tureLable,falseLable);
-                ans=T_Eseq(T_Seq(ifstm,T_Seq(truestm,T_Seq(falsestm,T_Label(endLable)))),T_Temp(temp));
+                T_stm truestm=T_Seq(T_Label(tureLable),T_Seq(T_Move(T_Temp(temp),T_Const(1)),T_Jump(endLable)));
+                T_stm falsestm=T_Seq(T_Label(falseLable),T_Move(T_Temp(temp),T_Const(0)));
+                T_stm ifstm=T_Cjump(T_ne,ast2treepExp(x->u.op.left),T_Const(0),shortcutLable,falseLable);
+                T_stm ifstm2=T_Cjump(T_ne,ast2treepExp(x->u.op.right),T_Const(0),tureLable,falseLable);
+                ans=T_Eseq(T_Seq(ifstm,T_Seq(T_Seq(T_Label(shortcutLable),ifstm2),T_Seq(truestm,T_Seq(falsestm,T_Label(endLable))))),T_Temp(temp));
             }else if (x->u.op.oper==A_or){
                 Temp_temp temp=Temp_newtemp();
                 Temp_label tureLable=Temp_newlabel();
                 Temp_label falseLable=Temp_newlabel();
+                Temp_label shortcutLable=Temp_newlabel();
                 Temp_label endLable=Temp_newlabel();
-                T_stm truestm=T_Seq(T_Label(tureLable),T_Seq(T_Move(T_Temp(temp),T_Const(1)),T_Label(endLable)));
-                T_stm falsestm=T_Seq(T_Label(tureLable),T_Seq(T_Move(T_Temp(temp),ast2treepExp(x->u.op.right)),T_Label(endLable)));
-                T_stm ifstm=T_Cjump(T_ne,ast2treepExp(x->u.op.left),T_Const(0),tureLable,falseLable);
-                ans=T_Eseq(T_Seq(ifstm,T_Seq(truestm,T_Seq(falsestm,T_Label(endLable)))),T_Temp(temp));
+                T_stm truestm=T_Seq(T_Label(tureLable),T_Seq(T_Move(T_Temp(temp),T_Const(1)),T_Jump(endLable)));
+                T_stm falsestm=T_Seq(T_Label(falseLable),T_Move(T_Temp(temp),T_Const(0)));
+                T_stm ifstm=T_Cjump(T_ne,ast2treepExp(x->u.op.left),T_Const(0),tureLable,shortcutLable);
+                T_stm ifstm2=T_Cjump(T_ne,ast2treepExp(x->u.op.right),T_Const(0),tureLable,falseLable);
+                ans=T_Eseq(T_Seq(ifstm,T_Seq(T_Seq(T_Label(shortcutLable),ifstm2),T_Seq(truestm,T_Seq(falsestm,T_Label(endLable))))),T_Temp(temp));
             }else{
                 assert(0);
             }
@@ -251,7 +255,7 @@ T_stm ast2treepStm(A_stm x){
         }
         case A_break:{
             whilenode now=head->nxt;
-            if (!now) printError(x->pos,"can not use continue out of while");
+            if (!now) printError(x->pos,"can not use break out of while");
             ans=T_Jump(now->endLable);
             break;
         }
@@ -304,8 +308,14 @@ T_funcDeclList ast2treepclassDeclList(A_classDeclList list){
 }
 T_funcDecl ast2treepMainmethod(A_mainMethod x){
     T_stm varstm=ast2treepvarDeclList(x->vdl);
-    if (varstm) return T_FuncDecl("main",NULL,T_Seq(varstm,ast2treepStmList(x->sl)));
-    return T_FuncDecl("main",NULL,ast2treepStmList(x->sl));
+    T_stm stm=ast2treepStmList(x->sl);
+    T_stm ans=NULL;
+    if (varstm) ans=varstm;
+    if (stm){
+        if (ans==NULL) ans=stm;
+        else ans=T_Seq(ans,stm);
+    }
+    return T_FuncDecl("main",NULL,ans);
 }
 T_funcDeclList ast2treepprog(A_prog x){
     ast2treepinit();

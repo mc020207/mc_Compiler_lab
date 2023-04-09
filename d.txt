@@ -3,274 +3,45 @@ FuncDecl(main,
 [ARGS:]
 NULL
 [STMS:]
-  SEQ(
 -[Stm#1]SEQ(
-   CJUMP(NE,
-    ESEQ(
---[Stm#2]SEQ(
-   CJUMP(NE,
-    ESEQ(
----[Stm#3]SEQ(
-   CJUMP(LT,
+   MOVE(
     T_TEMP(t100),
-    CONST 0,
-    L33,L34),
-   SEQ(
----[Stm#4]SEQ(
-   LABEL L33,
----[Stm#5]SEQ(
-   MOVE(
-    T_TEMP(t110),
-    CONST 1),
----[Stm#6]   JUMP( L35))),
-    SEQ(
----[Stm#7]SEQ(
-   LABEL L33,
----[Stm#8]SEQ(
-   MOVE(
-    T_TEMP(t110),
     CONST 0),
----[Stm#9]   JUMP( L35))),
----[Stm#10]   LABEL L35)))
-     T_TEMP(t110)),
-    CONST 0,
-    L27,L28),
-   SEQ(
---[Stm#11]SEQ(
-   LABEL L27,
---[Stm#12]SEQ(
-   MOVE(
-    T_TEMP(t108),
-    CONST 1),
---[Stm#13]   LABEL L29)),
-    SEQ(
---[Stm#14]SEQ(
-   LABEL L27,
---[Stm#15]SEQ(
-   MOVE(
-    T_TEMP(t108),
+-[Stm#2]   MOVE(
+    T_TEMP(t100),
     ESEQ(
----[Stm#16]SEQ(
-   CJUMP(GT,
-    ESEQ(
-----[Stm#17]     MOVE(
-      T_TEMP(t100),
-      CONST 1)
-     T_TEMP(t101)),
-    CONST 1,
-    L30,L31),
-   SEQ(
----[Stm#18]SEQ(
-   LABEL L30,
----[Stm#19]SEQ(
-   MOVE(
-    T_TEMP(t109),
-    CONST 1),
----[Stm#20]   JUMP( L32))),
-    SEQ(
----[Stm#21]SEQ(
-   LABEL L30,
----[Stm#22]SEQ(
-   MOVE(
-    T_TEMP(t109),
-    CONST 0),
----[Stm#23]   JUMP( L32))),
----[Stm#24]   LABEL L32)))
-     T_TEMP(t109))),
---[Stm#25]   LABEL L29)),
---[Stm#26]   LABEL L29)))
-     T_TEMP(t108)),
+--[Stm#3]SEQ(
+   CJUMP(NE,
+    BINOP(PLUS,
+     T_TEMP(t100),
+     CONST 1),
     CONST 0,
-    L0,L1),
+    L0,L2),
    SEQ(
--[Stm#27]SEQ(
+--[Stm#4]SEQ(
+   LABEL L2,
+--[Stm#5]   CJUMP(NE,
+    BINOP(PLUS,
+     T_TEMP(t100),
+     CONST 8),
+    CONST 0,
+    L0,L1)),
+    SEQ(
+--[Stm#6]SEQ(
    LABEL L0,
--[Stm#28]SEQ(
-   T_EXP(
-    T_ExtCALL(putint,
-      T_TEMP(t100))),
--[Stm#29]   JUMP( L2))),
-    SEQ(
--[Stm#30]SEQ(
+--[Stm#7]SEQ(
+   MOVE(
+    T_TEMP(t101),
+    CONST 1),
+--[Stm#8]   JUMP( L3))),
+     SEQ(
+--[Stm#9]SEQ(
    LABEL L1,
-   SEQ(
-    SEQ(
--[Stm#31]SEQ(
-   CJUMP(NE,
-    ESEQ(
---[Stm#32]SEQ(
-   CJUMP(NE,
-    ESEQ(
----[Stm#33]SEQ(
-   CJUMP(EQ,
-    T_TEMP(t100),
-    CONST 0,
-    L24,L25),
-   SEQ(
----[Stm#34]SEQ(
-   LABEL L24,
----[Stm#35]SEQ(
+--[Stm#10]SEQ(
    MOVE(
-    T_TEMP(t107),
-    CONST 1),
----[Stm#36]   JUMP( L26))),
-    SEQ(
----[Stm#37]SEQ(
-   LABEL L24,
----[Stm#38]SEQ(
-   MOVE(
-    T_TEMP(t107),
-    CONST 0),
----[Stm#39]   JUMP( L26))),
----[Stm#40]   LABEL L26)))
-     T_TEMP(t107)),
-    CONST 0,
-    L18,L19),
-   SEQ(
---[Stm#41]SEQ(
-   LABEL L18,
---[Stm#42]SEQ(
-   MOVE(
-    T_TEMP(t105),
-    ESEQ(
----[Stm#43]SEQ(
-   CJUMP(EQ,
     T_TEMP(t101),
-    CONST 1,
-    L21,L22),
-   SEQ(
----[Stm#44]SEQ(
-   LABEL L21,
----[Stm#45]SEQ(
-   MOVE(
-    T_TEMP(t106),
-    CONST 1),
----[Stm#46]   JUMP( L23))),
-    SEQ(
----[Stm#47]SEQ(
-   LABEL L21,
----[Stm#48]SEQ(
-   MOVE(
-    T_TEMP(t106),
     CONST 0),
----[Stm#49]   JUMP( L23))),
----[Stm#50]   LABEL L23)))
-     T_TEMP(t106))),
---[Stm#51]   LABEL L20)),
-    SEQ(
---[Stm#52]SEQ(
-   LABEL L18,
---[Stm#53]SEQ(
-   MOVE(
-    T_TEMP(t105),
-    CONST 0),
---[Stm#54]   LABEL L20)),
---[Stm#55]   LABEL L20)))
-     T_TEMP(t105)),
-    CONST 0,
-    L15,L16),
-   SEQ(
--[Stm#56]SEQ(
-   LABEL L15,
--[Stm#57]SEQ(
-   T_EXP(
-    T_ExtCALL(putint,
-      T_TEMP(t101))),
--[Stm#58]   JUMP( L17))),
-    SEQ(
--[Stm#59]SEQ(
-   LABEL L16,
--[Stm#60]   JUMP( L17)),
--[Stm#61]   LABEL L17))),
--[Stm#62]SEQ(
-   LABEL L3,
--[Stm#63]SEQ(
-   CJUMP(NE,
-    ESEQ(
---[Stm#64]SEQ(
-   CJUMP(EQ,
-    T_TEMP(t100),
-    CONST 0,
-    L6,L7),
-   SEQ(
---[Stm#65]SEQ(
-   LABEL L6,
---[Stm#66]SEQ(
-   MOVE(
-    T_TEMP(t102),
-    CONST 1),
---[Stm#67]   JUMP( L8))),
-    SEQ(
---[Stm#68]SEQ(
-   LABEL L6,
---[Stm#69]SEQ(
-   MOVE(
-    T_TEMP(t102),
-    CONST 0),
---[Stm#70]   JUMP( L8))),
---[Stm#71]   LABEL L8)))
-     T_TEMP(t102)),
-    CONST 0,
-    L5,L4),
--[Stm#72]SEQ(
-   LABEL L5,
-   SEQ(
--[Stm#73]SEQ(
-   MOVE(
-    T_TEMP(t100),
-    ESEQ(
---[Stm#74]SEQ(
-   CJUMP(EQ,
-    ESEQ(
----[Stm#75]SEQ(
-   CJUMP(GT,
-    T_TEMP(t101),
-    CONST 0,
-    L12,L13),
-   SEQ(
----[Stm#76]SEQ(
-   LABEL L12,
----[Stm#77]SEQ(
-   MOVE(
-    T_TEMP(t104),
-    CONST 1),
----[Stm#78]   JUMP( L14))),
-    SEQ(
----[Stm#79]SEQ(
-   LABEL L12,
----[Stm#80]SEQ(
-   MOVE(
-    T_TEMP(t104),
-    CONST 0),
----[Stm#81]   JUMP( L14))),
----[Stm#82]   LABEL L14)))
-     T_TEMP(t104)),
-    CONST 0,
-    L9,L10),
-   SEQ(
---[Stm#83]SEQ(
-   LABEL L9,
---[Stm#84]SEQ(
-   MOVE(
-    T_TEMP(t103),
-    CONST 1),
---[Stm#85]   JUMP( L11))),
-    SEQ(
---[Stm#86]SEQ(
-   LABEL L9,
---[Stm#87]SEQ(
-   MOVE(
-    T_TEMP(t103),
-    CONST 0),
---[Stm#88]   JUMP( L11))),
---[Stm#89]   LABEL L11)))
-     T_TEMP(t103))),
--[Stm#90]   JUMP( L4)),
--[Stm#91]SEQ(
-   JUMP( L3),
--[Stm#92]   LABEL L4)))))),
--[Stm#93]   JUMP( L2))),
--[Stm#94]   LABEL L2))),
--[Stm#95]   T_Return(
-    T_TEMP(t101)))
+--[Stm#11]   JUMP( L3))),
+--[Stm#12]   LABEL L3))))
+     T_TEMP(t101))))
 --End Func-----
