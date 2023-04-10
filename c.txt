@@ -1,6 +1,7 @@
 public int main() {
     int i=0;
-    i=(i+1||i+8);
+    if(i||i||i) i=2;
+    else 
 }
 
 

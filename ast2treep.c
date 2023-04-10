@@ -37,7 +37,7 @@ T_exp rel2exp(A_exp x){
     Temp_label falseLable=Temp_newlabel();
     Temp_label endLable=Temp_newlabel();
     T_stm truestm=T_Seq(T_Label(tureLable),T_Seq(T_Move(T_Temp(temp),T_Const(1)),T_Jump(endLable)));
-    T_stm falsestm=T_Seq(T_Label(falseLable),T_Move(T_Temp(temp),T_Const(0)));
+    T_stm falsestm=T_Seq(T_Label(falseLable),T_Seq(T_Move(T_Temp(temp),T_Const(0)),T_Jump(endLable)));
     T_stm ifstm=NULL;
     if (x->kind==A_notExp){
         ifstm=T_Cjump(T_eq,ast2treepExp(x->u.e),T_Const(0),tureLable,falseLable);
@@ -106,7 +106,7 @@ T_exp ast2treepExp(A_exp x){
                 Temp_label shortcutLable=Temp_newlabel();
                 Temp_label endLable=Temp_newlabel();
                 T_stm truestm=T_Seq(T_Label(tureLable),T_Seq(T_Move(T_Temp(temp),T_Const(1)),T_Jump(endLable)));
-                T_stm falsestm=T_Seq(T_Label(falseLable),T_Move(T_Temp(temp),T_Const(0)));
+                T_stm falsestm=T_Seq(T_Label(falseLable),T_Seq(T_Move(T_Temp(temp),T_Const(0)),T_Jump(endLable)));
                 T_stm ifstm=T_Cjump(T_ne,ast2treepExp(x->u.op.left),T_Const(0),shortcutLable,falseLable);
                 T_stm ifstm2=T_Cjump(T_ne,ast2treepExp(x->u.op.right),T_Const(0),tureLable,falseLable);
                 ans=T_Eseq(T_Seq(ifstm,T_Seq(T_Seq(T_Label(shortcutLable),ifstm2),T_Seq(truestm,T_Seq(falsestm,T_Label(endLable))))),T_Temp(temp));
@@ -117,7 +117,7 @@ T_exp ast2treepExp(A_exp x){
                 Temp_label shortcutLable=Temp_newlabel();
                 Temp_label endLable=Temp_newlabel();
                 T_stm truestm=T_Seq(T_Label(tureLable),T_Seq(T_Move(T_Temp(temp),T_Const(1)),T_Jump(endLable)));
-                T_stm falsestm=T_Seq(T_Label(falseLable),T_Move(T_Temp(temp),T_Const(0)));
+                T_stm falsestm=T_Seq(T_Label(falseLable),T_Seq(T_Move(T_Temp(temp),T_Const(0)),T_Jump(endLable)));
                 T_stm ifstm=T_Cjump(T_ne,ast2treepExp(x->u.op.left),T_Const(0),tureLable,shortcutLable);
                 T_stm ifstm2=T_Cjump(T_ne,ast2treepExp(x->u.op.right),T_Const(0),tureLable,falseLable);
                 ans=T_Eseq(T_Seq(ifstm,T_Seq(T_Seq(T_Label(shortcutLable),ifstm2),T_Seq(truestm,T_Seq(falsestm,T_Label(endLable))))),T_Temp(temp));
