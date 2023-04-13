@@ -1,47 +1,80 @@
+add c1
+add c2
+c1
 --A Function---
 FuncDecl(main,
 [ARGS:]
 NULL
 [STMS:]
--[Stm#1]SEQ(
+-[Stm#1]  MOVE(
+   T_TEMP(t111),
+   ESEQ(
+--[Stm#2]SEQ(
    MOVE(
-    T_TEMP(t100),
-    CONST 0),
--[Stm#2]   MOVE(
-    T_TEMP(t100),
-    ESEQ(
+    T_TEMP(t112),
+    T_ExtCALL(malloc,
+      CONST 16)),
 --[Stm#3]SEQ(
-   CJUMP(NE,
-    BINOP(PLUS,
-     T_TEMP(t100),
-     CONST 1),
-    CONST 0,
-    L0,L2),
-   SEQ(
---[Stm#4]SEQ(
-   LABEL L2,
---[Stm#5]   CJUMP(NE,
-    BINOP(PLUS,
-     T_TEMP(t100),
-     CONST 8),
-    CONST 0,
-    L0,L1)),
-    SEQ(
---[Stm#6]SEQ(
-   LABEL L0,
---[Stm#7]SEQ(
    MOVE(
-    T_TEMP(t101),
+    MEM(
+     BINOP(PLUS,
+      T_TEMP(t112),
+      CONST 0)),
     CONST 1),
---[Stm#8]   JUMP( L3))),
-     SEQ(
---[Stm#9]SEQ(
-   LABEL L1,
---[Stm#10]SEQ(
+--[Stm#4]SEQ(
    MOVE(
-    T_TEMP(t101),
-    CONST 0),
---[Stm#11]   JUMP( L3))),
---[Stm#12]   LABEL L3))))
-     T_TEMP(t101))))
+    MEM(
+     BINOP(PLUS,
+      T_TEMP(t112),
+      CONST 4)),
+    CONST 2),
+--[Stm#5]SEQ(
+   MOVE(
+    MEM(
+     BINOP(PLUS,
+      T_TEMP(t112),
+      CONST 8)),
+    CONST 3),
+--[Stm#6]   MOVE(
+    MEM(
+     BINOP(PLUS,
+      T_TEMP(t112),
+      CONST 12)),
+    NAME c2_c1)))))
+    T_TEMP(t112))))
+--End Func-----
+--A Function---
+FuncDecl(c2_c1,
+[ARGS:]
+ t107, 
+ t108, 
+ t109, 
+ t110
+[STMS:]
+-[Stm#7]  T_Return(
+   CONST 0))
+--End Func-----
+--A Function---
+FuncDecl(c1_c1,
+[ARGS:]
+ t100, 
+ t104, 
+ t105, 
+ t106
+[STMS:]
+-[Stm#8]  T_Return(
+   BINOP(PLUS,
+    BINOP(PLUS,
+     BINOP(PLUS,
+      BINOP(PLUS,
+       BINOP(PLUS,
+        T_TEMP(t104),
+        T_TEMP(t105)),
+       T_TEMP(t106)),
+      MEM(
+       BINOP(PLUS,
+        T_TEMP(t100),
+        CONST 0))),
+     T_TEMP(t102)),
+    T_TEMP(t103))))
 --End Func-----

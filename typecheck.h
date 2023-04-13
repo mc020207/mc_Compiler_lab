@@ -4,14 +4,7 @@
 #include "table.h"
 #include "symbol.h"
 #include "types.h"
-S_table t;          // save local VAR and its type in it , key:name value:type
-S_table classtable; // save class type in it , key:className Value:S_table{Var/method's name,TyAndInit} 
-                    // when save fuction use a Ty_record.
-                    // in Ty_fildlist ,the first Ty in the list is the returnType
-S_table extends;    // save className and its treenode pointer key:calssName value:tree
-S_table classPos;   // save className and their struct
-Ty_ty returnType;
-A_classDecl nowclass;
+#include "temp.h"
 typedef struct node{
     bool location;
     Ty_ty value;

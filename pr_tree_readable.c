@@ -187,7 +187,7 @@ void printFuncDecl(FILE *out, T_funcDecl funcDecl)
   }
   else 
     fprintf(out, "NULL");
-  fprintf(out, "\n--End Func-----\n");
+  fprintf(out, ")\n--End Func-----\n");
   return;
 }
 

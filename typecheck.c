@@ -1,6 +1,17 @@
 #include "typecheck.h"
 #include <stdlib.h>
 #include <string.h>
+S_table t;          // save local VAR and its type in it , key:name value:type
+S_table classtable; // save class type in it , key:className Value:S_table{Var/method's name,TyAndInit} 
+                    // when save fuction use a Ty_record.
+                    // in Ty_fildlist ,the first Ty in the list is the returnType
+S_table extends;    // save className and its treenode pointer key:calssName value:tree
+S_table classPos;   // save className and their struct
+S_table classElementsOffset;
+S_table tempFunctionName;
+int classElementsCnt=0;
+Ty_ty returnType;
+A_classDecl nowclass;
 void printError(A_pos pos,const char* message){
     printf("error on line %d and pos %d , %s\n",pos->line,pos->pos,message);
     exit(0);
@@ -444,6 +455,11 @@ void typeCheckVarDecl(A_varDecl x,S_table table,bool isClassVar){
             break;
         }
     }
+    if (isClassVar&&!S_look(classElementsOffset,S_Symbol(x->v))){
+        int *now=checked_malloc(sizeof(int));
+        *now=classElementsCnt++;
+        S_enter(classElementsOffset,S_Symbol(x->v),now);
+    }
 }
 void typeCheckVarDeclList(A_varDeclList x,S_table table,bool isClassVar){
     if (!x) return ;
@@ -460,6 +476,11 @@ void typeCheckMainMethod(A_mainMethod x){
     typeCheckStmList(x->sl);
 }
 void typeCheckProg(A_prog root){
+    tempFunctionName=S_empty();
+    classtable=S_empty();
+    extends=S_empty();
+    classPos=S_empty();
+    classElementsOffset=S_empty();
     fillTable(root->cdl);
     solveExtendsList(root->cdl);
     typeCheckMainMethod(root->m);
@@ -485,22 +506,31 @@ Ty_fieldList getTyFieldList(A_formalList list){
     }
     Ty_fieldList ans=Ty_FieldList(Ty_Field(x->id?S_Symbol(x->id):NULL,ty),getTyFieldList(list->tail));
 }
-void filltableMethod(A_methodDecl x,S_table table){
+void filltableMethod(A_methodDecl x,S_table table,string className){
     A_formalList now=checked_malloc(sizeof(*now));
     if (S_look(table,S_Symbol(x->id))){
         printError(x->pos,"this function name has been used");
     }
-    now->head=A_Formal(NULL,x->t,NULL);now->tail=x->fl;
+    // string oldclassName=className;
+    string fuctionName=String(strcat(strcat(String(className),"_"),String(x->id)));
+    // className=oldclassName;
+    S_enter(tempFunctionName,S_Symbol(fuctionName),Temp_namedlabel(fuctionName));
+    if (!S_look(classElementsOffset,S_Symbol(x->id))){
+        int *cnt=checked_malloc(sizeof(int));
+        *cnt=classElementsCnt++;
+        S_enter(classElementsOffset,S_Symbol(x->id),cnt);
+    }
+    now->head=A_Formal(NULL,x->t,className);now->tail=x->fl;
     getTyFieldList(now);
     TyAndInit ans=checked_malloc(sizeof(*ans));
     ans->ty=Ty_Record(getTyFieldList(now));
     ans->expList=NULL;
     S_enter(table,S_Symbol(x->id),ans);
 }   
-void filltableMethodList(A_methodDeclList list,S_table table){
+void filltableMethodList(A_methodDeclList list,S_table table,string className){
     if (!list) return ;
-    filltableMethod(list->head,table);
-    filltableMethodList(list->tail,table);
+    filltableMethod(list->head,table,className);
+    filltableMethodList(list->tail,table,className);
 }
 void fillTable(A_classDeclList list){
     if (!list) return ;
@@ -511,7 +541,7 @@ void fillTable(A_classDeclList list){
     }
     S_table table=S_empty();
     typeCheckVarDeclList(x->vdl,table,1);
-    filltableMethodList(x->mdl,table);
+    filltableMethodList(x->mdl,table,x->id);
     S_enter(classtable,S_Symbol(x->id),table);
     if (x->parentID){
         tree now=checked_malloc(sizeof(*now));

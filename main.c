@@ -16,9 +16,6 @@ A_prog root;
 extern int yyparse();
 int main(int argc, const char * argv[]) {
     yyparse();
-    classtable=S_empty();
-    extends=S_empty();
-    classPos=S_empty();
     typeCheckProg(root);
     printFuncDeclList(stdout,ast2treepprog(root));
     // printA_Prog(stdout, root);

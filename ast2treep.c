@@ -1,6 +1,12 @@
 #include "ast2treep.h"
 #include "stdlib.h"
+#include <string.h>
+#define OFFSETSTEP 4
 S_table temp_table;
+extern S_table tempFunctionName;
+extern S_table classElementsOffset;
+extern int classElementsCnt;
+extern S_table classtable;
 struct whilenode_{
     Temp_label testLable;
     Temp_label endLable;
@@ -28,6 +34,54 @@ void ast2treepinit(){
     temp_table=S_empty();
     head=checked_malloc(sizeof(*head));
     head->nxt=NULL;
+}
+string getFuctionName(string className,string fuctionName){
+    return String(strcat(strcat(String(className),"_"),String(fuctionName)));
+}
+T_exp arrayInit(A_expList list){
+    if (!list) return T_Const(0); // 给array的地址赋一个NULL
+    Temp_temp temp=Temp_newtemp();
+    int cnt=0;
+    T_stm assignStm=NULL;
+    for (;list;list=list->tail){
+        A_exp x=list->head;
+        T_stm nowstm=T_Move(T_Mem(T_Binop(T_plus,T_Temp(temp),T_Const(cnt*OFFSETSTEP))),ast2treepExp(x));
+        if (assignStm==NULL) assignStm=nowstm;
+        else assignStm=T_Seq(assignStm,nowstm);
+        cnt++;
+    }
+    return T_Eseq(T_Seq(T_Move(T_Temp(temp),T_ExtCall("malloc",T_ExpList(T_Const(cnt*OFFSETSTEP),NULL))),assignStm),T_Temp(temp));
+}
+T_stm classInit(S_table table,Temp_temp temp){
+    S_symbol key=table->top;
+    if (!key) return NULL;
+    TyAndInit ty=S_look(table,key);
+    int offset=*(int*)S_look(classElementsOffset,key);
+    T_stm now=NULL;
+    if (ty->ty->kind==Ty_record){
+        string functionName=getFuctionName(S_name(ty->ty->u.record->head->name),S_name(key));
+        now=T_Move(T_Mem(T_Binop(T_plus,T_Temp(temp),T_Const(offset*OFFSETSTEP))),T_Name(S_look(tempFunctionName,S_Symbol(functionName))));
+    }else if (ty->expList){
+        if (ty->ty->kind==Ty_int){
+            now=T_Move(T_Mem(T_Binop(T_plus,T_Temp(temp),T_Const(offset*OFFSETSTEP))),ast2treepExp(ty->expList->head));
+        }else{
+            now=T_Move(T_Mem(T_Binop(T_plus,T_Temp(temp),T_Const(offset*OFFSETSTEP))),arrayInit(ty->expList));
+        }
+    }
+    TAB_pop(table);
+    T_stm nxt=classInit(table,temp);
+    S_enter(table,key,ty);
+    if (now&&nxt) return T_Seq(now,nxt);
+    else if (now) return now;
+    else if (nxt) return nxt;
+    return NULL;
+}
+T_exp newclass(string className){
+    Temp_temp temp=Temp_newtemp();
+    T_stm initStm=classInit(S_look(classtable,S_Symbol(className)),temp);
+    if (initStm) initStm=T_Seq(T_Move(T_Temp(temp),T_ExtCall("malloc",T_ExpList(T_Const(classElementsCnt*OFFSETSTEP),NULL))),initStm);
+    else initStm=T_Move(T_Temp(temp),T_ExtCall("malloc",T_ExpList(T_Const(classElementsCnt*OFFSETSTEP),NULL)));
+    return T_Eseq(initStm,T_Temp(temp));
 }
 T_exp rel2exp(A_exp x){
     if (x==NULL) return NULL;
@@ -127,15 +181,17 @@ T_exp ast2treepExp(A_exp x){
             break;
         }
         case A_arrayExp:{
-            // fill it next time
+            ans=T_Mem(T_Binop(T_plus,ast2treepExp(x->u.array_pos.arr),ast2treepExp(x->u.array_pos.arr_pos)));
             break;
         }
         case A_callExp:{
-            // fill it next time
+            int cnt=*(int*)S_look(classElementsOffset,S_Symbol(x->u.call.fun));
+            ans=T_Call(x->u.call.fun,T_Mem(T_Binop(T_plus,ast2treepExp(x->u.call.obj),T_Const(cnt*OFFSETSTEP))),ast2treepExpList(x->u.call.el));
             break;
         }
         case A_classVarExp:{
-            // fill it next time
+            int cnt=*(int*)S_look(classElementsOffset,S_Symbol(x->u.classvar.var));
+            ans=T_Mem(T_Binop(T_plus,ast2treepExp(x->u.classvar.obj),T_Const(cnt*OFFSETSTEP)));
             break;
         }
         case A_boolConst:{
@@ -151,19 +207,20 @@ T_exp ast2treepExp(A_exp x){
             break;
         }
         case A_thisExp:{
-            // fill it next time
+            ans=T_Temp(S_look(temp_table,S_Symbol("this")));
             break;
         }
         case A_lengthExp:{
-            // fill it next time
+            ans=T_ExtCall("length",T_ExpList(ast2treepExp(x->u.e),NULL));
             break;
         }
         case A_newIntArrExp:{
-            // fill it next time
+            Temp_temp temp=Temp_newtemp();
+            ans=T_Eseq(T_Move(T_Temp(temp),T_ExtCall("malloc",T_ExpList(ast2treepExp(x->u.e),NULL))),T_Temp(temp));
             break;
         }
         case A_newObjExp:{
-            // fill it next time
+            ans=newclass(x->u.v);
             break;
         }
         case A_notExp:{
@@ -187,7 +244,7 @@ T_exp ast2treepExp(A_exp x){
             break;
         }
         case A_getarray:{
-            // fill it next time
+            ans=T_ExtCall(String("getarray"),T_ExpList(ast2treepExp(x->u.e),NULL));
             break;
         }
     }
@@ -240,11 +297,12 @@ T_stm ast2treepStm(A_stm x){
             break;
         }
         case A_arrayInit:{
-            // fill it next time
+            ans=T_Move(ast2treepExp(x->u.array_init.arr),arrayInit(x->u.array_init.init_values));
             break;
         }
         case A_callStm:{
-            // fill it next time
+            int cnt=*(int*)S_look(classElementsOffset,S_Symbol(x->u.call_stat.fun));
+            ans=T_Exp(T_Call(x->u.call_stat.fun,T_Mem(T_Binop(T_plus,ast2treepExp(x->u.call_stat.obj),T_Const(cnt*OFFSETSTEP))),ast2treepExpList(x->u.call_stat.el)));
             break;
         }
         case A_continue:{
@@ -268,7 +326,7 @@ T_stm ast2treepStm(A_stm x){
             break;
         }
         case A_putarray:{
-            // fill it next time
+            ans=T_Exp(T_ExtCall("putarray",T_ExpList(ast2treepExp(x->u.putarray.e2),T_ExpList(ast2treepExp(x->u.putarray.e1),NULL))));
             break;
         }
         case A_putch:{
@@ -296,15 +354,56 @@ T_stm ast2treepvarDeclList(A_varDeclList list){
             if (ans==NULL) ans=T_Move(T_Temp(temp),ast2treepExp(x->elist->head));
             else ans=T_Seq(ans,T_Move(T_Temp(temp),ast2treepExp(x->elist->head)));
         }
-        if (x->elist&&x->t->t==A_intType){
-            // fill it next time
+        if (x->elist&&x->t->t==A_intArrType){
+            if (ans==NULL) ans=T_Move(T_Temp(temp),arrayInit(x->elist));
+            else ans=T_Seq(ans,T_Move(T_Temp(temp),arrayInit(x->elist)));
         }
     }
     return ans;
 }
+Temp_tempList ast2treepformalList(A_formalList list){
+    if (!list) return NULL;
+    A_formal x=list->head;
+    Temp_temp temp=Temp_newtemp();
+    S_enter(temp_table,S_Symbol(x->id),temp);
+    return Temp_TempList(temp,ast2treepformalList(list->tail));
+}
+T_funcDeclList ast2treepMethodDeclList(A_methodDeclList list,string className){
+    T_funcDeclList ans=NULL;
+    for (;list;list=list->tail){
+        A_methodDecl x=list->head;
+        temp_table=S_empty();
+        Temp_temp temp=Temp_newtemp();
+        S_enter(temp_table,S_Symbol("this"),temp);
+        T_stm varstm=ast2treepvarDeclList(x->vdl);
+        Temp_tempList args=Temp_TempList(temp,ast2treepformalList(x->fl));
+        T_stm stm=ast2treepStmList(x->sl);
+        T_stm ansstm=NULL;
+        if (varstm) ansstm=varstm;
+        if (stm){
+            if (ansstm==NULL) ansstm=stm;
+            else ansstm=T_Seq(ansstm,stm);
+        }
+        ans=T_FuncDeclList(T_FuncDecl(getFuctionName(className,x->id),args,ansstm),ans);
+    }
+    return ans;
+}
 T_funcDeclList ast2treepclassDeclList(A_classDeclList list){
-    // fill it next time
-    return NULL;
+    T_funcDeclList ans=NULL;
+    for (;list;list=list->tail){
+        A_classDecl x=list->head;
+        T_funcDeclList now=ast2treepMethodDeclList(x->mdl,x->id);
+        if (now){
+            for (T_funcDeclList temp=now;temp;temp=temp->tail){
+                if (temp->tail==NULL) {
+                    temp->tail=ans;
+                    break;
+                }
+            }
+            ans=now;
+        }
+    }
+    return ans;
 }
 T_funcDecl ast2treepMainmethod(A_mainMethod x){
     T_stm varstm=ast2treepvarDeclList(x->vdl);
