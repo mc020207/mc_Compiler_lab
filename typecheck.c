@@ -45,11 +45,11 @@ node typeCheckExp(A_exp x){
                 printError(x->pos,"the EXP does not have a class value");
             }
             S_table table=S_look(classtable,t1.value->u.name.sym);
-            Ty_ty ty=S_look(table,S_Symbol(x->u.call.fun));
-            if (ty==NULL){
+            if (S_look(table,S_Symbol(x->u.call.fun))==NULL){
                 printError(x->pos,"the class does not have this fuction");
             }
-            else if (ty->kind!=Ty_record){
+            Ty_ty ty=((TyAndInit)(S_look(table,S_Symbol(x->u.call.fun))))->ty;
+            if (ty->kind!=Ty_record){
                 printError(x->pos,"it is a Var name in this class");
             }
             ans.location=0;
@@ -63,11 +63,11 @@ node typeCheckExp(A_exp x){
                 printError(x->pos,"the EXP does not have a class value");
             }
             S_table table=S_look(classtable,t1.value->u.name.sym);
-            Ty_ty ty=S_look(table,S_Symbol(x->u.call.fun));
-            if (ty==NULL){
+            if (S_look(table,S_Symbol(x->u.classvar.var))==NULL){
                 printError(x->pos,"the class does not have this Var");
             }
-            else if (ty->kind==Ty_record){
+            Ty_ty ty=((TyAndInit)(S_look(table,S_Symbol(x->u.classvar.var))))->ty;
+            if (ty->kind==Ty_record){
                 printError(x->pos,"it is a fuction name in this class");
             }
             ans.location=1;
@@ -267,11 +267,11 @@ void typeCheckStm(A_stm x){
                 printError(x->pos,"the EXP does not have a class value");
             }
             S_table table=S_look(classtable,t1.value->u.name.sym);
-            Ty_ty ty=S_look(table,S_Symbol(x->u.call_stat.fun));
-            if (ty==NULL){
+            if (S_look(table,S_Symbol(x->u.call_stat.fun))==NULL){
                 printError(x->pos,"the class does not have this fuction");
             }
-            else if (ty->kind!=Ty_record){
+            Ty_ty ty=((TyAndInit)(S_look(table,S_Symbol(x->u.call_stat.fun))))->ty;
+            if (ty->kind!=Ty_record){
                 printError(x->pos,"it is a Var name in this class");
             }
             typeCheckExpList(x->u.call_stat.el,ty->u.record->tail,0,x->pos);
@@ -378,7 +378,7 @@ void typeCheckMethodDecl(A_methodDecl x){
             }
         }
     }
-    typeCheckVarDeclList(x->vdl,t);
+    typeCheckVarDeclList(x->vdl,t,0);
     checkExistVarList(x->vdl);
     typeCheckStmList(x->sl);
 }
@@ -396,7 +396,7 @@ void typeCheckClassDeclList(A_classDeclList list){
     typeCheckClassDecl(list->head);
     typeCheckClassDeclList(list->tail);
 }
-void typeCheckVarDecl(A_varDecl x,S_table table){
+void typeCheckVarDecl(A_varDecl x,S_table table,bool isClassVar){
     if(S_look(table,S_Symbol(x->v))){
         printError(x->pos,"this id has been defined");
     }
@@ -408,11 +408,23 @@ void typeCheckVarDecl(A_varDecl x,S_table table){
                     printError(x->elist->head->pos,"the EXP does not have an integer value");
                 }
             }
-            S_enter(table,S_Symbol(x->v),Ty_Int());
+            if (isClassVar){
+                TyAndInit ans=checked_malloc(sizeof(*ans));
+                ans->ty=Ty_Int();
+                ans->expList=x->elist;
+                S_enter(table,S_Symbol(x->v),ans);
+            }
+            else S_enter(table,S_Symbol(x->v),Ty_Int());
             break;
         } 
         case A_idType:{
-            S_enter(table,S_Symbol(x->v),Ty_Name(S_Symbol(x->t->id),Ty_Nil()));
+            if (isClassVar){
+                TyAndInit ans=checked_malloc(sizeof(*ans));
+                ans->ty=Ty_Name(S_Symbol(x->t->id),Ty_Nil());
+                ans->expList=NULL;
+                S_enter(table,S_Symbol(x->v),ans);
+            }
+            else S_enter(table,S_Symbol(x->v),Ty_Name(S_Symbol(x->t->id),Ty_Nil()));
             break;
         } 
         case A_intArrType:{
@@ -422,22 +434,28 @@ void typeCheckVarDecl(A_varDecl x,S_table table){
                     printError(x->elist->head->pos,"the EXPLIST is not a intlist");
                 }
             }
-            S_enter(table,S_Symbol(x->v),Ty_Array(Ty_Int()));
+            if (isClassVar){
+                TyAndInit ans=checked_malloc(sizeof(*ans));
+                ans->ty=Ty_Array(Ty_Int());
+                ans->expList=x->elist;
+                S_enter(table,S_Symbol(x->v),ans);
+            }
+            else S_enter(table,S_Symbol(x->v),Ty_Array(Ty_Int()));
             break;
         }
     }
 }
-void typeCheckVarDeclList(A_varDeclList x,S_table table){
+void typeCheckVarDeclList(A_varDeclList x,S_table table,bool isClassVar){
     if (!x) return ;
-    typeCheckVarDecl(x->head,table);
-    typeCheckVarDeclList(x->tail,table);
+    typeCheckVarDecl(x->head,table,isClassVar);
+    typeCheckVarDeclList(x->tail,table,isClassVar);
 }
 void typeCheckMainMethod(A_mainMethod x){
     returnType=Ty_Int();
     nowclass=NULL;
     if (t) free(t);
     t=S_empty();
-    typeCheckVarDeclList(x->vdl,t);
+    typeCheckVarDeclList(x->vdl,t,0);
     checkExistVarList(x->vdl);
     typeCheckStmList(x->sl);
 }
@@ -474,7 +492,10 @@ void filltableMethod(A_methodDecl x,S_table table){
     }
     now->head=A_Formal(NULL,x->t,NULL);now->tail=x->fl;
     getTyFieldList(now);
-    S_enter(table,S_Symbol(x->id),Ty_Record(getTyFieldList(now)));
+    TyAndInit ans=checked_malloc(sizeof(*ans));
+    ans->ty=Ty_Record(getTyFieldList(now));
+    ans->expList=NULL;
+    S_enter(table,S_Symbol(x->id),ans);
 }   
 void filltableMethodList(A_methodDeclList list,S_table table){
     if (!list) return ;
@@ -489,7 +510,7 @@ void fillTable(A_classDeclList list){
         printError(x->pos,"this class name has been used");
     }
     S_table table=S_empty();
-    typeCheckVarDeclList(x->vdl,table);
+    typeCheckVarDeclList(x->vdl,table,1);
     filltableMethodList(x->mdl,table);
     S_enter(classtable,S_Symbol(x->id),table);
     if (x->parentID){
@@ -563,19 +584,18 @@ void solveExtends(A_classDecl x){
 void extendsTable(A_classDecl x,S_table to,S_table from){
     S_symbol key=from->top;
     if (!key) return ;
-    Ty_ty ty=S_look(from,key);
+    TyAndInit ty=S_look(from,key);
     addKey(x,to,key,ty);
     TAB_pop(from);
     extendsTable(x,to,from);
     S_enter(from,key,ty);
-    // printf("enter %s\n",S_name(key));
 }
-void addKey(A_classDecl x,S_table to,S_symbol key,Ty_ty value){
+void addKey(A_classDecl x,S_table to,S_symbol key,TyAndInit value){
     Ty_ty ty1=S_look(to,key);
     if (ty1==NULL){
         S_enter(to,key,value);
     }else{
-        Ty_ty ty2=value;
+        Ty_ty ty2=value->ty;
         if (ty1->kind==Ty_record&&ty2->kind==Ty_record){
             compareFuctions(x,ty1,ty2,S_name(key));
         }else{
