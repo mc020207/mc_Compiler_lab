@@ -1,22 +1,11 @@
 public int main() {
-    class c1 x;
-    x=new c2();
+    class c x;
+    x=new c();
+    x.f(1);
 }
 
-public class c1{
-    int x=1;
-    int y=2;
-    int z=3;
-    public int c1(int a,int b,int c){
-        int x;
-        int y;
-        int z;
-        return a+b+c+this.x+y+z;
-    }
-}
-
-public class c2 extends c1{
-    public int c1(int a,int b,int c){
-        return 0;
+public class c{
+    public int f(int x){
+        return 1;
     }
 }

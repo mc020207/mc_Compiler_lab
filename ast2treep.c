@@ -39,18 +39,19 @@ string getFuctionName(string className,string fuctionName){
     return String(strcat(strcat(String(className),"_"),String(fuctionName)));
 }
 T_exp arrayInit(A_expList list){
-    if (!list) return T_Const(0); // 给array的地址赋一个NULL
     Temp_temp temp=Temp_newtemp();
     int cnt=0;
     T_stm assignStm=NULL;
     for (;list;list=list->tail){
         A_exp x=list->head;
-        T_stm nowstm=T_Move(T_Mem(T_Binop(T_plus,T_Temp(temp),T_Const(cnt*OFFSETSTEP))),ast2treepExp(x));
+        T_stm nowstm=T_Move(T_Mem(T_Binop(T_plus,T_Temp(temp),T_Const((cnt+1)*OFFSETSTEP))),ast2treepExp(x));
         if (assignStm==NULL) assignStm=nowstm;
         else assignStm=T_Seq(assignStm,nowstm);
         cnt++;
     }
-    return T_Eseq(T_Seq(T_Move(T_Temp(temp),T_ExtCall("malloc",T_ExpList(T_Const(cnt*OFFSETSTEP),NULL))),assignStm),T_Temp(temp));
+    if (assignStm) assignStm=T_Seq(T_Move(T_Mem(T_Temp(temp)),T_Const(cnt)),assignStm);
+    else assignStm=T_Move(T_Mem(T_Temp(temp)),T_Const(cnt));
+    return T_Eseq(T_Seq(T_Move(T_Temp(temp),T_ExtCall("malloc",T_ExpList(T_Const((cnt+1)*OFFSETSTEP),NULL))),assignStm),T_Binop(T_plus,T_Temp(temp),T_Const(OFFSETSTEP)));
 }
 T_stm classInit(S_table table,Temp_temp temp){
     S_symbol key=table->top;
@@ -181,12 +182,14 @@ T_exp ast2treepExp(A_exp x){
             break;
         }
         case A_arrayExp:{
-            ans=T_Mem(T_Binop(T_plus,ast2treepExp(x->u.array_pos.arr),ast2treepExp(x->u.array_pos.arr_pos)));
+            ans=T_Mem(T_Binop(T_plus,ast2treepExp(x->u.array_pos.arr),T_Binop(T_mul,ast2treepExp(x->u.array_pos.arr_pos),T_Const(OFFSETSTEP))));
             break;
         }
         case A_callExp:{
             int cnt=*(int*)S_look(classElementsOffset,S_Symbol(x->u.call.fun));
-            ans=T_Call(x->u.call.fun,T_Mem(T_Binop(T_plus,ast2treepExp(x->u.call.obj),T_Const(cnt*OFFSETSTEP))),ast2treepExpList(x->u.call.el));
+            T_exp objExp=ast2treepExp(x->u.call.obj);
+            T_exp objTemp=objExp->kind==T_ESEQ?objExp->u.ESEQ.exp:objExp;
+            ans=T_Call(x->u.call.fun,T_Mem(T_Binop(T_plus,objExp,T_Const(cnt*OFFSETSTEP))),T_ExpList(objTemp,ast2treepExpList(x->u.call.el)));
             break;
         }
         case A_classVarExp:{
@@ -211,12 +214,14 @@ T_exp ast2treepExp(A_exp x){
             break;
         }
         case A_lengthExp:{
-            ans=T_ExtCall("length",T_ExpList(ast2treepExp(x->u.e),NULL));
+            ans=T_Mem(T_Binop(T_minus,ast2treepExp(x->u.e),T_Const(OFFSETSTEP)));
             break;
         }
         case A_newIntArrExp:{
             Temp_temp temp=Temp_newtemp();
-            ans=T_Eseq(T_Move(T_Temp(temp),T_ExtCall("malloc",T_ExpList(ast2treepExp(x->u.e),NULL))),T_Temp(temp));
+            T_stm assignStm=T_Move(T_Temp(temp),T_ExtCall("malloc",T_ExpList(T_Binop(T_mul,T_Binop(T_plus,ast2treepExp(x->u.e),T_Const(1)),T_Const(OFFSETSTEP)),NULL)));
+            assignStm=T_Seq(assignStm,T_Move(T_Mem(T_Temp(temp)),ast2treepExp(x->u.e)));
+            ans=T_Eseq(assignStm,T_Binop(T_plus,T_Temp(temp),T_Const(OFFSETSTEP)));
             break;
         }
         case A_newObjExp:{
@@ -302,7 +307,9 @@ T_stm ast2treepStm(A_stm x){
         }
         case A_callStm:{
             int cnt=*(int*)S_look(classElementsOffset,S_Symbol(x->u.call_stat.fun));
-            ans=T_Exp(T_Call(x->u.call_stat.fun,T_Mem(T_Binop(T_plus,ast2treepExp(x->u.call_stat.obj),T_Const(cnt*OFFSETSTEP))),ast2treepExpList(x->u.call_stat.el)));
+            T_exp objExp=ast2treepExp(x->u.call_stat.obj);
+            T_exp objTemp=objExp->kind==T_ESEQ?objExp->u.ESEQ.exp:objExp;
+            ans=T_Exp(T_Call(x->u.call_stat.fun,T_Mem(T_Binop(T_plus,objExp,T_Const(cnt*OFFSETSTEP))),T_ExpList(objTemp,ast2treepExpList(x->u.call_stat.el))));
             break;
         }
         case A_continue:{
