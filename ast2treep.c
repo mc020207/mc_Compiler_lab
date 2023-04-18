@@ -333,7 +333,7 @@ T_stm ast2treepStm(A_stm x){
             break;
         }
         case A_putarray:{
-            ans=T_Exp(T_ExtCall("putarray",T_ExpList(ast2treepExp(x->u.putarray.e2),T_ExpList(ast2treepExp(x->u.putarray.e1),NULL))));
+            ans=T_Exp(T_ExtCall("putarray",T_ExpList(ast2treepExp(x->u.putarray.e1),T_ExpList(ast2treepExp(x->u.putarray.e2),NULL))));
             break;
         }
         case A_putch:{
