@@ -32,6 +32,7 @@ T_stmList T_StmList(T_stm head, T_stmList tail)
 
 T_stm T_Seq(T_stm left, T_stm right)
 {T_stm p = (T_stm) checked_malloc(sizeof *p);
+ if(!left) return right;
  p->kind=T_SEQ;
  p->u.SEQ.left=left;
  p->u.SEQ.right=right;
