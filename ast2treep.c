@@ -187,9 +187,10 @@ T_exp ast2treepExp(A_exp x){
         }
         case A_callExp:{
             int cnt=*(int*)S_look(classElementsOffset,S_Symbol(x->u.call.fun));
-            T_exp objExp=ast2treepExp(x->u.call.obj);
-            T_exp objTemp=objExp->kind==T_ESEQ?objExp->u.ESEQ.exp:objExp;
-            ans=T_Call(x->u.call.fun,T_Mem(T_Binop(T_plus,objExp,T_Const(cnt*OFFSETSTEP))),T_ExpList(objTemp,ast2treepExpList(x->u.call.el)));
+            Temp_temp temp=Temp_newtemp();
+            T_stm mvstm=T_Move(T_Temp(temp),ast2treepExp(x->u.call.obj));
+            ans=T_Call(x->u.call.fun,T_Mem(T_Binop(T_plus,T_Temp(temp),T_Const(cnt*OFFSETSTEP))),T_ExpList(T_Temp(temp),ast2treepExpList(x->u.call.el)));
+            ans=T_Eseq(mvstm,ans);
             break;
         }
         case A_classVarExp:{
@@ -219,9 +220,11 @@ T_exp ast2treepExp(A_exp x){
         }
         case A_newIntArrExp:{
             Temp_temp temp=Temp_newtemp();
-            T_stm assignStm=T_Move(T_Temp(temp),T_ExtCall("malloc",T_ExpList(T_Binop(T_mul,T_Binop(T_plus,ast2treepExp(x->u.e),T_Const(1)),T_Const(OFFSETSTEP)),NULL)));
-            assignStm=T_Seq(assignStm,T_Move(T_Mem(T_Temp(temp)),ast2treepExp(x->u.e)));
-            ans=T_Eseq(assignStm,T_Binop(T_plus,T_Temp(temp),T_Const(OFFSETSTEP)));
+            Temp_temp tempcnt=Temp_newtemp();
+            T_stm mvstm=T_Move(T_Temp(tempcnt),ast2treepExp(x->u.e));
+            T_stm assignStm=T_Move(T_Temp(temp),T_ExtCall("malloc",T_ExpList(T_Binop(T_mul,T_Binop(T_plus,T_Temp(tempcnt),T_Const(1)),T_Const(OFFSETSTEP)),NULL)));
+            assignStm=T_Seq(assignStm,T_Move(T_Mem(T_Temp(temp)),T_Temp(tempcnt)));
+            ans=T_Eseq(T_Seq(mvstm,assignStm),T_Binop(T_plus,T_Temp(temp),T_Const(OFFSETSTEP)));
             break;
         }
         case A_newObjExp:{
@@ -307,9 +310,14 @@ T_stm ast2treepStm(A_stm x){
         }
         case A_callStm:{
             int cnt=*(int*)S_look(classElementsOffset,S_Symbol(x->u.call_stat.fun));
-            T_exp objExp=ast2treepExp(x->u.call_stat.obj);
-            T_exp objTemp=objExp->kind==T_ESEQ?objExp->u.ESEQ.exp:objExp;
-            ans=T_Exp(T_Call(x->u.call_stat.fun,T_Mem(T_Binop(T_plus,objExp,T_Const(cnt*OFFSETSTEP))),T_ExpList(objTemp,ast2treepExpList(x->u.call_stat.el))));
+            Temp_temp temp=Temp_newtemp();
+            T_stm mvstm=T_Move(T_Temp(temp),ast2treepExp(x->u.call_stat.obj));
+            ans=T_Exp(T_Call(x->u.call_stat.fun,T_Mem(T_Binop(T_plus,T_Temp(temp),T_Const(cnt*OFFSETSTEP))),T_ExpList(T_Temp(temp),ast2treepExpList(x->u.call_stat.el))));
+            ans=T_Seq(mvstm,ans);
+            // int cnt=*(int*)S_look(classElementsOffset,S_Symbol(x->u.call_stat.fun));
+            // T_exp objExp=ast2treepExp(x->u.call_stat.obj);
+            // T_exp objTemp=objExp->kind==T_ESEQ?objExp->u.ESEQ.exp:objExp;
+            // ans=T_Exp(T_Call(x->u.call_stat.fun,T_Mem(T_Binop(T_plus,objExp,T_Const(cnt*OFFSETSTEP))),T_ExpList(objTemp,ast2treepExpList(x->u.call_stat.el))));
             break;
         }
         case A_continue:{
