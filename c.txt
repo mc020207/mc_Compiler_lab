@@ -1,5 +1,7 @@
 public int main() {
-    if (1){}
+    class c x;
+    x=new c();
+    x.f(1);
 }
 
 public class c{
