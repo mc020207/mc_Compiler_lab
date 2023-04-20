@@ -321,7 +321,7 @@ STM : '{' STMLIST '}'
     |
     PUTCH '(' EXP ')' ';'
     {
-        $$=A_Putint($1,$3);
+        $$=A_Putch($1,$3);
     }
     |
     PUTARRAY '(' EXP ',' EXP ')' ';'
