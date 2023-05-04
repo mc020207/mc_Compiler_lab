@@ -512,7 +512,7 @@ void filltableMethod(A_methodDecl x,S_table table,string className){
         printError(x->pos,"this function name has been used");
     }
     // string oldclassName=className;
-    string fuctionName=String(strcat(strcat(String(className),"_"),String(x->id)));
+    string fuctionName=String(strcat(strcat(String(className),"#"),String(x->id)));
     // className=oldclassName;
     S_enter(tempFunctionName,S_Symbol(fuctionName),Temp_namedlabel(fuctionName));
     if (!S_look(classElementsOffset,S_Symbol(x->id))){

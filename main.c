@@ -10,16 +10,27 @@
 #include "y.tab.h"
 #include "printast.h"
 #include "typecheck.h"
-#include "pr_tree_readable.h"
+#include "printtreep.h"
 #include "ast2treep.h"
+#include "canon.h"
+#include "pr_linearized.h"
 A_prog root;
 extern int yyparse();
 int main(int argc, const char * argv[]) {
     yyparse();
     typeCheckProg(root);
-    printFuncDeclList(stdout,ast2treepprog(root));
-    // printA_Prog(stdout, root);
-    // printf("PASS!\n");
-    // pr_stm(stdout,T_Seq(T_Label(Temp_newlabel()),T_Label(Temp_newlabel())),0);
+    T_funcDeclList fl=ast2treepprog(root);
+    T_stm s;
+    while (fl) {
+        s=fl->head->stm;
+        T_stmList sl = C_linearize(s);
+        struct C_block c = C_basicBlocks(sl);
+        fprintf(stdout, "%s\n",fl->head->name);
+        printStmList_linearized(stdout, C_traceSchedule(c), 0);
+        fprintf(stdout,"\n");
+        fl=fl->tail;
+    }
+    fprintf(stdout, "\n");
+
     return 0;
 }

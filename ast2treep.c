@@ -36,7 +36,7 @@ void ast2treepinit(){
     head->nxt=NULL;
 }
 string getFuctionName(string className,string fuctionName){
-    return String(strcat(strcat(String(className),"_"),String(fuctionName)));
+    return String(strcat(strcat(String(className),"#"),String(fuctionName)));
 }
 T_exp arrayInit(A_expList list){
     Temp_temp temp=Temp_newtemp();

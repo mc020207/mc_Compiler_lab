@@ -14,10 +14,10 @@ $(TESTCASE_DIR)/%.output: $(TESTCASE_DIR)/%.fmj a.out
 	@echo test $*
 	@./a.out < $(word 1,$^) >$@
 
-a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o typecheck.o pr_tree_readable.o treep.o temp.o ast2treep.o
+a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o typecheck.o treep.o temp.o ast2treep.o canon.o pr_linearized.o printtreep.o
 	@cc -g $^ -o a.out
 
-main.o: main.c fdmjast.h fdmjast.c util.h util.c printast.h printast.c y.tab.h y.tab.c lex.yy.o y.tab.o main.c main.o fdmjast.o util.o printast.o table.o types.o symbol.o typecheck.o pr_tree_readable.o treep.o temp.o 
+main.o: main.c y.tab.h y.tab.c lex.yy.o y.tab.o
 	@cc -g -c main.c -o main.o
 
 lex.yy.c: lexer.lex y.tab.h y.tab.c
@@ -59,6 +59,12 @@ printast.o: printast.c fdmjast.h util.h
 
 pr_tree_readable.o: pr_tree_readable.c
 
+canon.o: canon.c
+
+pr_linearized.o: pr_linearized.c
+
+printtreep.o: printtreep.c
+
 temp.o: temp.c temp.h
 
 treep.o: treep.c treep.h
@@ -71,32 +77,3 @@ clean:
 
 clean2:
 	@rm -f ./tests/*.output
-
-
-
-# mytest: cleanall
-# 	@g++ rd.cpp -o rd
-# 	@./rd >mktest.c
-# 	@./rd >mktest.c
-# 	@gcc mktest.c -o mktest
-# 	@./mktest
-# 	@make runint2 >b.txt
-# 	@make runcomp2 >a.txt
-# 	@g++ d.cpp -o d
-# 	@./d >d.txt
-
-# runcomp2: clean lib.ll main.ll
-# 	@llvm-link main.ll lib.ll -S -o out.ll
-# 	@lli out.ll
-
-# runint2: clean lib.ll b.out
-# 	@./b.out < fdmjast_source.txt
-
-# main.ll: a.out
-# 	@./a.out main.ll <fdmjast_source.txt
-
-# a.out: lex.yy.o y.tab.o main.c main.o fdmjast.o util.o printast.o
-# 	@cc -g main.o fdmjast.o util.o y.tab.o lex.yy.o printast.o -ll
-
-# b.out: lex.yy.o y.tab.o interpreter.c interpreter.o fdmjast.o util.o printast.o
-# 	@cc -g interpreter.o fdmjast.o util.o y.tab.o lex.yy.o printast.o -ll -o b.out
