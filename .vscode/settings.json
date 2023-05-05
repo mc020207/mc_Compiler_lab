@@ -14,6 +14,14 @@
         "xiosbase": "c",
         "xlocale": "c",
         "xutility": "c",
-        "typecheck.h": "c"
+        "typecheck.h": "c",
+        "assemblock.h": "c",
+        "canon.h": "c",
+        "atomic": "c",
+        "cstdlib": "c",
+        "memory": "c",
+        "xlocinfo": "c",
+        "xlocnum": "c",
+        "xmemory": "c"
     }
 }

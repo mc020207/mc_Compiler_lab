@@ -2,7 +2,7 @@
 #define _BG
 
 #include "assemblock.h"
-
+#include "graph.h"
 /* Block graph */
 
 G_nodeList Create_bg(AS_blockList); /* create bg from blocklist */

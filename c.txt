@@ -1,9 +1,0 @@
-public int main() {
-    
-}
-
-public class c{
-    public int f(int x){
-        return 1;
-    }
-}

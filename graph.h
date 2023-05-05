@@ -1,7 +1,7 @@
 /*
  * graph.h - Abstract Data Type (ADT) for directed graphs
  */
-
+#pragma once
 typedef struct G_graph_ *G_graph;  /* The "graph" type */
 typedef struct G_node_ *G_node;    /* The "node" type */
 

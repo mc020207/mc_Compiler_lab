@@ -1,0 +1,162 @@
+main
+L6
+**********
+ L7:
+  Move t109, malloc 4
+  Move Mem(Binop(T_plus, t109, 0)), c2#m1
+  Move t108, t109
+  Move t110, Mem(Binop(T_plus, t108, 0)).m1 t108, 10
+  Move t107, t110
+  Return t107
+------~Final traced StmList---------
+**********
+L7
+%t113 = add i32 4, 0
+%t112 = call i64 @malloc(i64 %t113)
+%t111 = ptrtoint ptr %t112 to i64
+%t109 = add i32 %t111, 0
+%t117 = add i32 %t109, 0
+%t116 = add i32 0, 0
+%t115 = add i32 %t117, %t116
+%t114 = inttoptr i64 %t115 to ptr
+%t118 = ptrtoint ptr @c2#m1 to i64
+store i64 %t118, ptr %t114
+%t119 = add i32 %t109, 0
+%t108 = add i32 %t119, 0
+%t126 = add i32 %t108, 0
+%t125 = add i32 0, 0
+%t124 = add i32 %t126, %t125
+%t123 = inttoptr i64 t124 to ptr
+%t122 = load i64, ptr %t123
+%t121 = inttoptr i64 t122 to ptr
+%t128 = add i32 %t108, 0
+%t127 = add i32 10, 0
+%t120 = call i64 t121(i64 %t128,i64 %t127)
+%t110 = add i32 %t120, 0
+%t129 = add i32 %t110, 0
+%t107 = add i32 %t129, 0
+%t130 = add i32 %t107, 0
+ret i32 %t130
+
+c2#m1
+L8
+**********
+ L9:
+  Return 0
+------~Final traced StmList---------
+**********
+L9
+%t131 = add i32 0, 0
+ret i32 %t131
+
+c1#m1
+L10
+**********
+ L11:
+  Cjump T_gt, t101, 2, L3, L4
+**********
+ L3:
+  Move t104, 1
+  Jump L5
+**********
+ L4:
+  Move t104, 0
+  Jump L5
+**********
+ L5:
+  Cjump T_ne, t104, 0, L0, L1
+**********
+ L0:
+  Move t103, t100
+  Move t132, Mem(Binop(T_plus, t103, 0)).m1 t103, Binop(T_minus, t101, 1)
+  Move t134, t132
+  Move t102, t100
+  Move t133, Mem(Binop(T_plus, t102, 0)).m1 t102, Binop(T_minus, t101, 2)
+  Return Binop(T_plus, t134, t133)
+**********
+ L12:
+  Jump L2
+**********
+ L1:
+  Jump L2
+**********
+ L2:
+  Return t101
+------~Final traced StmList---------
+**********
+L11
+%t136 = add i32 %t101, 0
+%t137 = add i32 2, 0
+%t135 = icmp sgt i64 %t136, %t137
+br i1 %t135, label %L3, label %L4
+
+**********
+L3
+%t138 = add i32 1, 0
+%t104 = add i32 %t138, 0
+br label %L5
+
+**********
+L4
+%t139 = add i32 0, 0
+%t104 = add i32 %t139, 0
+br label %L5
+
+**********
+L5
+%t141 = add i32 %t104, 0
+%t142 = add i32 0, 0
+%t140 = icmp ne i64 %t141, %t142
+br i1 %t140, label %L0, label %L1
+
+**********
+L0
+%t143 = add i32 %t100, 0
+%t103 = add i32 %t143, 0
+%t150 = add i32 %t103, 0
+%t149 = add i32 0, 0
+%t148 = add i32 %t150, %t149
+%t147 = inttoptr i64 t148 to ptr
+%t146 = load i64, ptr %t147
+%t145 = inttoptr i64 t146 to ptr
+%t154 = add i32 %t103, 0
+%t153 = add i32 %t101, 0
+%t152 = add i32 1, 0
+%t151 = sub i32 %t153, %t152
+%t144 = call i64 t145(i64 %t154,i64 %t151)
+%t132 = add i32 %t144, 0
+%t155 = add i32 %t132, 0
+%t134 = add i32 %t155, 0
+%t156 = add i32 %t100, 0
+%t102 = add i32 %t156, 0
+%t163 = add i32 %t102, 0
+%t162 = add i32 0, 0
+%t161 = add i32 %t163, %t162
+%t160 = inttoptr i64 t161 to ptr
+%t159 = load i64, ptr %t160
+%t158 = inttoptr i64 t159 to ptr
+%t167 = add i32 %t102, 0
+%t166 = add i32 %t101, 0
+%t165 = add i32 2, 0
+%t164 = sub i32 %t166, %t165
+%t157 = call i64 t158(i64 %t167,i64 %t164)
+%t133 = add i32 %t157, 0
+%t170 = add i32 %t134, 0
+%t169 = add i32 %t133, 0
+%t168 = add i32 %t170, %t169
+ret i32 %t168
+
+**********
+L12
+br label %L2
+
+**********
+L1
+br label %L2
+
+**********
+L2
+%t171 = add i32 %t101, 0
+ret i32 %t171
+
+
