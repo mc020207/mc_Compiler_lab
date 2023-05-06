@@ -18,20 +18,31 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss);
 AS_instr AS_Label2(Temp_label lable){
     return AS_Label(S_name(lable),lable);
 }
-AS_instrList getargs(T_expList list,string demand,Temp_tempList* templist,int d){
+AS_instrList getargs(T_expList list,string demand,Temp_tempList* templist,int d,bool first){
     if (!list) {
         strcpy(demand,"");
         *templist=NULL;
         return NULL;
     }
-    if (d==1) sprintf(demand,"i64 %%`s%d",d);
-    else sprintf(demand,",i64 %%`s%d",d);
-    string tempstring=checked_malloc(sizeof(char)*100);// careful
-    AS_instrList ans=getargs(list->tail,tempstring,templist,d+1);
-    strcat(demand,tempstring);
-    Temp_temp temp=NULL;
-    ans=AS_splice(treep2assemExp(list->head,&temp,TRUE),ans);
-    *templist=Temp_TempList(temp,*templist);
+    AS_instrList ans;
+    if (list->head->kind==T_CONST){
+        if (first) sprintf(demand,"i64 %d",list->head->u.CONST);
+        else sprintf(demand,",i64 %d",list->head->u.CONST);
+        string tempstring=checked_malloc(sizeof(char)*1000);// careful
+        ans=getargs(list->tail,tempstring,templist,d,0);
+        strcat(demand,tempstring);
+        *templist=*templist;
+    }
+    else{
+        if (first) sprintf(demand,"i64 %%`s%d",d);
+        else sprintf(demand,",i64 %%`s%d",d);
+        string tempstring=checked_malloc(sizeof(char)*1000);// careful
+        ans=getargs(list->tail,tempstring,templist,d+1,0);
+        strcat(demand,tempstring);
+        Temp_temp temp=NULL;
+        ans=AS_splice(treep2assemExp(list->head,&temp,TRUE),ans);
+        *templist=Temp_TempList(temp,*templist);
+    }
     return ans;
 }
 AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
@@ -46,26 +57,90 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
         case T_BINOP:{
             Temp_temp temp1=NULL,temp2=NULL;
             free(ans);
-            ans=AS_splice(treep2assemExp(x->u.BINOP.left,&temp1,TRUE),treep2assemExp(x->u.BINOP.right,&temp2,TRUE));
-            switch (x->u.BINOP.op){
-                case T_plus:{
-                    strcpy(des,"%`d0 = add i32 %`s0, %`s1");
-                    break;
+            if (x->u.BINOP.left->kind==T_CONST&&x->u.BINOP.right->kind==T_CONST){
+                switch (x->u.BINOP.op){
+                    case T_plus:{
+                        sprintf(des,"%`d0 = add i64 %d, %d",x->u.BINOP.left->u.CONST,x->u.BINOP.right->u.CONST);
+                        break;
+                    }
+                    case T_minus:{
+                        sprintf(des,"%`d0 = sub i64 %d, %d",x->u.BINOP.left->u.CONST,x->u.BINOP.right->u.CONST);
+                        break;
+                    }
+                    case T_mul:{
+                        sprintf(des,"%`d0 = mul i64 %d, %d",x->u.BINOP.left->u.CONST,x->u.BINOP.right->u.CONST);
+                        break;
+                    }
+                    case T_div:{
+                        sprintf(des,"%`d0 = sdiv i64 %d, %d",x->u.BINOP.left->u.CONST,x->u.BINOP.right->u.CONST);
+                        break;
+                    }
                 }
-                case T_minus:{
-                    strcpy(des,"%`d0 = sub i32 %`s0, %`s1");
-                    break;
+                ans=I(OI(String(des), T(ret),NULL, NULL));
+            }else if (x->u.BINOP.left->kind==T_CONST){
+                ans=treep2assemExp(x->u.BINOP.right,&temp2,TRUE);
+                switch (x->u.BINOP.op){
+                    case T_plus:{
+                        sprintf(des,"%`d0 = add i64 %d, %`s0",x->u.BINOP.left->u.CONST);
+                        break;
+                    }
+                    case T_minus:{
+                        sprintf(des,"%`d0 = sub i64 %d, %`s0",x->u.BINOP.left->u.CONST);
+                        break;
+                    }
+                    case T_mul:{
+                        sprintf(des,"%`d0 = mul i64 %d, %`s0",x->u.BINOP.left->u.CONST);
+                        break;
+                    }
+                    case T_div:{
+                        sprintf(des,"%`d0 = sdiv i64 %d, %`s0",x->u.BINOP.left->u.CONST);
+                        break;
+                    }
                 }
-                case T_mul:{
-                    strcpy(des,"%`d0 = mul i32 %`s0, %`s1");
-                    break;
+                ans=AS_splice(ans,I(OI(String(des), T(ret), T(temp2), NULL)));
+            }else if (x->u.BINOP.right->kind==T_CONST){
+                ans=treep2assemExp(x->u.BINOP.left,&temp1,TRUE);
+                switch (x->u.BINOP.op){
+                    case T_plus:{
+                        sprintf(des,"%`d0 = add i64 %`s0, %d",x->u.BINOP.right->u.CONST);
+                        break;
+                    }
+                    case T_minus:{
+                        sprintf(des,"%`d0 = sub i64 %`s0, %d",x->u.BINOP.right->u.CONST);
+                        break;
+                    }
+                    case T_mul:{
+                        sprintf(des,"%`d0 = mul i64 %`s0, %d",x->u.BINOP.right->u.CONST);
+                        break;
+                    }
+                    case T_div:{
+                        sprintf(des,"%`d0 = sdiv i64 %`s0, %d",x->u.BINOP.right->u.CONST);
+                        break;
+                    }
                 }
-                case T_div:{
-                    strcpy(des,"%`d0 = sdiv i32 %`s0, %`s1");
-                    break;
+                ans=AS_splice(ans,I(OI(String(des), T(ret), T(temp1), NULL)));
+            }else{
+                ans=AS_splice(treep2assemExp(x->u.BINOP.left,&temp1,TRUE),treep2assemExp(x->u.BINOP.right,&temp2,TRUE));
+                switch (x->u.BINOP.op){
+                    case T_plus:{
+                        strcpy(des,"%`d0 = add i64 %`s0, %`s1");
+                        break;
+                    }
+                    case T_minus:{
+                        strcpy(des,"%`d0 = sub i64 %`s0, %`s1");
+                        break;
+                    }
+                    case T_mul:{
+                        strcpy(des,"%`d0 = mul i64 %`s0, %`s1");
+                        break;
+                    }
+                    case T_div:{
+                        strcpy(des,"%`d0 = sdiv i64 %`s0, %`s1");
+                        break;
+                    }
                 }
+                ans=AS_splice(ans,I(OI(String(des), T(ret), TL(temp1, T(temp2)), NULL)));
             }
-            ans=AS_splice(ans,I(OI(String(des), T(ret), TL(temp1, T(temp2)), NULL)));
             break;
         }
         case T_MEM:{
@@ -79,7 +154,7 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
         }
         case T_TEMP:{
             if(canMiss&&*rettemp==NULL) ret=x->u.TEMP;
-            else ans->head=OI("%`d0 = add i32 %`s0, 0", T(ret), T(x->u.TEMP), NULL);
+            else ans->head=OI("%`d0 = add i64 %`s0, 0", T(ret), T(x->u.TEMP), NULL);
             break;
         }
         case T_ESEQ:{
@@ -92,7 +167,7 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
             break;
         }
         case T_CONST:{
-            sprintf(des,"%`d0 = add i32 %d, 0",x->u.CONST);
+            sprintf(des,"%`d0 = add i64 %d, 0",x->u.CONST);
             // printf("%s\n",des);
             ans->head=OI(String(des),T(ret),NULL,NULL);
             break;
@@ -103,13 +178,13 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
             ans=treep2assemExp(x->u.CALL.obj,&tempfuci64,TRUE);
             ans=AS_splice(ans,I(OI("%`d0 = inttoptr i64 %`s0 to ptr",T(tempfucptr),T(tempfuci64),NULL)));
             string des2=String("%`d0 = call i64 %`s0(");
-            string tempstring=checked_malloc(100);
+            string tempstring=checked_malloc(1000);
             Temp_tempList args;
-            ans=AS_splice(ans,getargs(x->u.CALL.args,tempstring,&args,1));
+            ans=AS_splice(ans,getargs(x->u.CALL.args,tempstring,&args,1,1));
             strcat(des2,tempstring);
             strcat(des2,")");
             args=Temp_TempList(tempfucptr,args);
-            ans=AS_splice(ans,I(OI(des2,T(ret),args,NULL)));
+            ans=AS_splice(ans,I(OI(String(des2),T(ret),args,NULL)));
             break;
         }
         case T_ExtCALL:{
@@ -117,9 +192,16 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
                 Temp_temp temp1=NULL,temp2=NULL,temp3=NULL;
                 temp2=Temp_newtemp();
                 free(ans);
-                ans=treep2assemExp(x->u.ExtCALL.args->head,&temp1,TRUE);
-                ans=AS_splice(ans,I(OI("%`d0 = call i64 @malloc(i64 %`s0)",T(temp2),T(temp1),NULL)));
-                ans=AS_splice(ans,I(OI("%`d0 = ptrtoint ptr %`s0 to i64",T(ret),T(temp2),NULL)));
+                if (x->u.ExtCALL.args->head->kind==T_CONST){
+                    sprintf(des,"%`d0 = call ptr @malloc(i64 %d)",x->u.ExtCALL.args->head->u.CONST);
+                    ans=I(OI(String(des),T(temp2),NULL,NULL));
+                    ans=AS_splice(ans,I(OI("%`d0 = ptrtoint ptr %`s0 to i64",T(ret),T(temp2),NULL)));
+                }
+                else{
+                    ans=treep2assemExp(x->u.ExtCALL.args->head,&temp1,TRUE);
+                    ans=AS_splice(ans,I(OI("%`d0 = call ptr @malloc(i64 %`s0)",T(temp2),T(temp1),NULL)));
+                    ans=AS_splice(ans,I(OI("%`d0 = ptrtoint ptr %`s0 to i64",T(ret),T(temp2),NULL)));
+                }
             }else{
                 assert(0);
             }
@@ -136,7 +218,7 @@ AS_instrList treep2assemStm(T_stm x){
     ans->head=NULL;ans->tail=NULL;
     switch (x->kind){
          case T_SEQ:{
-            assert(0);
+            // assert(0);
             ans=AS_splice(treep2assemStm(x->u.SEQ.left),treep2assemStm(x->u.SEQ.right));
             break;
          }
@@ -153,41 +235,140 @@ AS_instrList treep2assemStm(T_stm x){
             free(ans);
             Temp_temp temp1=NULL,temp2=NULL,tempcond=NULL;
             tempcond=Temp_newtemp();
-            ans=treep2assemExp(x->u.CJUMP.left,&temp1,TRUE);
-            assert(ans==NULL);
-            ans=AS_splice(ans,treep2assemExp(x->u.CJUMP.right,&temp2,TRUE));
-            AS_printInstrList(stdout,ans,Temp_name());
-            switch (x->u.CJUMP.op){
-                case T_eq:{
-                    strcpy(des,"%`d0 = icmp eq i64 %`s0, %`s1");
-                    break;
+            if (x->u.CJUMP.left->kind==T_CONST&&x->u.CJUMP.right->kind==T_CONST){
+                ans=NULL;
+                switch (x->u.CJUMP.op){
+                    case T_eq:{
+                        sprintf(des,"%`d0 = icmp eq i64 %d, %d",x->u.CJUMP.left->u.CONST,x->u.CJUMP.right->u.CONST);
+                        break;
+                    }
+                    case T_ne:{
+                        sprintf(des,"%`d0 = icmp ne i64 %d, %d",x->u.CJUMP.left->u.CONST,x->u.CJUMP.right->u.CONST);
+                        break;
+                    }
+                    case T_lt:{
+                        sprintf(des,"%`d0 = icmp slt i64 %d, %d",x->u.CJUMP.left->u.CONST,x->u.CJUMP.right->u.CONST);
+                        break;
+                    }
+                    case T_gt:{
+                        sprintf(des,"%`d0 = icmp sgt i64 %d, %d",x->u.CJUMP.left->u.CONST,x->u.CJUMP.right->u.CONST);
+                        break;
+                    }
+                    case T_le:{
+                        sprintf(des,"%`d0 = icmp sle i64 %d, %d",x->u.CJUMP.left->u.CONST,x->u.CJUMP.right->u.CONST);
+                        break;
+                    }
+                    case T_ge:{
+                        sprintf(des,"%`d0 = icmp sge i64 %d, %d",x->u.CJUMP.left->u.CONST,x->u.CJUMP.right->u.CONST);
+                        break;
+                    }
+                    default:{
+                        assert(0);
+                        break;
+                    }
                 }
-                case T_ne:{
-                    strcpy(des,"%`d0 = icmp ne i64 %`s0, %`s1");
-                    break;
+                ans=AS_splice(ans,I(OI(String(des),T(tempcond),NULL,NULL)));
+            }else if (x->u.CJUMP.left->kind==T_CONST){
+                ans=treep2assemExp(x->u.CJUMP.right,&temp2,TRUE);
+                switch (x->u.CJUMP.op){
+                    case T_eq:{
+                        sprintf(des,"%`d0 = icmp eq i64 %d, i64 %`s0",x->u.CJUMP.left->u.CONST);
+                        break;
+                    }
+                    case T_ne:{
+                        sprintf(des,"%`d0 = icmp ne i64 %d, i64 %`s0",x->u.CJUMP.left->u.CONST);
+                        break;
+                    }
+                    case T_lt:{
+                        sprintf(des,"%`d0 = icmp slt i64 %d, i64 %`s0",x->u.CJUMP.left->u.CONST);
+                        break;
+                    }
+                    case T_gt:{
+                        sprintf(des,"%`d0 = icmp sgt i64 %d, i64 %`s0",x->u.CJUMP.left->u.CONST);
+                        break;
+                    }
+                    case T_le:{
+                        sprintf(des,"%`d0 = icmp sle i64 %d, i64 %`s0",x->u.CJUMP.left->u.CONST);
+                        break;
+                    }
+                    case T_ge:{
+                        sprintf(des,"%`d0 = icmp sge i64 %d, i64 %`s0",x->u.CJUMP.left->u.CONST);
+                        break;
+                    }
+                    default:{
+                        assert(0);
+                        break;
+                    }
                 }
-                case T_lt:{
-                    strcpy(des,"%`d0 = icmp slt i64 %`s0, %`s1");
-                    break;
+                ans=AS_splice(ans,I(OI(String(des),T(tempcond),T(temp2),NULL)));
+            }else if (x->u.CJUMP.right->kind==T_CONST){
+                ans=treep2assemExp(x->u.CJUMP.left,&temp1,TRUE);
+                switch (x->u.CJUMP.op){
+                    case T_eq:{
+                        sprintf(des,"%`d0 = icmp eq i64 %`s0, i64 %d",x->u.CJUMP.right->u.CONST);
+                        break;
+                    }
+                    case T_ne:{
+                        sprintf(des,"%`d0 = icmp ne i64 %`s0, i64 %d",x->u.CJUMP.right->u.CONST);
+                        break;
+                    }
+                    case T_lt:{
+                        sprintf(des,"%`d0 = icmp slt i64 %`s0, i64 %d",x->u.CJUMP.right->u.CONST);
+                        break;
+                    }
+                    case T_gt:{
+                        sprintf(des,"%`d0 = icmp sgt i64 %`s0, i64 %d",x->u.CJUMP.right->u.CONST);
+                        break;
+                    }
+                    case T_le:{
+                        sprintf(des,"%`d0 = icmp sle i64 %`s0, i64 %d",x->u.CJUMP.right->u.CONST);
+                        break;
+                    }
+                    case T_ge:{
+                        sprintf(des,"%`d0 = icmp sge i64 %`s0, i64 %d",x->u.CJUMP.right->u.CONST);
+                        break;
+                    }
+                    default:{
+                        assert(0);
+                        break;
+                    }
                 }
-                case T_gt:{
-                    strcpy(des,"%`d0 = icmp sgt i64 %`s0, %`s1");
-                    break;
+                ans=AS_splice(ans,I(OI(String(des),T(tempcond),T(temp1),NULL)));
+            }else{
+                ans=treep2assemExp(x->u.CJUMP.left,&temp1,TRUE);
+                ans=AS_splice(ans,treep2assemExp(x->u.CJUMP.right,&temp2,TRUE));
+                switch (x->u.CJUMP.op){
+                    case T_eq:{
+                        strcpy(des,"%`d0 = icmp eq i64 %`s0, %`s1");
+                        break;
+                    }
+                    case T_ne:{
+                        strcpy(des,"%`d0 = icmp ne i64 %`s0, %`s1");
+                        break;
+                    }
+                    case T_lt:{
+                        strcpy(des,"%`d0 = icmp slt i64 %`s0, %`s1");
+                        break;
+                    }
+                    case T_gt:{
+                        strcpy(des,"%`d0 = icmp sgt i64 %`s0, %`s1");
+                        break;
+                    }
+                    case T_le:{
+                        strcpy(des,"%`d0 = icmp sle i64 %`s0, %`s1");
+                        break;
+                    }
+                    case T_ge:{
+                        strcpy(des,"%`d0 = icmp sge i64 %`s0, %`s1");
+                        break;
+                    }
+                    default:{
+                        assert(0);
+                        break;
+                    }
                 }
-                case T_le:{
-                    strcpy(des,"%`d0 = icmp sle i64 %`s0, %`s1");
-                    break;
-                }
-                case T_ge:{
-                    strcpy(des,"%`d0 = icmp sge i64 %`s0, %`s1");
-                    break;
-                }
-                default:{
-                    assert(0);
-                    break;
-                }
+                ans=AS_splice(ans,I(OI(String(des),T(tempcond),TL(temp1,T(temp2)),NULL)));
             }
-            ans=AS_splice(ans,I(OI(String(des),T(tempcond),TL(temp1,T(temp2)),NULL)));
             sprintf(des,"br i1 %`s0, label %%%s, label %%%s",S_name(x->u.CJUMP.true),S_name(x->u.CJUMP.false));
             ans=AS_splice(ans,I(OI(String(des),NULL,T(tempcond),AS_Targets(LL(x->u.CJUMP.true,L(x->u.CJUMP.false))))));
             break;
@@ -197,14 +378,20 @@ AS_instrList treep2assemStm(T_stm x){
             if (x->u.MOVE.dst->kind==T_TEMP){
                 Temp_temp temp1=x->u.MOVE.dst->u.TEMP;
                 ans=treep2assemExp(x->u.MOVE.src,&temp1,FALSE);
-                // ans=AS_splice(ans,I(OI("%`d0 = add i32 %`s0, 0",T(x->u.MOVE.dst->u.TEMP),T(temp1),NULL)));
+                // ans=AS_splice(ans,I(OI("%`d0 = add i64 %`s0, 0",T(x->u.MOVE.dst->u.TEMP),T(temp1),NULL)));
             }else if (x->u.MOVE.dst->kind==T_MEM){
                 Temp_temp tempsrc=NULL,tempdsti64=NULL,tempdst=NULL;
                 tempdst=Temp_newtemp();
                 ans=treep2assemExp(x->u.MOVE.dst->u.MEM,&tempdsti64,TRUE);
                 ans=AS_splice(ans,I(OI("%`d0 = inttoptr i64 %`s0 to ptr",T(tempdst),T(tempdsti64),NULL)));
-                ans=AS_splice(ans,treep2assemExp(x->u.MOVE.src,&tempsrc,TRUE));
-                ans=AS_splice(ans,I(OI("store i64 %`s0, ptr %`s1",NULL,TL(tempsrc,T(tempdst)),NULL)));
+                if (x->u.MOVE.src->kind==T_CONST){
+                    sprintf(des,"store i64 %d, ptr %`s0",x->u.MOVE.src->u.CONST);
+                    ans=AS_splice(ans,I(OI(String(des),NULL,T(tempdst),NULL)));
+                }
+                else{
+                    ans=AS_splice(ans,treep2assemExp(x->u.MOVE.src,&tempsrc,TRUE));
+                    ans=AS_splice(ans,I(OI("store i64 %`s0, ptr %`s1",NULL,TL(tempsrc,T(tempdst)),NULL)));
+                }
             }else{
                 assert(0);
             }
@@ -219,8 +406,13 @@ AS_instrList treep2assemStm(T_stm x){
          case T_RETURN:{
             free(ans);
             Temp_temp temp=NULL;
-            ans=treep2assemExp(x->u.EXP,&temp,TRUE);
-            ans=AS_splice(ans,I(OI("ret i32 %`s0", NULL, T(temp), NULL)));
+            if (x->u.EXP->kind==T_CONST){
+                sprintf(des,"ret i64 %d",x->u.EXP->u.CONST);
+                ans=I(OI(String(des),NULL,NULL,NULL));
+            }else{
+                ans=treep2assemExp(x->u.EXP,&temp,TRUE);
+                ans=AS_splice(ans,I(OI("ret i64 %`s0", NULL, T(temp), NULL)));
+            }
             break;
          }
     }

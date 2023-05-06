@@ -58,7 +58,7 @@ int main(int argc, const char * argv[]) {
         sprintf(des,"define i64 @%s() #0 {",fl->head->name);
         AS_instrList prolog=IL(OI(String(des), NULL, NULL ,NULL), NULL);
         AS_instrList epilog=I(OI("}", NULL, NULL, NULL));
-        AS_instrList il = AS_traceSchedule(aslist, prolog, epilog, FALSE);
+        AS_instrList il = AS_traceSchedule(aslist, prolog, epilog, TRUE);
         AS_printInstrList(stdout, il, Temp_name());
         G_graph G=FG_AssemFlowGraph(il);
         G_show(stdout, G_nodes(G), (void*)show);
