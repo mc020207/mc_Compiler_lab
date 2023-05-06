@@ -45,12 +45,15 @@ int main(int argc, const char * argv[]) {
         s=fl->head->stm;
         T_stmList sl = C_linearize(s);
         struct C_block c = C_basicBlocks(sl);
-        c=C_basicBlocks(C_traceSchedule(c));
+        sl=C_traceSchedule(c);
+        // printf("------~Final traced StmList1---------\n");
+        // printStmList_linearized(stdout,sl,0);
+        c=C_basicBlocks(sl);
         AS_blockList aslist=treep2assemblcok(c);
         G_nodeList bg=Create_bg(aslist);
         printf("------Basic Block Graph---------\n");
         Show_bg(stdout, bg);
-        printf("------~Final traced StmList---------\n");
+        printf("------~Final traced StmList2---------\n");
         char des[1010];
         sprintf(des,"define i64 @%s() #0 {",fl->head->name);
         AS_instrList prolog=IL(OI(String(des), NULL, NULL ,NULL), NULL);
