@@ -46,7 +46,6 @@ AS_instrList getargs(T_expList list,string demand,Temp_tempList* templist,int d,
 AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
     if (x==NULL) return NULL;
     AS_instrList ans=checked_malloc(sizeof(*ans));
-    // printf("%d\n",x->kind);
     ans->head=NULL;ans->tail=NULL;
     Temp_temp ret;
     if (*rettemp) ret=*rettemp;
@@ -166,7 +165,6 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
         }
         case T_CONST:{
             sprintf(des,"%%`d0 = add i64 %d, 0",x->u.CONST);
-            // printf("%s\n",des);
             ans->head=OI(String(des),T(ret),NULL,NULL);
             break;
         }
@@ -216,7 +214,6 @@ AS_instrList treep2assemStm(T_stm x){
     ans->head=NULL;ans->tail=NULL;
     switch (x->kind){
          case T_SEQ:{
-            // assert(0);
             ans=AS_splice(treep2assemStm(x->u.SEQ.left),treep2assemStm(x->u.SEQ.right));
             break;
          }
@@ -376,7 +373,6 @@ AS_instrList treep2assemStm(T_stm x){
             if (x->u.MOVE.dst->kind==T_TEMP){
                 Temp_temp temp1=x->u.MOVE.dst->u.TEMP;
                 ans=treep2assemExp(x->u.MOVE.src,&temp1,FALSE);
-                // ans=AS_splice(ans,I(OI("%`d0 = add i64 %`s0, 0",T(x->u.MOVE.dst->u.TEMP),T(temp1),NULL)));
             }else if (x->u.MOVE.dst->kind==T_MEM){
                 Temp_temp tempsrc=NULL,tempdsti64=NULL,tempdst=NULL;
                 tempdst=Temp_newtemp();
@@ -414,15 +410,11 @@ AS_instrList treep2assemStm(T_stm x){
             break;
          }
     }
-    // printf("%p: return\n",x);
     return ans;
 }
 AS_instrList treep2assemStmList(T_stmList list){
     if (list==NULL) return NULL;
-    // printf("************%d**************\n",list->head->kind);
-    // printf("asd head:%p tail:%p\n",list->head,list->tail);
     AS_instrList now = treep2assemStm(list->head);
-    // AS_printInstrList(stdout,now,Temp_name());
     return AS_splice(now,treep2assemStmList(list->tail));
 }
 AS_blockList treep2assemblcok(struct C_block block){
