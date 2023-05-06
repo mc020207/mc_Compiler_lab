@@ -12,11 +12,9 @@
 #define L(a) Temp_LabelList(a, NULL)
 #define Targets(a) AS_Targets(a)
 char des[1000];
-// 检查所有的Temp_temp有没有赋初值NULL
-// 检查是不是所有语句都加了%
 AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss);
 AS_instr AS_Label2(Temp_label lable){
-    return AS_Label(S_name(lable),lable);
+    return AS_Label(String(strcat(S_name(lable),":")),lable);
 }
 AS_instrList getargs(T_expList list,string demand,Temp_tempList* templist,int d,bool first){
     if (!list) {
@@ -148,7 +146,7 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
             Temp_temp tempsrci64=NULL,tempsrcptr=NULL;
             tempsrcptr=Temp_newtemp();
             ans=treep2assemExp(x->u.MEM,&tempsrci64,TRUE);
-            ans=AS_splice(ans,I(OI("%`d0 = inttoptr i64 `s0 to ptr",T(tempsrcptr),T(tempsrci64),NULL)));
+            ans=AS_splice(ans,I(OI("%`d0 = inttoptr i64 %`s0 to ptr",T(tempsrcptr),T(tempsrci64),NULL)));
             ans=AS_splice(ans,I(OI("%`d0 = load i64, ptr %`s0",T(ret),T(tempsrcptr),NULL)));
             break;
         }
@@ -428,13 +426,26 @@ AS_instrList treep2assemStmList(T_stmList list){
     return AS_splice(now,treep2assemStmList(list->tail));
 }
 AS_blockList treep2assemblcok(struct C_block block){
-    
     if (!block.stmLists) return NULL;
     AS_instrList now1 = treep2assemStmList(block.stmLists->head);
-    
     AS_block now=AS_Block(now1);
-    
     block.stmLists=block.stmLists->tail;
-    
     return AS_BlockList(now,treep2assemblcok(block));
+}
+AS_instrList treep2assemfuction(AS_blockList aslist,T_funcDecl x){
+    string des2=checked_malloc(1000);
+    sprintf(des2,"define i64 @%s(",x->name);
+    Temp_tempList list=x->args;
+    for (int i=0;;i++){
+        if (!list) break;
+        if (i==0) sprintf(des,"i64 %`s%d",i);
+        else sprintf(des,", i64 %`s%d",i);
+        strcat(des,des);
+        list=list->tail;
+    }
+    strcat(des2,") #0 {");
+    AS_instrList prolog=IL(OI(String(des2), NULL, x->args ,NULL), NULL);
+    AS_instrList epilog=I(OI("}", NULL, NULL, NULL));
+    AS_instrList il = AS_traceSchedule(aslist, prolog, epilog, TRUE);
+    return il;
 }

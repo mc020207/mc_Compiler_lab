@@ -1,18 +1,31 @@
 public int main() {
-    int r;
-    return ({r=new c2().m1(10);} r);
+    int[] a;
+    class c1 o;
+
+    a = new int[6];
+    a[0] = 10;
+    a[2] = 30;
+    o = new c2();
+
+    return o.m1(new c1().self(a), o.m2()) + a[2]; // 36 + 30 = 66
 }
 
 public class c1 {
-    public int m1(int x) {
-        if (x>2) 
-           return(this.m1(x-1)+this.m1(x-2));
-        return x;
+    int[] a = {50, 20, 10};
+    public int m1(int[] a, int b) {
+        return length(a) + b * 2 + this.a[1]; // 6 + 5 * 2 + 20 = 36
+    }
+    public int m2() {
+        return this.a[2]; // 20
+    }
+    public int[] self(int[] a) {
+        return a;
     }
 }
 
-public class c2 {
-    public int m1(int x) {
-        return 0;
+public class c2 extends c1 {
+    int b = 45;
+    public int m2() {
+        return this.a[0] - this.b; // 50 - 45 = 5
     }
 }

@@ -50,26 +50,21 @@ int main(int argc, const char * argv[]) {
         // printStmList_linearized(stdout,sl,0);
         c=C_basicBlocks(sl);
         AS_blockList aslist=treep2assemblcok(c);
-        G_nodeList bg=Create_bg(aslist);
-        printf("------Basic Block Graph---------\n");
-        Show_bg(stdout, bg);
-        printf("------~Final traced StmList2---------\n");
-        char des[1010];
-        sprintf(des,"define i64 @%s() #0 {",fl->head->name);
-        AS_instrList prolog=IL(OI(String(des), NULL, NULL ,NULL), NULL);
-        AS_instrList epilog=I(OI("}", NULL, NULL, NULL));
-        AS_instrList il = AS_traceSchedule(aslist, prolog, epilog, TRUE);
+        // G_nodeList bg=Create_bg(aslist);
+        // printf("------Basic Block Graph---------\n");
+        // Show_bg(stdout, bg);
+        // printf("------~Final traced StmList2---------\n");
+        AS_instrList il=treep2assemfuction(aslist,fl->head);
         AS_printInstrList(stdout, il, Temp_name());
-        G_graph G=FG_AssemFlowGraph(il);
-        G_show(stdout, G_nodes(G), (void*)show);
-        G_nodeList lg=Liveness(G_nodes(G));
-        Show_Liveness(stdout, lg);
-        printf("------Interference Graph---------\n");
-        G_nodeList ig=Create_ig(lg);
-        Show_ig(stdout, ig);
+        // G_graph G=FG_AssemFlowGraph(il);
+        // G_show(stdout, G_nodes(G), (void*)show);
+        // G_nodeList lg=Liveness(G_nodes(G));
+        // Show_Liveness(stdout, lg);
+        // printf("------Interference Graph---------\n");
+        // G_nodeList ig=Create_ig(lg);
+        // Show_ig(stdout, ig);
         fl=fl->tail;
     }
-    fprintf(stdout, "\n");
-
+    fprintf(stdout, "declare ptr @malloc(i32)\n");
     return 0;
 }

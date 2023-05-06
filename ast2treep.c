@@ -1,7 +1,7 @@
 #include "ast2treep.h"
 #include "stdlib.h"
 #include <string.h>
-#define OFFSETSTEP 4
+#define OFFSETSTEP 8
 S_table temp_table;
 extern S_table tempFunctionName;
 extern S_table classElementsOffset;
@@ -36,7 +36,7 @@ void ast2treepinit(){
     head->nxt=NULL;
 }
 string getFuctionName(string className,string fuctionName){
-    return String(strcat(strcat(String(className),"#"),String(fuctionName)));
+    return String(strcat(strcat(String(className),"$"),String(fuctionName)));
 }
 T_exp arrayInit(A_expList list){
     Temp_temp temp=Temp_newtemp();
