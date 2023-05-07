@@ -432,7 +432,7 @@ AS_instrList treep2assemfuction(AS_blockList aslist,T_funcDecl x){
         if (!list) break;
         if (i==0) sprintf(des,"i64 %%`s%d",i);
         else sprintf(des,", i64 %%`s%d",i);
-        strcat(des,des);
+        strcat(des2,des);
         list=list->tail;
     }
     strcat(des2,") #0 {");

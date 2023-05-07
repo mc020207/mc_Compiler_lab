@@ -112,7 +112,7 @@ L0:
 ret i64 -1
 }
 
-define i64 @c2$m2() #0 {
+define i64 @c2$m2(i64 %t106) #0 {
 L4:
 %t244 = add i64 %t106, 0
 %t243 = inttoptr i64 %t244 to ptr
@@ -130,14 +130,14 @@ L3:
 ret i64 -1
 }
 
-define i64 @c1$self() #0 {
+define i64 @c1$self(i64 %t104, i64 %t105) #0 {
 L7:
 ret i64 %t105
 L6:
 ret i64 -1
 }
 
-define i64 @c1$m2() #0 {
+define i64 @c1$m2(i64 %t103) #0 {
 L10:
 %t253 = add i64 %t103, 0
 %t252 = inttoptr i64 %t253 to ptr
@@ -151,7 +151,7 @@ L9:
 ret i64 -1
 }
 
-define i64 @c1$m1() #0 {
+define i64 @c1$m1(i64 %t100, i64 %t101, i64 %t102) #0 {
 L13:
 %t269 = sub i64 %t101, 8
 %t268 = inttoptr i64 %t269 to ptr
