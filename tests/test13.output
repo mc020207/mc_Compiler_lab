@@ -1,17 +1,15 @@
 define i64 @main() #0 {
-L1:
-%t104 = call ptr @malloc(i64 8)
-%t103 = ptrtoint ptr %t104 to i64
-%t102 = add i64 %t103, 0
-br label %L0
 L0:
 ret i64 -1
 }
 
 define i64 @c1$a(i64 %t100, i64 %t101) #0 {
-L4:
-ret i64 2
 L3:
+%t105 = add i64 %t100, 8
+%t104 = inttoptr i64 %t105 to ptr
+%t103 = load i64, ptr %t104
+ret i64 %t103
+L2:
 ret i64 -1
 }
 

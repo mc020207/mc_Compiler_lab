@@ -1,0 +1,20 @@
+// wrong parameter at (5,23)
+public int main() { 
+    class c2 my_class;
+    my_class = new c2();
+    return my_class.a(new c1());
+}
+
+public class c1{
+    int x;
+    public int b(int x) {
+        return 3;
+    }
+}
+
+public class c2 extends c1{
+    //int x;
+    public int a(class c1 x) {
+        return 1;
+    }
+}

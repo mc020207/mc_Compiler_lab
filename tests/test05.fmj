@@ -1,40 +1,30 @@
+// Class declarations cannot have rings at (5,1)
 public int main() {
-    int i=0; 
-    int[] a; 
-    class c1 o1;
-    class c2 o2;
-    class c3 o3;
-    class c4 o4;
-
-    o1=new c4();
-    o2=new c4();
-    o3=new c4();
-    o4=new c4();
-
-    o1.x1=1;
-    o2.x1=2;
-    o3.x1=3;
-    o4.x1=4;
-
-    o1.x1=1;
-    o2.x2=2;
-    o3.x1=3;
-    o4.x4=4;
-    return a[7];
 }
 
-public class c4 extends c3 {
-    int x4=123;
+public class a extends b{
 }
 
-public class c3 extends c2 {
-    int x3=10;
+public class b extends c{
 }
 
-public class c2 extends c1 {
-    int x2=1;
+public class d extends e{
 }
 
-public class c1 {
-    int x1;
+public class c extends d{
+}
+
+public class e extends f{
+}
+
+public class f extends g{
+}
+
+public class g extends h{
+}
+
+public class h extends i{
+}
+
+public class i{
 }

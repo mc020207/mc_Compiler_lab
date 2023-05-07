@@ -1,0 +1,13 @@
+// formal can only be declared once at (10,25)
+public int main() { 
+    int y;
+    int x;
+    return new c1().a(1,1);
+}
+
+public class c1 {
+    int x;
+    public int a(int x, int y) {
+        return 3;
+    }
+}

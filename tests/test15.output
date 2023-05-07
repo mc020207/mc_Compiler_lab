@@ -1,0 +1,46 @@
+define i64 @main() #0 {
+L1:
+%t111 = call ptr @malloc(i64 24)
+%t107 = ptrtoint ptr %t111 to i64
+%t113 = add i64 %t107, 8
+%t112 = inttoptr i64 %t113 to ptr
+%t115 = ptrtoint ptr @c1$b to i64
+store i64 %t115, ptr %t112
+%t117 = add i64 %t107, 16
+%t116 = inttoptr i64 %t117 to ptr
+%t119 = ptrtoint ptr @c2$a to i64
+store i64 %t119, ptr %t116
+%t104 = add i64 %t107, 0
+%t105 = add i64 %t104, 0
+%t121 = add i64 %t105, 16
+%t120 = inttoptr i64 %t121 to ptr
+%t110 = load i64, ptr %t120
+%t109 = add i64 %t105, 0
+%t123 = call ptr @malloc(i64 24)
+%t106 = ptrtoint ptr %t123 to i64
+%t125 = add i64 %t106, 8
+%t124 = inttoptr i64 %t125 to ptr
+%t127 = ptrtoint ptr @c1$b to i64
+store i64 %t127, ptr %t124
+%t128 = inttoptr i64 %t110 to ptr
+%t108 = call i64 %t128(i64 %t109,i64 %t106)
+ret i64 %t108
+L0:
+ret i64 -1
+}
+
+define i64 @c2$a(i64 %t102, i64 %t103) #0 {
+L4:
+ret i64 1
+L3:
+ret i64 -1
+}
+
+define i64 @c1$b(i64 %t100, i64 %t101) #0 {
+L7:
+ret i64 3
+L6:
+ret i64 -1
+}
+
+declare ptr @malloc(i64)

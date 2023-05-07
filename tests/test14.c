@@ -25,7 +25,10 @@ return
           A_CallExp(A_Pos(5,12),
             A_NewObjExp(A_Pos(5,12), String("c1")), String("a"), A_ExpList(
               A_NumConst(A_Pos(5,23), 1),
-              NULL
+              A_ExpList(
+                A_NumConst(A_Pos(5,25), 1),
+                NULL
+              )
             )
           )
         ),
@@ -50,19 +53,15 @@ return
             String("a"),
             A_FormalList(
               A_Formal(A_Pos(10,18), A_Type(A_Pos(10,18), A_intType, NULL), String("x")),
+              A_FormalList(
+              A_Formal(A_Pos(10,25), A_Type(A_Pos(10,25), A_intType, NULL), String("x")),
               NULL
+            )
             ),
-            A_VarDeclList( // begin of A_VarDeclList
-              A_VarDecl(A_Pos(11,9),
-                A_Type(A_Pos(11,9), A_intType, NULL),
-                String("x"),
-                NULL
-              ), // end of VarDecl for x 
-              NULL
-            ), // end of A_VarDeclList
+            NULL, // end of A_VarDeclList
             A_StmList(
-              A_Return(A_Pos(12,9),
-                A_NumConst(A_Pos(12,16), 3)
+              A_Return(A_Pos(11,9),
+                A_NumConst(A_Pos(11,16), 3)
               ),
               NULL
             )

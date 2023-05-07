@@ -11,13 +11,13 @@ store i64 %t112, ptr %t109
 %t115 = inttoptr i64 %t116 to ptr
 %t114 = load i64, ptr %t115
 %t113 = inttoptr i64 %t114 to ptr
-%t107 = call i64 %t113(i64 %t105,i64 1)
+%t107 = call i64 %t113(i64 %t105,i64 1,i64 1)
 ret i64 %t107
 L0:
 ret i64 -1
 }
 
-define i64 @c1$a(i64 %t100, i64 %t102) #0 {
+define i64 @c1$a(i64 %t100, i64 %t101, i64 %t102) #0 {
 L4:
 ret i64 3
 L3:

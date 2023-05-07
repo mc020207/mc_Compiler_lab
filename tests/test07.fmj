@@ -1,20 +1,10 @@
+// wrong parameter at (3,23)
 public int main() {
-    return new c2().m1(1).m2(10);
+    return new c1().a(6);
 }
 
 public class c1 {
-    int c1m1;
-
-    public class c2 m1(int x) {
-        this.c1m1=x;
-        return this;
+    public int a(int x) {
+        return 2;
     }
 }
-
-public class c2 extends c1 {
-    int i2;
-    public int m2(int x) {
-        return (this.m1(x)).c1m1;
-    }
-}
-

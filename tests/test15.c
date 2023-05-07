@@ -7,7 +7,7 @@ return
     A_MainMethod(A_Pos(2,1), // begin of main class
       A_VarDeclList( // begin of A_VarDeclList
         A_VarDecl(A_Pos(3,5),
-          A_Type(A_Pos(3,5), A_idType, String("c1")),
+          A_Type(A_Pos(3,5), A_idType, String("c2")),
           String("my_class"),
           NULL
         ), // end of VarDecl for my_class 
@@ -21,7 +21,10 @@ return
         A_StmList(
           A_Return(A_Pos(5,5),
             A_CallExp(A_Pos(5,1),
-              A_IdExp(A_Pos(5,12), String("my_class")), String("b"), NULL
+              A_IdExp(A_Pos(5,12), String("my_class")), String("a"), A_ExpList(
+                A_IdExp(A_Pos(5,23), String("my_class")),
+                NULL
+              )
             )
           ),
           NULL
@@ -32,17 +35,26 @@ return
       A_ClassDecl(A_Pos(8,1),
         String("c1"),
         NULL,
-        NULL, // end of A_VarDeclList
-        A_MethodDeclList( // begin of A_MethodDeclList
-          A_MethodDecl(A_Pos(9,5), // begin of MethodDecl for a
-            A_Type(A_Pos(9,12), A_intType, NULL),
-            String("a"),
+        A_VarDeclList( // begin of A_VarDeclList
+          A_VarDecl(A_Pos(9,5),
+            A_Type(A_Pos(9,5), A_intType, NULL),
+            String("x"),
             NULL
-,
+          ), // end of VarDecl for x 
+          NULL
+        ), // end of A_VarDeclList
+        A_MethodDeclList( // begin of A_MethodDeclList
+          A_MethodDecl(A_Pos(10,5), // begin of MethodDecl for a
+            A_Type(A_Pos(10,12), A_intType, NULL),
+            String("a"),
+            A_FormalList(
+              A_Formal(A_Pos(10,18), A_Type(A_Pos(10,18), A_intType, NULL), String("x")),
+              NULL
+            ),
             NULL, // end of A_VarDeclList
             A_StmList(
-              A_Return(A_Pos(10,9),
-                A_NumConst(A_Pos(10,16), 2)
+              A_Return(A_Pos(11,9),
+                A_NumConst(A_Pos(11,16), 3)
               ),
               NULL
             )
@@ -51,40 +63,34 @@ return
         ) // end of A_MethodDeclList
       ), // end of ClassDecl for c1 
       A_ClassDeclList(
-        A_ClassDecl(A_Pos(14,1),
+        A_ClassDecl(A_Pos(15,1),
           String("c2"),
-          String("c1"),
-          NULL, // end of A_VarDeclList
-          A_MethodDeclList( // begin of A_MethodDeclList
-            A_MethodDecl(A_Pos(15,5), // begin of MethodDecl for a
-              A_Type(A_Pos(15,12), A_intType, NULL),
-              String("a"),
+          NULL,
+          A_VarDeclList( // begin of A_VarDeclList
+            A_VarDecl(A_Pos(16,5),
+              A_Type(A_Pos(16,5), A_intType, NULL),
+              String("x"),
               NULL
-,
+            ), // end of VarDecl for x 
+            NULL
+          ), // end of A_VarDeclList
+          A_MethodDeclList( // begin of A_MethodDeclList
+            A_MethodDecl(A_Pos(17,5), // begin of MethodDecl for a
+              A_Type(A_Pos(17,12), A_intType, NULL),
+              String("a"),
+              A_FormalList(
+                A_Formal(A_Pos(17,18), A_Type(A_Pos(17,18), A_idType, String("c1")), String("x")),
+                NULL
+              ),
               NULL, // end of A_VarDeclList
               A_StmList(
-                A_Return(A_Pos(16,9),
-                  A_NumConst(A_Pos(16,16), 3)
+                A_Return(A_Pos(18,9),
+                  A_NumConst(A_Pos(18,16), 1)
                 ),
                 NULL
               )
             ), // end of MethodDecl for a
-            A_MethodDeclList(
-              A_MethodDecl(A_Pos(18,5), // begin of MethodDecl for b
-                A_Type(A_Pos(18,12), A_intType, NULL),
-                String("b"),
-                NULL
-,
-                NULL, // end of A_VarDeclList
-                A_StmList(
-                  A_Return(A_Pos(19,9),
-                    A_NumConst(A_Pos(19,16), 3)
-                  ),
-                  NULL
-                )
-              ), // end of MethodDecl for b
-              NULL
-            )
+            NULL
           ) // end of A_MethodDeclList
         ), // end of ClassDecl for c2 
         NULL

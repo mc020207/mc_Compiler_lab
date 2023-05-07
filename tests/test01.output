@@ -1,0 +1,17 @@
+define i64 @main() #0 {
+L1:
+%t101 = call ptr @malloc(i64 16)
+%t100 = ptrtoint ptr %t101 to i64
+%t108 = add i64 %t100, 8
+%t107 = inttoptr i64 %t108 to ptr
+%t106 = load i64, ptr %t107
+%t105 = mul i64 0, 8
+%t104 = add i64 %t106, %t105
+%t103 = inttoptr i64 %t104 to ptr
+%t102 = load i64, ptr %t103
+ret i64 %t102
+L0:
+ret i64 -1
+}
+
+declare ptr @malloc(i64)

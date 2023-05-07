@@ -1,11 +1,12 @@
+// variable can only be declared once at (11,5)
 public int main() {
-    class c1 c;
-    c=new c5();
-    return c.y[1];
+    return new c2().a[0];
 }
 
-public class c5 extends c1 {int x;}
-public class c1 {int [] y ={1,2,3};}
-public class c3 {}
-public class c4 extends c3 {}
-public class c2 extends c1 {}
+public class c1 {
+    int b;
+}
+
+public class c2 extends c1{
+    int[] a;
+}

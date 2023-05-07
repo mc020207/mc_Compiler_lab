@@ -1,0 +1,6 @@
+define i64 @main() #0 {
+L0:
+ret i64 -1
+}
+
+declare ptr @malloc(i64)

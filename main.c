@@ -65,6 +65,6 @@ int main(int argc, const char * argv[]) {
         // Show_ig(stdout, ig);
         fl=fl->tail;
     }
-    fprintf(stdout, "declare ptr @malloc(i32)\n");
+    fprintf(stdout, "declare ptr @malloc(i64)\n");
     return 0;
 }

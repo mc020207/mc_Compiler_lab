@@ -171,4 +171,4 @@ L12:
 ret i64 -1
 }
 
-declare ptr @malloc(i32)
+declare ptr @malloc(i64)

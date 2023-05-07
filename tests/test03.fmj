@@ -1,17 +1,21 @@
+// the superclass don't have function b at (5,21)
 public int main() {
-    int i=0; 
-    int[] a; 
-
-    a=new int[8];
-    while (({a[i]=i; i=i+1;} i)<8);
-    putarray(8,a);
-    return new c1().m(0).x[3];
+    class c1 my_class;
+    my_class = new c1();
+    return my_class.a();
 }
 
-public class c0 {}
-public class c1 extends c0 {
-    int [] x={123,312,312,3,123};
-    public class c1 m(int x) {
-       return new c1();
+public class c1 {
+    public int a() {
+        return 2;
+    }
+}
+
+public class c2 extends c1{
+    public int a() {
+        return 3;
+    }
+    public int b() {
+        return 3;
     }
 }

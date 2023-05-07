@@ -1,0 +1,20 @@
+// method can only be declared once at (17,5)
+public int main() { 
+}
+
+public class c1 {
+    int x;
+    public int a() {
+        int x;
+        return 3;
+    }
+}
+
+public class c2 {
+    public int a(int x) {
+        return x;
+    }
+    public int b(int x) {
+        return 4;
+    }
+}

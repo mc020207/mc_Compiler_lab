@@ -1,0 +1,12 @@
+// variable not declared at (9,21)
+public int main() {
+    int x;
+}
+
+public class c1 {
+    int x;
+    int y=888;
+    public int a(int x) {
+        return this.y;
+    }
+}
