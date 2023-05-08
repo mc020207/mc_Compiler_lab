@@ -1,8 +1,0 @@
-define i64 @main() #0 {
-L1:
-ret i64 %t100
-L0:
-ret i64 -1
-}
-
-declare ptr @malloc(i64)

@@ -50,7 +50,7 @@ int main(int argc, const char * argv[]) {
         // printStmList_linearized(stdout,sl,0);
         c=C_basicBlocks(sl);
         AS_blockList aslist=treep2assemblcok(c);
-        // G_nodeList bg=Create_bg(aslist);
+        G_nodeList bg=Create_bg(aslist);
         // printf("------Basic Block Graph---------\n");
         // Show_bg(stdout, bg);
         // printf("------~Final traced StmList2---------\n");

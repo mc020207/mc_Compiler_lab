@@ -371,8 +371,12 @@ AS_instrList treep2assemStm(T_stm x){
          case T_MOVE:{
             free(ans);
             if (x->u.MOVE.dst->kind==T_TEMP){
-                Temp_temp temp1=x->u.MOVE.dst->u.TEMP;
-                ans=treep2assemExp(x->u.MOVE.src,&temp1,FALSE);
+                if(x->u.MOVE.src->kind==T_TEMP){
+                    ans=I(AS_Move("%`d0 = add i64 %`s0, 0",T(x->u.MOVE.dst->u.TEMP),T(x->u.MOVE.src->u.TEMP)));
+                }else{
+                    Temp_temp temp1=x->u.MOVE.dst->u.TEMP;
+                    ans=treep2assemExp(x->u.MOVE.src,&temp1,FALSE);
+                }
             }else if (x->u.MOVE.dst->kind==T_MEM){
                 Temp_temp tempsrc=NULL,tempdsti64=NULL,tempdst=NULL;
                 tempdst=Temp_newtemp();

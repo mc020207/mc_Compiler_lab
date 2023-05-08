@@ -1,31 +1,109 @@
+
 public int main() {
     int[] a;
-    class c1 o;
-
-    a = new int[6];
-    a[0] = 10;
-    a[2] = 30;
-    o = new c2();
-
-    return o.m1(new c1().self(a), o.m2()) + a[2]; // 36 + 30 = 66
+    int[] b;
+    int c=100;
+    class c1 t;
+    class c1 t2;
+    t=new c1();
+    t2=new c1();
+    t2.a[0]=30;
+    a=new int[10];
+    b=new int[10];
+    b[0]=100;
+    a[0]=0;
+    b[1]=0;
+    while (b[1]-10){
+        b[1]=b[1]+1;
+        b[0]=100;
+        while (t.m1(a,b[0])+t.m2()+t2.self()[0]+100){
+            if (t.mod(b[0])){
+                if (t2.mod(b[0])){
+                    a[0]=a[0]+b[0]*b[1];
+                }
+            }
+            b[0]=b[0]-1;
+        }
+    }
+    return a[0];
 }
-
+// 10 ~ -35
 public class c1 {
     int[] a = {50, 20, 10};
     public int m1(int[] a, int b) {
-        return length(a) + b * 2 + this.a[1]; // 6 + 5 * 2 + 20 = 36
+        return length(a) + b * 2 + this.a[1];
     }
     public int m2() {
         return this.a[2]; // 20
     }
-    public int[] self(int[] a) {
-        return a;
+    public int[] self() {
+        return this.a;
+    }
+    public int mod(int x){
+        return x-x/2*2;
     }
 }
 
 public class c2 extends c1 {
-    int b = 45;
+    int b = 100;
     public int m2() {
         return this.a[0] - this.b; // 50 - 45 = 5
     }
+    public int[] self() {
+        this.b=this.b-1;
+        this.a[0]=this.b;
+        return this.a;
+    }
+    public int mod(int x){
+        return x-x/3*3;
+    }
 }
+
+
+
+/*
+public int main() {
+    class bcj t;
+    t=new bcj();
+    t.init(10);
+    t.merge(1,2);
+    t.merge(2,3);
+    t.merge(4,5);
+    t.merge(7,8);
+    t.merge(4,7);
+    return t.find(1)*t.find(4);
+}
+public class bcj{
+    int[] fa;
+    public int find(int x){
+        int ans;
+        if (this.fa[x]-x) ans=this.find(this.fa[x]);
+        else return x;
+        this.fa[x]=ans;
+        return ans;
+    }
+    
+    public int merge(int x,int y){
+        int fx;
+        int fy;
+        fx=this.find(x);
+        fy=this.find(y);
+        if (fx-fy){
+            this.fa[fx]=fy;
+            return fx;
+        }
+        return 0;
+    }
+    public int init(int n){
+        int []i={0};
+        this.fa=new int[n+1];
+        while (i[0]-(n+1)){
+            this.fa[i[0]]=i[0];
+            i[0]=i[0]+1;
+        }
+    }
+    public int[] cal(){
+        return this.fa;
+    }
+}
+*/
