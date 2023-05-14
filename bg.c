@@ -59,7 +59,10 @@ G_nodeList Create_bg(AS_blockList bl) {
     for (AS_blockList l=bl; l; l=l->tail) {
       Temp_labelList tl = l->head->succs;
       while (tl) {
-        Enter_bg(l->head, S_look(block_env, tl->head));
+	AS_block succ=S_look(block_env, tl->head);
+//if the succ label doesn't have a block, assume it's the "exit label",
+//then this doesn't form an edge in the bg graph
+        if (succ) Enter_bg(l->head, succ); 
         tl=tl->tail;
       }
     }
@@ -73,4 +76,3 @@ static void show_AS_Block(AS_block b) {
 void Show_bg(FILE* out, G_nodeList l) {
         G_show(out, l, (void*)show_AS_Block);
 }
-

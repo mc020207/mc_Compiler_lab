@@ -46,7 +46,8 @@ struct stmExp {T_stm s; T_exp e;};
 
 static T_stm reorder(expRefList rlist) {
    if (!rlist) return T_Exp(T_Const(0)); /* nop */
-   else if ((*rlist->head)->kind==T_CALL || 
+   else 
+	if ((*rlist->head)->kind==T_CALL || 
 		(*rlist->head)->kind==T_ExtCALL) {
       Temp_temp t = Temp_newtemp();
       *rlist->head = T_Eseq(T_Move(T_Temp(t),*rlist->head),T_Temp(t));
@@ -118,8 +119,6 @@ static struct stmExp do_exp(T_exp exp)
 	  T_Move(T_Temp(t),exp)), T_Temp(t));
   case T_ExtCALL:    
       t = Temp_newtemp();
-      return StmExp(seq(reorder(get_call_rlist(exp)), 
-	  T_Move(T_Temp(t),exp)), T_Temp(t));
       return StmExp(seq(reorder(get_extcall_rlist(exp)),
 	  T_Move(T_Temp(t), exp)), T_Temp(t));
   default:
@@ -130,7 +129,6 @@ static struct stmExp do_exp(T_exp exp)
 /* processes stm so that it contains no ESEQ nodes */
 static T_stm do_stm(T_stm stm)
 {
-  if (!stm) return NULL;
   switch (stm->kind) {
   case T_SEQ: 
     return seq(do_stm(stm->u.SEQ.left), do_stm(stm->u.SEQ.right));
@@ -171,7 +169,6 @@ static T_stm do_stm(T_stm stm)
 /* linear gets rid of the top-level SEQ's, producing a list */
 static T_stmList linear(T_stm stm, T_stmList right)
 {
- if (!stm) return NULL;
  if (stm->kind == T_SEQ) 
    return linear(stm->u.SEQ.left,linear(stm->u.SEQ.right,right));
  else return T_StmList(stm, right);
@@ -346,4 +343,3 @@ T_stmList C_traceSchedule(struct C_block b)
 
   return getNext();
 }
-
