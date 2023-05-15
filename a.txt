@@ -1,12 +1,9 @@
 
 public int main() {
-    int a=2;
-    int b=1;
-    int c=1;
-    while (a<b){
-        c=a+1;
+    int a=1;
+    int sum=0;
+    while (a<=100){
+        sum=sum+a;
+        a=a+1;
     }
-    b=3;
-    c=4;
-    return 0;
 }

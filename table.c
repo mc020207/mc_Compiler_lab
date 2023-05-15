@@ -45,6 +45,16 @@ void TAB_enter(TAB_table t, void *key, void *value)
  t->top = key;
 }
 
+binder TAB_getBinder(TAB_table t, void *key)
+{int index;
+ binder b;
+ assert(t && key);
+ index=((unsigned)key) % TABSIZE;
+ for(b=t->table[index]; b; b=b->next)
+   if (b->key==key) return b;
+ return NULL;
+}
+
 void *TAB_look(TAB_table t, void *key)
 {int index;
  binder b;

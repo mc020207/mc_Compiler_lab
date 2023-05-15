@@ -24,6 +24,8 @@ TAB_table TAB_empty(void);
  *    shadowing but not destroying any previous binding for "key". */
 void TAB_enter(TAB_table t, void *key, void *value);
 
+binder TAB_getBinder(TAB_table t, void *key);
+
 /* Look up the most recent binding for "key" in table "t" */
 void *TAB_look(TAB_table t, void *key);
 
