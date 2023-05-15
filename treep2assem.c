@@ -334,27 +334,27 @@ AS_instrList treep2assemStm(T_stm x){
                 ans=AS_splice(ans,treep2assemExp(x->u.CJUMP.right,&temp2,TRUE));
                 switch (x->u.CJUMP.op){
                     case T_eq:{
-                        strcpy(des,"%%`d0 = icmp eq i64 %%`s0, %%`s1");
+                        strcpy(des,"%`d0 = icmp eq i64 %`s0, %`s1");
                         break;
                     }
                     case T_ne:{
-                        strcpy(des,"%%`d0 = icmp ne i64 %%`s0, %%`s1");
+                        strcpy(des,"%`d0 = icmp ne i64 %`s0, %`s1");
                         break;
                     }
                     case T_lt:{
-                        strcpy(des,"%%`d0 = icmp slt i64 %%`s0, %%`s1");
+                        strcpy(des,"%`d0 = icmp slt i64 %`s0, %`s1");
                         break;
                     }
                     case T_gt:{
-                        strcpy(des,"%%`d0 = icmp sgt i64 %%`s0, %%`s1");
+                        strcpy(des,"%`d0 = icmp sgt i64 %`s0, %`s1");
                         break;
                     }
                     case T_le:{
-                        strcpy(des,"%%`d0 = icmp sle i64 %%`s0, %%`s1");
+                        strcpy(des,"%`d0 = icmp sle i64 %`s0, %`s1");
                         break;
                     }
                     case T_ge:{
-                        strcpy(des,"%%`d0 = icmp sge i64 %%`s0, %%`s1");
+                        strcpy(des,"%`d0 = icmp sge i64 %`s0, %`s1");
                         break;
                     }
                     default:{
