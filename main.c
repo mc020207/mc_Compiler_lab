@@ -50,17 +50,15 @@ int main(int argc, const char * argv[]) {
         G_nodeList bg=Create_bg(aslist);
         // printf("------Basic Block Graph---------\n");
         // Show_bg(stdout, bg);
-        
-        
         AS_instrList il=treep2assemfuction(aslist,fl->head);
         // printf("------Interference AssemFlowGraph---------\n");
         G_graph G=FG_AssemFlowGraph(il);
-        G_show(stdout, G_nodes(G), (void*)show);
-        printf("------Interference Liveness---------\n");
+        // G_show(stdout, G_nodes(G), (void*)show);
+        // printf("------Interference Liveness---------\n");
         G_nodeList lg=Liveness(G_nodes(G));
-        Show_Liveness(stdout, lg);
+        // Show_Liveness(stdout, lg);
         // printf("------Interference Graph---------\n");
-        G_nodeList ig=Create_ig(lg);
+        // G_nodeList ig=Create_ig(lg);
         // Show_ig(stdout, ig);
         // printf("------~Final traced StmList2---------\n");
         ssa(aslist,bg,lg);

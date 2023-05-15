@@ -142,7 +142,7 @@ void AS_format(char *result, string assem,
     
 void AS_print(FILE *out, AS_instr i, Temp_map m)
 {
-  char r[200]; /* result */
+  char r[2000]; /* result */
   switch (i->kind) {
   case I_OPER:
     format(r, i->u.OPER.assem, i->u.OPER.dst, i->u.OPER.src, i->u.OPER.jumps, m);
