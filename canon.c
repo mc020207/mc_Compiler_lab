@@ -180,6 +180,7 @@ static T_stmList linear(T_stm stm, T_stmList right)
       2.  The parent of every CALL is an EXP(..) or a MOVE(TEMP t,..) */
 T_stmList C_linearize(T_stm stm)
 {
+  if (!stm) return NULL;
     return linear(do_stm(stm), NULL);
 }
 

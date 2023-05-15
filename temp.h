@@ -1,6 +1,8 @@
 #ifndef _TEMP
 #define _TEMP
-
+#include <stdio.h>
+#include <stdlib.h> /* for atoi */
+#include <string.h> /* for strcpy */
 /*
  * temp.h 
  *

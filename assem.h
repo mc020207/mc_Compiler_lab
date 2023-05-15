@@ -1,6 +1,5 @@
 #ifndef _ASSEM
 #define _ASSEM
-
 /*
  * assem.h - Function prototypes to translate to Assem-instructions
  *             using Maximal Munch.

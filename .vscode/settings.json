@@ -22,6 +22,10 @@
         "memory": "c",
         "xlocinfo": "c",
         "xlocnum": "c",
-        "xmemory": "c"
+        "xmemory": "c",
+        "assem.h": "c",
+        "temp.h": "c",
+        "table.h": "c",
+        "symbol.h": "c"
     }
 }

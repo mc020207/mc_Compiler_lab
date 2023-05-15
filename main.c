@@ -1,7 +1,3 @@
-// *****************************
-// *remember to finish getarray*
-// *****************************
-
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
@@ -21,6 +17,7 @@
 #include "liveness.h"
 #include "ig.h"
 #include "bg.h"
+#include "ssa.h"
 #define I(a) AS_InstrList(a, NULL)
 #define IL(a, b) AS_InstrList(a, b)
 #define MI(a, b, c) AS_Move(a, b, c)
@@ -53,16 +50,21 @@ int main(int argc, const char * argv[]) {
         G_nodeList bg=Create_bg(aslist);
         // printf("------Basic Block Graph---------\n");
         // Show_bg(stdout, bg);
-        // printf("------~Final traced StmList2---------\n");
+        
+        
         AS_instrList il=treep2assemfuction(aslist,fl->head);
-        AS_printInstrList(stdout, il, Temp_name());
-        // G_graph G=FG_AssemFlowGraph(il);
-        // G_show(stdout, G_nodes(G), (void*)show);
-        // G_nodeList lg=Liveness(G_nodes(G));
-        // Show_Liveness(stdout, lg);
+        // printf("------Interference AssemFlowGraph---------\n");
+        G_graph G=FG_AssemFlowGraph(il);
+        G_show(stdout, G_nodes(G), (void*)show);
+        printf("------Interference Liveness---------\n");
+        G_nodeList lg=Liveness(G_nodes(G));
+        Show_Liveness(stdout, lg);
         // printf("------Interference Graph---------\n");
-        // G_nodeList ig=Create_ig(lg);
+        G_nodeList ig=Create_ig(lg);
         // Show_ig(stdout, ig);
+        // printf("------~Final traced StmList2---------\n");
+        ssa(aslist,bg,lg);
+        AS_printInstrList(stdout, il, Temp_name());
         fl=fl->tail;
     }
     fprintf(stdout, "declare ptr @malloc(i64)\n");

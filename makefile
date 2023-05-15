@@ -14,7 +14,7 @@ $(TESTCASE_DIR)/%.output: $(TESTCASE_DIR)/%.fmj a.out
 	@echo test $*
 	@./a.out < $(word 1,$^) >$@
 
-a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o typecheck.o treep.o temp.o ast2treep.o canon.o pr_linearized.o printtreep.o canon.o assem.o assemblock.o treep2assem.o bg.o graph.o liveness.o ig.o flowgraph.o 
+a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o typecheck.o treep.o temp.o ast2treep.o canon.o pr_linearized.o printtreep.o canon.o assem.o assemblock.o treep2assem.o bg.o graph.o liveness.o ig.o flowgraph.o ssa.o
 	cc -g $^ -o a.out
 
 main.o: main.c y.tab.h y.tab.c lex.yy.o y.tab.o
@@ -66,6 +66,8 @@ pr_linearized.o: pr_linearized.c
 printtreep.o: printtreep.c
 
 temp.o: temp.c temp.h
+
+ssa.o: ssa.c ssa.h
 
 treep.o: treep.c treep.h
 
