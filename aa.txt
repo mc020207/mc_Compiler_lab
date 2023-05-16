@@ -1,61 +1,313 @@
 define i64 @main() #0 {
-L16:
-%t100 = add i64 1, 0
-%t101 = add i64 0, 0
+L25:
+%t114 = add i64 100, 0
+%t139 = call ptr @malloc(i64 48)
+%t128 = ptrtoint ptr %t139 to i64
+%t141 = add i64 %t128, 32
+%t140 = inttoptr i64 %t141 to ptr
+%t143 = ptrtoint ptr @c1$mod to i64
+store i64 %t143, ptr %t140
+%t145 = add i64 %t128, 24
+%t144 = inttoptr i64 %t145 to ptr
+%t147 = ptrtoint ptr @c1$self to i64
+store i64 %t147, ptr %t144
+%t149 = add i64 %t128, 16
+%t148 = inttoptr i64 %t149 to ptr
+%t151 = ptrtoint ptr @c1$m2 to i64
+store i64 %t151, ptr %t148
+%t153 = add i64 %t128, 8
+%t152 = inttoptr i64 %t153 to ptr
+%t155 = ptrtoint ptr @c1$m1 to i64
+store i64 %t155, ptr %t152
+%t138 = add i64 %t128, 0
+%t157 = call ptr @malloc(i64 32)
+%t129 = ptrtoint ptr %t157 to i64
+%t158 = inttoptr i64 %t129 to ptr
+store i64 3, ptr %t158
+%t161 = add i64 %t129, 8
+%t160 = inttoptr i64 %t161 to ptr
+store i64 50, ptr %t160
+%t164 = add i64 %t129, 16
+%t163 = inttoptr i64 %t164 to ptr
+store i64 20, ptr %t163
+%t167 = add i64 %t129, 24
+%t166 = inttoptr i64 %t167 to ptr
+store i64 10, ptr %t166
+%t169 = inttoptr i64 %t138 to ptr
+%t171 = add i64 %t129, 8
+store i64 %t171, ptr %t169
+%t115 = add i64 %t128, 0
+%t173 = call ptr @malloc(i64 48)
+%t126 = ptrtoint ptr %t173 to i64
+%t175 = add i64 %t126, 32
+%t174 = inttoptr i64 %t175 to ptr
+%t177 = ptrtoint ptr @c1$mod to i64
+store i64 %t177, ptr %t174
+%t179 = add i64 %t126, 24
+%t178 = inttoptr i64 %t179 to ptr
+%t181 = ptrtoint ptr @c1$self to i64
+store i64 %t181, ptr %t178
+%t183 = add i64 %t126, 16
+%t182 = inttoptr i64 %t183 to ptr
+%t185 = ptrtoint ptr @c1$m2 to i64
+store i64 %t185, ptr %t182
+%t187 = add i64 %t126, 8
+%t186 = inttoptr i64 %t187 to ptr
+%t189 = ptrtoint ptr @c1$m1 to i64
+store i64 %t189, ptr %t186
+%t137 = add i64 %t126, 0
+%t191 = call ptr @malloc(i64 32)
+%t127 = ptrtoint ptr %t191 to i64
+%t192 = inttoptr i64 %t127 to ptr
+store i64 3, ptr %t192
+%t195 = add i64 %t127, 8
+%t194 = inttoptr i64 %t195 to ptr
+store i64 50, ptr %t194
+%t198 = add i64 %t127, 16
+%t197 = inttoptr i64 %t198 to ptr
+store i64 20, ptr %t197
+%t201 = add i64 %t127, 24
+%t200 = inttoptr i64 %t201 to ptr
+store i64 10, ptr %t200
+%t203 = inttoptr i64 %t137 to ptr
+%t205 = add i64 %t127, 8
+store i64 %t205, ptr %t203
+%t116 = add i64 %t126, 0
+%t212 = add i64 %t116, 0
+%t211 = inttoptr i64 %t212 to ptr
+%t210 = load i64, ptr %t211
+%t209 = mul i64 0, 8
+%t208 = add i64 %t210, %t209
+%t207 = inttoptr i64 %t208 to ptr
+store i64 30, ptr %t207
+%t112 = add i64 100, 0
+%t111 = add i64 0, 0
+%t113 = add i64 0, 0
 br label %L0
 L0:
-%t119=phi i64 [%t124,%L8],[%t101,%L16]
-%t120=phi i64 [%t125,%L8],[%t100,%L16]
-%t104 = icmp sle i64 %t120, 100
-br i1 %t104, label %L3, label %L4
+%t280=phi i64 [%t283,%L7],[%t113,%L25]
+%t281=phi i64 [%t285,%L7],[%t111,%L25]
+%t214 = icmp slt i64 %t280, 10
+br i1 %t214, label %L3, label %L4
 L4:
-%t102 = add i64 0, 0
+%t117 = add i64 0, 0
 br label %L5
 L5:
-%t121=phi i64 [%t128,%L3],[%t102,%L4]
-%t106 = icmp ne i64 %t121, 0
-br i1 %t106, label %L2, label %L1
+%t282=phi i64 [%t297,%L3],[%t117,%L4]
+%t216 = icmp ne i64 %t282, 0
+br i1 %t216, label %L2, label %L1
 L1:
-%t122=phi i64 [%t124,%L6],[%t124,%L9],[%t119,%L5]
-%t123=phi i64 [%t125,%L6],[%t125,%L9],[%t120,%L5]
-ret i64 %t122
+ret i64 %t281
 L3:
-%t128 = add i64 1, 0
+%t297 = add i64 1, 0
 br label %L5
 L2:
-%t124 = add i64 %t119, %t120
-%t125 = add i64 %t120, 1
-%t112 = icmp sge i64 %t125, 20
-br i1 %t112, label %L12, label %L13
-L13:
-%t103 = add i64 0, 0
-br label %L14
-L14:
-%t126=phi i64 [%t127,%L12],[%t103,%L13]
-%t114 = icmp ne i64 %t126, 0
-br i1 %t114, label %L9, label %L10
+%t283 = add i64 %t280, 1
+%t284 = add i64 100, 0
+br label %L6
+L6:
+%t285=phi i64 [%t289,%L14],[%t281,%L2]
+%t286=phi i64 [%t290,%L14],[%t284,%L2]
+%t121 = add i64 %t115, 0
+%t223 = add i64 %t121, 8
+%t222 = inttoptr i64 %t223 to ptr
+%t221 = load i64, ptr %t222
+%t220 = inttoptr i64 %t221 to ptr
+%t132 = call i64 %t220(i64 %t121,i64 %t285,i64 %t286)
+%t134 = add i64 %t132, 0
+%t120 = add i64 %t115, 0
+%t231 = add i64 %t120, 16
+%t230 = inttoptr i64 %t231 to ptr
+%t229 = load i64, ptr %t230
+%t228 = inttoptr i64 %t229 to ptr
+%t133 = call i64 %t228(i64 %t120)
+%t136 = add i64 %t134, %t133
+%t119 = add i64 %t116, 0
+%t239 = add i64 %t119, 24
+%t238 = inttoptr i64 %t239 to ptr
+%t237 = load i64, ptr %t238
+%t236 = inttoptr i64 %t237 to ptr
+%t135 = call i64 %t236(i64 %t119)
+%t247 = mul i64 0, 8
+%t246 = add i64 %t135, %t247
+%t245 = inttoptr i64 %t246 to ptr
+%t244 = load i64, ptr %t245
+%t243 = add i64 %t136, %t244
+%t250 = sub i64 0, 100
+%t242 = icmp ne i64 %t243, %t250
+br i1 %t242, label %L9, label %L10
 L10:
+%t118 = add i64 0, 0
 br label %L11
 L11:
-%t117 = sdiv i64 %t125, 10
-%t116 = icmp ne i64 %t117, 0
-br i1 %t116, label %L6, label %L7
+%t287=phi i64 [%t296,%L9],[%t118,%L10]
+%t251 = icmp ne i64 %t287, 0
+br i1 %t251, label %L8, label %L7
 L7:
-br label %L8
-L8:
 br label %L0
-L12:
-%t127 = add i64 1, 0
-br label %L14
 L9:
-br label %L1
-L17:
+%t296 = add i64 1, 0
 br label %L11
-L6:
-br label %L1
+L8:
+%t125 = add i64 %t115, 0
+%t256 = add i64 %t125, 32
+%t255 = inttoptr i64 %t256 to ptr
+%t254 = load i64, ptr %t255
+%t253 = inttoptr i64 %t254 to ptr
+%t131 = call i64 %t253(i64 %t125,i64 %t286)
+%t260 = icmp ne i64 %t131, 0
+br i1 %t260, label %L21, label %L22
+L22:
+%t124 = add i64 0, 0
+br label %L23
+L23:
+%t288=phi i64 [%t295,%L21],[%t124,%L22]
+%t262 = icmp ne i64 %t288, 0
+br i1 %t262, label %L12, label %L13
+L13:
+br label %L14
+L14:
+%t289=phi i64 [%t292,%L17],[%t285,%L13]
+%t290 = sub i64 %t286, 1
+br label %L6
+L21:
+%t295 = add i64 1, 0
+br label %L23
+L12:
+%t123 = add i64 %t116, 0
+%t268 = add i64 %t123, 32
+%t267 = inttoptr i64 %t268 to ptr
+%t266 = load i64, ptr %t267
+%t265 = inttoptr i64 %t266 to ptr
+%t130 = call i64 %t265(i64 %t123,i64 %t286)
+%t272 = icmp ne i64 %t130, 0
+br i1 %t272, label %L18, label %L19
+L19:
+%t122 = add i64 0, 0
+br label %L20
+L20:
+%t291=phi i64 [%t294,%L18],[%t122,%L19]
+%t274 = icmp ne i64 %t291, 0
+br i1 %t274, label %L15, label %L16
+L16:
+br label %L17
+L17:
+%t292=phi i64 [%t293,%L15],[%t285,%L16]
+br label %L14
 L18:
-br label %L8
+%t294 = add i64 1, 0
+br label %L20
 L15:
+%t276 = mul i64 %t286, %t283
+%t293 = add i64 %t285, %t276
+br label %L17
+L24:
+ret i64 -1
+}
+
+define i64 @c2$mod(i64 %t109, i64 %t110) #0 {
+L28:
+%t300 = sdiv i64 %t110, 3
+%t299 = mul i64 %t300, 3
+%t298 = sub i64 %t110, %t299
+ret i64 %t298
+L27:
+ret i64 -1
+}
+
+define i64 @c2$self(i64 %t108) #0 {
+L31:
+%t304 = add i64 %t108, 40
+%t303 = inttoptr i64 %t304 to ptr
+%t309 = add i64 %t108, 40
+%t308 = inttoptr i64 %t309 to ptr
+%t307 = load i64, ptr %t308
+%t306 = sub i64 %t307, 1
+store i64 %t306, ptr %t303
+%t316 = add i64 %t108, 0
+%t315 = inttoptr i64 %t316 to ptr
+%t314 = load i64, ptr %t315
+%t313 = mul i64 0, 8
+%t312 = add i64 %t314, %t313
+%t311 = inttoptr i64 %t312 to ptr
+%t320 = add i64 %t108, 40
+%t319 = inttoptr i64 %t320 to ptr
+%t318 = load i64, ptr %t319
+store i64 %t318, ptr %t311
+%t324 = add i64 %t108, 0
+%t323 = inttoptr i64 %t324 to ptr
+%t322 = load i64, ptr %t323
+ret i64 %t322
+L30:
+ret i64 -1
+}
+
+define i64 @c2$m2(i64 %t107) #0 {
+L34:
+%t337 = add i64 %t107, 0
+%t336 = inttoptr i64 %t337 to ptr
+%t335 = load i64, ptr %t336
+%t334 = mul i64 0, 8
+%t333 = add i64 %t335, %t334
+%t332 = inttoptr i64 %t333 to ptr
+%t331 = load i64, ptr %t332
+%t329 = add i64 %t107, 40
+%t328 = inttoptr i64 %t329 to ptr
+%t327 = load i64, ptr %t328
+%t326 = sub i64 %t331, %t327
+ret i64 %t326
+L33:
+ret i64 -1
+}
+
+define i64 @c1$mod(i64 %t105, i64 %t106) #0 {
+L37:
+%t341 = sdiv i64 %t106, 2
+%t340 = mul i64 %t341, 2
+%t339 = sub i64 %t106, %t340
+ret i64 %t339
+L36:
+ret i64 -1
+}
+
+define i64 @c1$self(i64 %t104) #0 {
+L40:
+%t346 = add i64 %t104, 0
+%t345 = inttoptr i64 %t346 to ptr
+%t344 = load i64, ptr %t345
+ret i64 %t344
+L39:
+ret i64 -1
+}
+
+define i64 @c1$m2(i64 %t103) #0 {
+L43:
+%t354 = add i64 %t103, 0
+%t353 = inttoptr i64 %t354 to ptr
+%t352 = load i64, ptr %t353
+%t351 = mul i64 2, 8
+%t350 = add i64 %t352, %t351
+%t349 = inttoptr i64 %t350 to ptr
+%t348 = load i64, ptr %t349
+ret i64 %t348
+L42:
+ret i64 -1
+}
+
+define i64 @c1$m1(i64 %t100, i64 %t101, i64 %t102) #0 {
+L46:
+%t366 = mul i64 %t102, 2
+%t365 = add i64 10, %t366
+%t363 = add i64 %t100, 0
+%t362 = inttoptr i64 %t363 to ptr
+%t361 = load i64, ptr %t362
+%t360 = mul i64 1, 8
+%t359 = add i64 %t361, %t360
+%t358 = inttoptr i64 %t359 to ptr
+%t357 = load i64, ptr %t358
+%t356 = add i64 %t365, %t357
+ret i64 %t356
+L45:
 ret i64 -1
 }
 

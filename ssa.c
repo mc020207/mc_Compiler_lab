@@ -78,24 +78,12 @@ void getDOfBlocks(G_nodeList list){
         }
     }
 }
-void PRINTD(G_nodeList list){
-    for (G_nodeList x=list;x;x=x->tail){
-        Temp_label xLabel=((AS_block)G_nodeInfo(x->head))->label;
-        printf("%s : ",S_name(xLabel));
-        for (G_nodeList y=list;y;y=y->tail){
-            Temp_label yLabel=((AS_block)G_nodeInfo(y->head))->label;
-            if (isDomin(xLabel,yLabel)) printf("%s ",S_name(yLabel));
-        }
-        printf("\n");
-    }
-}
 bool isDF(G_node x,G_node w){
     Temp_label xLabel=((AS_block)G_nodeInfo(x))->label;
     Temp_label wLabel=((AS_block)G_nodeInfo(w))->label;
     for (G_nodeList predList=G_pred(w);predList;predList=predList->tail){
         G_node p=predList->head;
         Temp_label pLabel=((AS_block)G_nodeInfo(p))->label;
-        // printf("    --%s--\n",S_name(pLabel));
         if (isDomin(xLabel,pLabel)&&(!(isDomin(xLabel,wLabel)&&wLabel!=xLabel)))return TRUE;
     }
     return FALSE;
@@ -103,13 +91,10 @@ bool isDF(G_node x,G_node w){
 void getDFOfBlocks(G_nodeList list){
     for (G_nodeList x=list;x;x=x->tail){
         Temp_label xLabel=((AS_block)G_nodeInfo(x->head))->label;
-        // printf("----%s----\n",S_name(xLabel));
         for (G_nodeList y=list;y;y=y->tail){
             Temp_label yLabel=((AS_block)G_nodeInfo(y->head))->label;
-            // printf("  ---%s---\n",S_name(yLabel));
             if(isDF(x->head,y->head)){
                 enter_table(DFOfBlocks,xLabel,yLabel,TRUE);
-                // printf("DF(%s) -> %s\n",S_name(xLabel),S_name(yLabel));
             }
         }
     }
@@ -122,7 +107,6 @@ void initOriginAndIn(G_nodeList ig){
         if (nowinstr->kind==I_LABEL){
             nowLabel=nowinstr->u.LABEL.label;
             for (Temp_tempList tempList=FG_In(x);tempList;tempList=tempList->tail){
-                // printf("%s %s\n",S_name(nowLabel),Temp_look(Temp_name(),tempList->head));
                 enter_table(inOfBlock,nowLabel,tempList->head,FALSE);
             }
         }else{
@@ -160,7 +144,6 @@ AS_instr getPhiFuction(G_node node,Temp_temp temp){
     return AS_Oper(String(des),Temp_TempList(temp,NULL),tempList,NULL);
 }
 void solveTemp(Temp_temp nowTemp){
-    // printf("%s\n",Temp_look(Temp_name(),nowTemp));
     S_table nowTable=TAB_look(defsites,nowTemp);
     if (nowTable==NULL) return ;
     if (nowTable->top==NULL) return ;
@@ -176,7 +159,7 @@ void solveTemp(Temp_temp nowTemp){
                 AS_instrList instrList=((AS_block)G_nodeInfo(node))->instrs;
                 AS_instr insertInstr=getPhiFuction(node,nowTemp);
                 instrList->tail=AS_InstrList(insertInstr,instrList->tail);
-                if (inTable(originOfBlock,y,nowTemp)&&!S_look(nowTable,y)){
+                if (!inTable(originOfBlock,y,nowTemp)&&!S_look(nowTable,y)){
                     S_enter(nowTable,y,emptyPoint);
                 }
             }
@@ -194,7 +177,6 @@ void addPhiFuction(G_nodeList list){
     }
     Temp_temp nowTemp=(Temp_temp)defsites->top;
     while (nowTemp){
-        // printf("_____%s______\n",Temp_look(Temp_name(),nowTemp));
         solveTemp(nowTemp);
         binder bin=TAB_getBinder(defsites,nowTemp);
         nowTemp=(Temp_temp)bin->prevtop;
@@ -214,15 +196,9 @@ void renamePhi(G_node x,Temp_label faLabel){
                     Temp_temp src=tempList->head;
                     if (TAB_look(stackOfParams,src)==NULL) TAB_enter(stackOfParams,src,Temp_TempList(src,Temp_TempList(src,NULL)));
                     tempList->head=((Temp_tempList)TAB_look(stackOfParams,src))->tail->head;
-                    // printf("%sPHI:%s -> %s\n",S_name(predLabel),Temp_look(Temp_name(),src),Temp_look(Temp_name(),tempList->head));
                     break;
                 }
             }
-            // tempList=now->u.OPER.src;
-            // for (;tempList;tempList=tempList->tail){
-            //     printf("%s ",Temp_look(Temp_name(),tempList->head));
-            // }   
-            // printf("\n");
         }
     }
 }
@@ -246,15 +222,12 @@ void renameDst(AS_instrList list){
 void renameBlock(G_node x){
     Temp_label xLabel=((AS_block)G_nodeInfo(x))->label;
     if (S_look(visBlock,xLabel)) return ;
-    // printf("%s:\n",S_name(xLabel));
     S_enter(visBlock,xLabel,emptyPoint);
     AS_instrList xlist=((AS_block)G_nodeInfo(x))->instrs;
     xlist=xlist->tail;
     for (;xlist;xlist=xlist->tail){
-        // printf("1\n");
         AS_instr now=xlist->head;
         if (now->kind==I_LABEL) break;
-        // kind==MOVE or kind==OPER the dest and src has same offset
         if (!isPhi(now->u.OPER.assem)){
             Temp_tempList srcList=now->u.OPER.src;
             for (;srcList;srcList=srcList->tail){
@@ -267,14 +240,11 @@ void renameBlock(G_node x){
         if (dstList){
             Temp_temp dst=dstList->head;
             Temp_tempList stackList=TAB_look(stackOfParams,dst);
-            // printf("%s ->",Temp_look(Temp_name(),dst));
             if (stackList==NULL){
                 stackList=Temp_TempList(dst,Temp_TempList(dst,NULL));
                 TAB_enter(stackOfParams,dst,stackList);
             }
             else stackList->tail=Temp_TempList(Temp_newtemp(),stackList->tail);
-            // dstList->head=stackList->tail->head;
-            // printf("%s\n",Temp_look(Temp_name(),dstList->head));
         }
     }
     G_nodeList succ=G_succ(x);
@@ -290,11 +260,7 @@ void renameBlock(G_node x){
     renameDst(xlist);
 }
 void renameParams(G_nodeList bg){
-    for (;bg;bg=bg->tail){
-        renameBlock(bg->head);
-        // printf("&&&&&&&&&&&&&&&\n");
-        // AS_printInstrList(stdout,((AS_block)G_nodeInfo(bg->head))->instrs,Temp_name());
-    }
+    for (;bg;bg=bg->tail) renameBlock(bg->head);
 }
 void ssa(AS_blockList blockList,G_nodeList bg,G_nodeList ig){
     if (blockList==NULL||bg==NULL) return ;
@@ -310,7 +276,6 @@ void ssa(AS_blockList blockList,G_nodeList bg,G_nodeList ig){
     emptyPoint=checked_malloc(sizeof(int));
     RA_bg=Bg_graph();
     getDOfBlocks(bg);
-    // PRINTD(bg);
     getDFOfBlocks(bg);
     initOriginAndIn(ig);
     addPhiFuction(bg);
