@@ -1,0 +1,32 @@
+// fib
+public int main() {
+    class FIB fib;
+    fib = new FIB();
+    if (fib.fib_recur(10) == fib.fib_dir(10)) {
+        return 66;
+    } else {
+        return 99;
+    }
+}
+
+public class FIB {
+    public int fib_recur(int i) {
+        if (i == 0 || i == 1) return 1;
+        return this.fib_recur(i - 2) + this.fib_recur(i - 1);
+    }
+
+    public int fib_dir(int i) {
+        int dp;
+        int ans;
+        if (i == 0 || i == 1) return 1;
+        dp = 1;
+        ans = 1;
+        i = i - 1;
+        while (i) {
+            ans = ans + dp;
+            dp = ans - dp;
+            i = i - 1;
+        }
+        return ans;
+    }
+}

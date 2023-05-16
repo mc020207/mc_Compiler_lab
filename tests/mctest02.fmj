@@ -1,0 +1,44 @@
+public int main() {
+    class bcj t;
+    t=new bcj();
+    t.init(10);
+    t.merge(1,2);
+    t.merge(2,3);
+    t.merge(4,5);
+    t.merge(7,8);
+    t.merge(4,7);
+    return t.find(1)*t.find(4);
+}
+public class bcj{
+    int[] fa;
+    public int find(int x){
+        int ans;
+        if (this.fa[x]-x) ans=this.find(this.fa[x]);
+        else return x;
+        this.fa[x]=ans;
+        return ans;
+    }
+    
+    public int merge(int x,int y){
+        int fx;
+        int fy;
+        fx=this.find(x);
+        fy=this.find(y);
+        if (fx-fy){
+            this.fa[fx]=fy;
+            return fx;
+        }
+        return 0;
+    }
+    public int init(int n){
+        int []i={0};
+        this.fa=new int[n+1];
+        while (i[0]-(n+1)){
+            this.fa[i[0]]=i[0];
+            i[0]=i[0]+1;
+        }
+    }
+    public int[] cal(){
+        return this.fa;
+    }
+}

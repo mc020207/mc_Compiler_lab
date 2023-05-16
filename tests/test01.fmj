@@ -8,5 +8,5 @@ public class c1 {
 }
 
 public class c2 extends c1{
-    int[] a;
+    int[] a={1,2,3};
 }

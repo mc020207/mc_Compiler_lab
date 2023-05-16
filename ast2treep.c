@@ -68,6 +68,8 @@ T_stm classInit(S_table table,Temp_temp temp){
         }else{
             now=T_Move(T_Mem(T_Binop(T_plus,T_Temp(temp),T_Const(offset*OFFSETSTEP))),arrayInit(ty->expList));
         }
+    }else{
+        now=T_Move(T_Mem(T_Binop(T_plus,T_Temp(temp),T_Const(offset*OFFSETSTEP))),T_Const(0));
     }
     TAB_pop(table);
     T_stm nxt=classInit(table,temp);
@@ -360,18 +362,15 @@ T_stm ast2treepStm(A_stm x){
     return ans;
 }
 T_stm ast2treepvarDeclList(A_varDeclList list){
-    T_stm ans=NULL;
+    T_stm ans=T_Move(T_Temp(Temp_newtemp()),T_Const(0));
     for (;list;list=list->tail){
         A_varDecl x=list->head;
         Temp_temp temp=Temp_newtemp();
         S_enter(temp_table,S_Symbol(x->v),temp);
-        if (x->elist&&x->t->t==A_intType){
-            if (ans==NULL) ans=T_Move(T_Temp(temp),ast2treepExp(x->elist->head));
-            else ans=T_Seq(ans,T_Move(T_Temp(temp),ast2treepExp(x->elist->head)));
-        }
-        if (x->elist&&x->t->t==A_intArrType){
-            if (ans==NULL) ans=T_Move(T_Temp(temp),arrayInit(x->elist));
-            else ans=T_Seq(ans,T_Move(T_Temp(temp),arrayInit(x->elist)));
+        if (x->elist==NULL) ans=T_Seq(ans,T_Move(T_Temp(temp),T_Const(0)));
+        else{
+            if (x->t->t==A_intType) ans=T_Seq(ans,T_Move(T_Temp(temp),ast2treepExp(x->elist->head)));
+            if (x->t->t==A_intArrType) ans=T_Seq(ans,T_Move(T_Temp(temp),arrayInit(x->elist)));
         }
     }
     return ans;

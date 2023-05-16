@@ -1,0 +1,58 @@
+public int main() {
+    int a;
+    int b;
+    int b1;
+    int c=100;
+    class c1 t;
+    class c1 t2;
+    t=new c1();
+    t2=new c1();
+    t2.a[0]=30;
+    b=100;
+    a=0;
+    b1=0;
+    while (b1<10){
+        b1=b1+1;
+        b=100;
+        while (t.m1(a,b)+t.m2()+t2.self()[0]!=-100){
+            if (b-b/2*2!=0){
+                if (t2.mod(b)!=0){
+                    a=a+b*b1;
+                }
+            }
+            b=b-1;
+        }
+    }
+    return a;
+}
+// 10 ~ -35
+public class c1 {
+    int[] a = {50, 20, 10};
+    public int m1(int a, int b) {
+        return 10 + b * 2 + this.a[1];
+    }
+    public int m2() {
+        return this.a[2]; // 20
+    }
+    public int[] self() {
+        return this.a;
+    }
+    public int mod(int x){
+        return x-x/2*2;
+    }
+}
+
+public class c2 extends c1 {
+    int b = 100;
+    public int m2() {
+        return this.a[0] - this.b; // 50 - 45 = 5
+    }
+    public int[] self() {
+        this.b=this.b-1;
+        this.a[0]=this.b;
+        return this.a;
+    }
+    public int mod(int x){
+        return x-x/3*3;
+    }
+}

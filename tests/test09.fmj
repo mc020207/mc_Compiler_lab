@@ -1,6 +1,6 @@
 // wrong parameter at (4,23)
 public int main() {
-    int[] b;
+    int[] b={1,2,3};
     return new c1().a(b[1]);
 }
 
