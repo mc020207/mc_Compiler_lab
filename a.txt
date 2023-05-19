@@ -7,6 +7,9 @@ public int main() {
     int T=50000;
     int ans=0;
     class c1 x;
+    starttime();
+    a=getint();
+    b=getint();
     x=new c1();
     x.maxn=10010;
     x.init();
@@ -16,8 +19,10 @@ public int main() {
             a=a-1;
             b=b-1;
         }
+        putint(ans);
         T=T-1;
     }
+    stoptime();
     return ans;
 }
 public class c1 {
@@ -29,6 +34,7 @@ public class c1 {
     public int init(){
         int i;
         int j;
+        i=getarray(this.vis);
         this.vis=new int[this.maxn+10];
         this.mu=new int[this.maxn+10];
         this.pri=new int[this.maxn+10];
@@ -65,6 +71,7 @@ public class c1 {
             this.mu[i]=this.mu[i]+this.mu[i-1];
             i=i+1;
         }
+        putarray(1020,this.mu);
     }
     public int min(int n,int m){
         if (n<m) return n;
