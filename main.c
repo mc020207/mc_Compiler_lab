@@ -66,5 +66,13 @@ int main(int argc, const char * argv[]) {
         fl=fl->tail;
     }
     fprintf(stdout, "declare ptr @malloc(i64)\n");
+    fprintf(stdout, "declare i64 @getint()\n");
+    fprintf(stdout, "declare i64 @getch()\n");
+    fprintf(stdout, "declare i64 @getarray(ptr)\n");
+    fprintf(stdout, "declare void @putint(i64)\n");
+    fprintf(stdout, "declare void @putch(i64)\n");
+    fprintf(stdout, "declare void @putarray(i64,ptr)\n");
+    fprintf(stdout, "declare void @starttime()\n");
+    fprintf(stdout, "declare void @stoptime()\n");
     return 0;
 }

@@ -202,10 +202,10 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
                 Temp_temp temp1=NULL;
                 assert(x->u.ExtCALL.args);
                 ans=treep2assemExp(x->u.ExtCALL.args->head,&temp1,TRUE);
-                sprintf(des,"call void %s(i64 %%`s0)",x->u.ExtCALL.extfun);
+                sprintf(des,"call void @%s(i64 %%`s0)",x->u.ExtCALL.extfun);
                 ans=AS_splice(ans,I(OI(String(des),NULL,T(temp1),NULL)));
             }else if (strcmp(x->u.ExtCALL.extfun,"starttime")==0||strcmp(x->u.ExtCALL.extfun,"stoptime")==0){
-                sprintf(des,"call void %s()",x->u.ExtCALL.extfun);
+                sprintf(des,"call void @%s()",x->u.ExtCALL.extfun);
                 ans->head=OI(String(des),NULL,NULL,NULL);
             }else if (strcmp(x->u.ExtCALL.extfun,"putarray")==0){
                 Temp_temp temp1=NULL,temp2=NULL,temp3=NULL;
@@ -213,16 +213,16 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
                 ans=treep2assemExp(x->u.ExtCALL.args->head,&temp1,TRUE);
                 ans=AS_splice(ans,treep2assemExp(x->u.ExtCALL.args->tail->head,&temp2,TRUE));
                 ans=AS_splice(ans,I(OI("%`d0 = inttoptr i64 %`s0 to ptr",T(temp3),T(temp2),NULL)));
-                ans=AS_splice(ans,I(OI("call void putarray(i64 %`s0,ptr %`s1)",NULL,TL(temp1,T(temp3)),NULL)));
+                ans=AS_splice(ans,I(OI("call void @putarray(i64 %`s0,ptr %`s1)",NULL,TL(temp1,T(temp3)),NULL)));
             }else if (strcmp(x->u.ExtCALL.extfun,"getint")==0||strcmp(x->u.ExtCALL.extfun,"getch")==0){
-                sprintf(des,"%%`d0=call void %s()",x->u.ExtCALL.extfun);
+                sprintf(des,"%%`d0=call i64 @%s()",x->u.ExtCALL.extfun);
                 ans->head=OI(String(des),T(ret),NULL,NULL);
             }else if (strcmp(x->u.ExtCALL.extfun,"getarray")==0){
                 Temp_temp temp2=NULL,temp3=NULL;
                 temp3=Temp_newtemp();
                 ans=treep2assemExp(x->u.ExtCALL.args->head,&temp2,TRUE);
                 ans=AS_splice(ans,I(OI("%`d0 = inttoptr i64 %`s0 to ptr",T(temp3),T(temp2),NULL)));
-                ans=AS_splice(ans,I(OI("%`d0 = call void getarray(ptr %`s0)",T(ret),T(temp3),NULL)));
+                ans=AS_splice(ans,I(OI("%`d0 = call i64 @getarray(ptr %`s0)",T(ret),T(temp3),NULL)));
             }
             break;
         }

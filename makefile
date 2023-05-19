@@ -8,17 +8,18 @@ OUTPUTS = $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.output,$(TESTCASES)
 LLFILES = $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.ll,$(TESTCASES))
 
 .SECONDARY: $(LLFILES)
-runcomp: $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.output,$(TESTCASES)) clean
+runcomp: $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.output,$(TESTCASES))
 
-$(TESTCASE_DIR)/%.output: $(TESTCASE_DIR)/%.fmj a.out
+$(TESTCASE_DIR)/%.output: $(TESTCASE_DIR)/%.fmj a.out lib.ll
 	@echo test $*
 	@./a.out < $(word 1,$^) >$@
-	@lli-14 --opaque-pointers $@;echo $$?
+	@llvm-link-14 --opaque-pointers $@ lib.ll -S -o out.ll
+	@lli-14 --opaque-pointers out.ll;echo $$?
 
 a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o typecheck.o treep.o temp.o ast2treep.o canon.o pr_linearized.o printtreep.o canon.o assem.o assemblock.o treep2assem.o bg.o graph.o liveness.o ig.o flowgraph.o ssa.o
 	cc -g $^ -o a.out
 
-main.o: main.c y.tab.h y.tab.c lex.yy.o y.tab.o
+main.o: main.c y.tab.h y.tab.c lex.yy.o y.tab.o lib.ll
 	cc -g -c main.c -o main.o
 
 lex.yy.c: lexer.lex y.tab.h y.tab.c
@@ -72,11 +73,14 @@ ssa.o: ssa.c ssa.h
 
 treep.o: treep.c treep.h
 
+lib.ll: libsysy.c libsysy.h
+	clang -S -emit-llvm libsysy.c -o lib.ll -O0
+
 y.output:
 	yacc -v parser.yacc
 
 clean: 
-	@rm -f a.out b.out ./*.o lex.yy.c y.tab.c y.tab.h y.output
+	@rm -f a.out b.out ./*.o lex.yy.c y.tab.c y.tab.h y.output ./*.ll
 
 clean2:
 	@rm -f ./tests/*.output

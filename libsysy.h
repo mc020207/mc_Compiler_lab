@@ -5,6 +5,18 @@
 #include<stdarg.h>
 #include<sys/time.h>
 /* Input & output functions */
-int getint(),getch(),getarray(int a[]);
-void putint(int a),putch(int a),putarray(int n,int a[]);
+long long getint(),getch(),getarray(long long a[]);
+void putint(long long a),putch(long long a),putarray(long long n,long long a[]);
+/* Timing function implementation */
+
+
+#define _SYSY_N 1024
+
+__attribute((constructor)) void before_main(); 
+__attribute((destructor)) void after_main();
+void _sysy_starttime(int lineno);
+void _sysy_stoptime(int lineno);
+void starttime();
+void stoptime();
+
 #endif
