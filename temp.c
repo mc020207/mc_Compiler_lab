@@ -14,6 +14,36 @@
 #include "table.h"
 
 struct Temp_temp_ {int num;};
+static int temps = 100;
+static S_table TC_temp_table=NULL;
+
+/* Assume s is like "t101" (i.e., t followed by a number), construct
+   a Temp_temp  
+*/ 
+
+Temp_temp TC(string s)
+{
+ char c; int d;
+ Temp_temp value;
+
+ if (!s) assert(s);
+
+ if (!TC_temp_table) TC_temp_table=S_empty();
+ if ((value=S_look(TC_temp_table, S_Symbol(s)))) {
+	return(value);
+ }
+
+ Temp_temp p = (Temp_temp) checked_malloc(sizeof (*p));
+ sscanf(s, "%c%d", &c, &d);
+ p->num = d;
+ if (d>=100 && temps<=d) temps = d+1 ; 
+		//to make sure the next Temp_newtemp will get a different temp
+ Temp_enter(Temp_name(), p, String(&s[1]));
+
+ S_enter(TC_temp_table, S_Symbol(s), p);
+
+ return p;
+}
 
 string Temp_labelstring(Temp_label s)
 {return S_name(s);
@@ -32,7 +62,6 @@ Temp_label Temp_namedlabel(string s)
 {return S_Symbol(s);
 }
 
-static int temps = 100;
 
 Temp_temp Temp_newtemp(void)
 {Temp_temp p = (Temp_temp) checked_malloc(sizeof (*p));

@@ -1,98 +1,10 @@
+// test array access
 public int main() {
-    int a=10000;
-    int b=10000;
-    int c=10;
-    int d=10;
-    int k=1;
-    int T=50000;
-    int ans=0;
-    int []test;
-    int lentest;
-    class c1 x;
-    test=new int[10];
-    lentest=getarray(test);
-    putint(lentest);
-    putch(10);
-    x=new c1();
-    x.maxn=10010;
-    x.init();
-    starttime();
-    T=getint();
-    while (T>0){
-        a=getint();
-        b=getint();
-        c=getint();
-        d=getint();
-        putint(x.solve(a/k,b/k)-x.solve((c-1)/k,b/k)-x.solve(a/k,(d-1)/k)+x.solve((c-1)/k,(d-1)/k));
-        putch(10);
-        T=T-1;
-    }
-    stoptime();
-    return ans;
+    class tt t;
+    t=new tt();
 }
-public class c1 {
-    int[] vis;
-    int[] mu;//莫比乌斯函数
-    int[] pri;
-    int cnt;
-    int maxn;
-    public int init(){
-        int i;
-        int j;
-        this.vis=new int[this.maxn+10];
-        this.mu=new int[this.maxn+10];
-        this.pri=new int[this.maxn+10];
-        i=0;
-        while (i<this.maxn){
-            this.vis[i]=0;
-            this.mu[i]=0;
-            this.pri[i]=0;
-            i=i+1;
-        }
-        this.mu[1]=1;
-        i=2;
-        while (i<this.maxn){
-            if (!this.vis[i]){
-                this.pri[this.cnt]=i;
-                this.cnt=this.cnt+1;
-                this.mu[i]=-1;
-            }
-            j=0;
-            while(j < this.cnt){
-                if (i * this.pri[j] >= this.maxn) break;
-                this.vis[i*this.pri[j]]=1;
-                this.mu[i*this.pri[j]]=-this.mu[i];
-                if (i - i / this.pri[j] *this.pri[j] == 0) {
-                    this.mu[i*this.pri[j]]=0;
-                    break;
-                }
-                j=j+1;
-            }
-            i=i+1;
-        }
-        i=1;
-        while (i<this.maxn){
-            this.mu[i]=this.mu[i]+this.mu[i-1];
-            i=i+1;
-        }
-        putarray(10,this.pri);
-    }
-    public int min(int n,int m){
-        if (n<m) return n;
-        return m;
-    }
-    public int solve(int n,int m){
-        int ans=0;
-        int i=1;
-        int j;
-        if (n*m==0) return 0;
-        i=1;
-        j=i;
-        while(i<=this.min(n,m)){
-            j=this.min(n/(n/i),m/(m/i));
-            ans=ans+(this.mu[j]-this.mu[i-1])*(n/i)*(m/i);
-            i=j+1;
-        }
-        return ans;
+public class tt{
+    public int x(int x){
+        return x;
     }
 }

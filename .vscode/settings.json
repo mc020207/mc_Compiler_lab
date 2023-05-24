@@ -26,6 +26,7 @@
         "assem.h": "c",
         "temp.h": "c",
         "table.h": "c",
-        "symbol.h": "c"
+        "symbol.h": "c",
+        "string.h": "c"
     }
 }

@@ -9,6 +9,7 @@
  */
 
 typedef struct Temp_temp_ *Temp_temp;
+Temp_temp TC(string); //construct a temp from a string like "t100"
 Temp_temp Temp_newtemp(void);
 
 typedef struct Temp_tempList_ *Temp_tempList;
