@@ -103,7 +103,7 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
         }
         case T_TEMP:{
             if(canMiss&&*rettemp==NULL) ret=x->u.TEMP;
-            else ans->head=MI("move `d0, `s0",T(ret),T(x->u.TEMP));
+            else ans->head=MI("mov `d0, `s0",T(ret),T(x->u.TEMP));
             break;
         }
         case T_ESEQ:{
@@ -124,14 +124,14 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
             ans=treep2assemExp(x->u.CALL.obj,&tempfucptr,TRUE);
             ans=AS_splice(ans,getargs(x->u.CALL.args));
             ans=AS_splice(ans,I(OI("bl `s0",NULL,T(tempfucptr),NULL)));
-            ans=AS_splice(ans,I(OI("move `d0 `s0",T(ret),T(r(0)),NULL)));
+            ans=AS_splice(ans,I(OI("mov `d0 `s0",T(ret),T(r(0)),NULL)));
             break;
         }
         case T_ExtCALL:{
             ans=getargs(x->u.ExtCALL.args);
             sprintf(des,"bl %s",x->u.ExtCALL.extfun);
             ans=AS_splice(ans,I(OI(String(des),NULL,NULL,NULL)));
-            ans=AS_splice(ans,I(OI("move `d0 `s0",T(ret),T(r(0)),NULL)));
+            ans=AS_splice(ans,I(OI("mov `d0 `s0",T(ret),T(r(0)),NULL)));
         }
     }
     if (ans->head==NULL) ans=NULL;
@@ -152,7 +152,7 @@ AS_instrList treep2assemStm(T_stm x){
             break;
          }
          case T_JUMP:{
-            sprintf(des,"bl= %s",S_name(x->u.JUMP.jump));
+            sprintf(des,"b %s",S_name(x->u.JUMP.jump));
             ans->head=OI(String(des),NULL,NULL,AS_Targets(L(x->u.JUMP.jump)));
             break;
          }
@@ -170,7 +170,7 @@ AS_instrList treep2assemStm(T_stm x){
                 ans=AS_splice(ans,I(OI("cmp `s0,`s1",NULL,TL(temp1,T(temp2)),NULL)));
             }
             sprintf(des,"%s `j0",stricomp[x->u.CJUMP.op]);
-            ans=AS_splice(ans,I(OI(String(des),NULL,NULL,AS_Targets(L(x->u.CJUMP.true)))));
+            ans=AS_splice(ans,I(OI(String(des),NULL,NULL,AS_Targets(LL(x->u.CJUMP.true,L(x->u.CJUMP.false))))));
             break;
          }
          case T_MOVE:{
