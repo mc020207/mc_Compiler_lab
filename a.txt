@@ -1,10 +1,14 @@
-// test array access
+// test formal
 public int main() {
-    class tt t;
-    t=new tt();
+    int[] a = {1, 2};
+    class c1 c;
+    c = new c1();
+    return c.m(100,101,102,103,104,105,106)+1;
 }
-public class tt{
-    public int x(int x){
-        return x;
+
+public class c1 {
+    int x=0;
+    public int m (int a,int b,int c,int d,int e,int f,int g) {
+        return a+b+c+d+e+f+g;
     }
 }

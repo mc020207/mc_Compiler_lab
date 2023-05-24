@@ -1,40 +1,116 @@
+------~Final traced StmList1---------
+ L1:
+  Move t109, 0
+  Move t111, malloc 12
+  Move Mem(t111), 2
+  Move Mem(Binop(T_plus, t111, 4)), 1
+  Move Mem(Binop(T_plus, t111, 8)), 2
+  Move t110, Binop(T_plus, t111, 4)
+  Move t112, 0
+  Move t114, malloc 8
+  Move Mem(Binop(T_plus, t114, 4)), c1$m
+  Move Mem(Binop(T_plus, t114, 0)), 0
+  Move t112, t114
+  Move t113, t112
+  Move t115, Mem(Binop(T_plus, t113, 4)).m t113, 100, 101, 102, 103, 104, 105, 106
+  Return Binop(T_plus, t115, 1)
+ L0:
+  Return -1
 main: 
 push {t11}
 mov t11, t13
-mov t106, t14
+mov t116, t14
 L1:
-mov t103, #0
-mov t104, #0
-mov t107, #8
-mov t0, t107
-sub t13,t13,#16
+mov t109, #0
+mov t117, #12
+mov t0, t117
+sub t13,t13,#4
 bl malloc
-move t105 t0
-add t108 t105,#0
-str =tt$x, [t108]
-mov t104,t105
-bl= L0
+move t111 t0
+mov t119, #2
+str t119, [t111]
+add t120 t111,#4
+mov t122, #1
+str t122, [t120]
+add t123 t111,#8
+mov t125, #2
+str t125, [t123]
+add t110 t111,#4
+mov t112, #0
+mov t127, #8
+mov t0, t127
+sub t13,t13,#4
+bl malloc
+move t114 t0
+add t128 t114,#4
+str =c1$m, [t128]
+add t130 t114,#0
+mov t132, #0
+str t132, [t130]
+mov t112,t114
+mov t113,t112
+add t134 t113,#4
+ldr t133, [t134]
+mov t137, #100
+mov t138, #101
+mov t139, #102
+mov t140, #103
+mov t141, #104
+mov t142, #105
+mov t143, #106
+push {t143}
+push {t142}
+push {t141}
+push {t140}
+mov t3, t139
+mov t2, t138
+mov t1, t137
+mov t0, t113
+sub t13,t13,#16
+bl t133
+move t115 t0
+add t0 t115,#1
+mov t13, t11
+pop {t11}
+bx t116
 L0:
 mov t0, #-1
 mov t13, t11
 pop {t11}
-bx t106
+bx t116
 
-tt$x: 
+------~Final traced StmList1---------
+ L4:
+  Move t101, 0
+  Return Binop(T_plus, Binop(T_plus, Binop(T_plus, Binop(T_plus, Binop(T_plus, Binop(T_plus, t102, t103), t104), t105), t106), t107), t108)
+ L3:
+  Return -1
+c1$m: 
 push {t11}
 mov t11, t13
-mov t106, t14
+mov t116, t14
 mov t100, t0
-mov t102, t0
+mov t102, t1
+mov t103, t2
+mov t104, t3
+ldr t105, [fp, #20]
+ldr t106, [fp, #24]
+ldr t107, [fp, #28]
+ldr t108, [fp, #32]
 L4:
 mov t101, #0
-move t0, t102
+add t149 t102, t103
+add t148 t149, t104
+add t147 t148, t105
+add t146 t147, t106
+add t145 t146, t107
+add t0 t145, t108
 mov t13, t11
 pop {t11}
-bx t106
+bx t116
 L3:
 mov t0, #-1
 mov t13, t11
 pop {t11}
-bx t106
+bx t116
 

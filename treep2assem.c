@@ -51,14 +51,14 @@ AS_instrList getargs(T_expList list){
         arglist=TL(temp,arglist);
     }
     for (int j=i;arglist;arglist=arglist->tail,j--){
-        if (j>4){
+        if (j>=4){
             ans=AS_splice(ans,I(OI("push {`s0}",NULL,T(arglist->head),NULL)));
         }else{
-            ans=AS_splice(ans,I(OI("mov `d0, `s0",T(r(i)),T(arglist->head),NULL)));
+            ans=AS_splice(ans,I(OI("mov `d0, `s0",T(r(j)),T(arglist->head),NULL)));
         }
     }
     if (i!=-1){
-        sprintf(des,"sub `d0,`s0,#%d",4*(i>=3?(i+1):4));
+        sprintf(des,"sub `d0,`s0,#%d",4*(i>=3?4:(i+1)));
         ans=AS_splice(ans,I(OI(String(des),T(sp),T(sp),NULL)));
     }
     return ans;
@@ -111,8 +111,6 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
             break;
         }
         case T_NAME:{
-            // sprintf(des,"ldr `d0 , =<%s>",S_name(x->u.NAME));
-            // ans->head=OI(String(des),T(ret),NULL,NULL);
             break;
         }
         case T_CONST:{
@@ -192,7 +190,7 @@ AS_instrList treep2assemStm(T_stm x){
                     ans=AS_splice(ans,I(OI(String(des),NULL,T(tempdst),NULL)));
                 }else{
                     ans=AS_splice(ans,treep2assemExp(x->u.MOVE.src,&tempsrc,TRUE));
-                    ans=AS_splice(ans,I(OI("str `s1, [`s0]",NULL,TL(tempsrc,T(tempdst)),NULL)));
+                    ans=AS_splice(ans,I(OI("str `s0, [`s1]",NULL,TL(tempsrc,T(tempdst)),NULL)));
                 }
             }else{
                 assert(0);
@@ -238,7 +236,7 @@ AS_instrList treep2assemfuction(AS_blockList aslist,T_funcDecl x){
     prolog=AS_splice(prolog,I(MI("mov `d0, `s0", T(return_temp), T(lr))));
     // prolog=AS_splice(prolog,I(OI("push {`s0}", NULL, T(fp), NULL)));
     Temp_tempList list=x->args;
-    for (int i=0;list;list=list->tail){
+    for (int i=0;list;list=list->tail,i++){
         if (i<4){
             prolog=AS_splice(prolog,I(MI("mov `d0, `s0",T(list->head),T(r(i)))));
         }else{
