@@ -124,7 +124,7 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
             Temp_temp tempfucptr=NULL;
             ans=treep2assemExp(x->u.CALL.obj,&tempfucptr,TRUE);
             ans=AS_splice(ans,getargs(x->u.CALL.args));
-            ans=AS_splice(ans,I(OI("bl `s0",NULL,T(tempfucptr),NULL)));
+            ans=AS_splice(ans,I(OI("blx `s0",NULL,T(tempfucptr),NULL)));
             ans=AS_splice(ans,I(OI("mov `d0 `s0",T(ret),T(r(0)),NULL)));
             break;
         }
@@ -187,7 +187,7 @@ AS_instrList treep2assemStm(T_stm x){
                 Temp_temp tempsrc=NULL,tempdst=NULL;
                 ans=treep2assemExp(x->u.MOVE.dst->u.MEM,&tempdst,TRUE);
                 if (x->u.MOVE.src->kind==T_NAME){
-                    sprintf(des,"str =%s, [`s0]",S_name(x->u.MOVE.src->u.NAME));
+                    sprintf(des,"str %s, [`s0]",S_name(x->u.MOVE.src->u.NAME));
                     ans=AS_splice(ans,I(OI(String(des),NULL,T(tempdst),NULL)));
                 }else{
                     ans=AS_splice(ans,treep2assemExp(x->u.MOVE.src,&tempsrc,TRUE));

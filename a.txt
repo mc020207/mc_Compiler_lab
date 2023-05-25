@@ -1,6 +1,14 @@
 // test formal
 public int main() {
-    int a=1;
-    a=a*2;
-    return a;
+    int[] a = {1, 2};
+    class c1 c;
+    c = new c1();
+    return c.m(100,101,102,103,104,105,106)+1;
+}
+
+public class c1 {
+    int x=0;
+    public int m (int a,int b,int c,int d,int e,int f,int g) {
+        return a+b+c+d+e+f+g;
+    }
 }
