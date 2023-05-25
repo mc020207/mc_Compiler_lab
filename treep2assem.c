@@ -74,21 +74,22 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
         case T_BINOP:{
             Temp_temp temp1=NULL,temp2=NULL;
             free(ans);
+            bool canmiss=!(x->u.BINOP.op==T_mul||x->u.BINOP.op==T_div);
             if (x->u.BINOP.left->kind==T_CONST&&x->u.BINOP.op!=T_div){
                 Temp_temp temp1=NULL;
-                ans=treep2assemExp(x->u.BINOP.right,&temp1,TRUE);
+                ans=treep2assemExp(x->u.BINOP.right,&temp1,canmiss);
                 if (x->u.BINOP.op==T_minus) sprintf(des,"rsb `d0 `s0,#%d",x->u.BINOP.left->u.CONST);
                 else sprintf(des,"%s `d0 `s0,#%d",strbinop[x->u.BINOP.op],x->u.BINOP.left->u.CONST);
                 ans=AS_splice(ans,I(OI(String(des),T(ret),T(temp1),NULL)));
             }else if (x->u.BINOP.right->kind==T_CONST){
                 Temp_temp temp1=NULL;
-                ans=treep2assemExp(x->u.BINOP.left,&temp1,TRUE);
+                ans=treep2assemExp(x->u.BINOP.left,&temp1,canmiss);
                 sprintf(des,"%s `d0 `s0,#%d",strbinop[x->u.BINOP.op],x->u.BINOP.right->u.CONST);
                 ans=AS_splice(ans,I(OI(String(des),T(ret),T(temp1),NULL)));
             }else{
                 Temp_temp temp1=NULL,temp2=NULL;
-                ans=treep2assemExp(x->u.BINOP.left,&temp1,TRUE);
-                ans=AS_splice(ans,treep2assemExp(x->u.BINOP.right,&temp2,TRUE));
+                ans=treep2assemExp(x->u.BINOP.left,&temp1,canmiss);
+                ans=AS_splice(ans,treep2assemExp(x->u.BINOP.right,&temp2,canmiss));
                 sprintf(des,"%s `d0 `s0, `s1",strbinop[x->u.BINOP.op]);
                 ans=AS_splice(ans,I(OI(String(des), T(ret), TL(temp1, T(temp2)), NULL)));
             }
