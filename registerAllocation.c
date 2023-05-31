@@ -61,7 +61,7 @@ AS_instrList renameColor(AS_instrList il){
         for (;srcList;srcList=srcList->tail){
             colorNode nowcNode=(colorNode)TAB_look(colorTable,srcList->head);
             if (nowcNode->isSpill){
-                sprintf(des,"ldr `d0 , [`s0 , #-%d]",nowcNode->renum+mxrenum*4);
+                sprintf(des,"ldr `d0 , [`s0 , #-%d]",nowcNode->renum+mxrenum*4+8);
                 AS_instr y=OI(String(des),T(r(ptrnum)),T(fp),NULL);
                 if (pre==NULL){
                     pre=il=AS_InstrList(y,list);
@@ -79,7 +79,7 @@ AS_instrList renameColor(AS_instrList il){
         for (;desList;desList=desList->tail){
             colorNode nowcNode=(colorNode)TAB_look(colorTable,desList->head);
             if (nowcNode->isSpill){
-                sprintf(des,"str `s0 , [`s1 , #-%d]",nowcNode->renum+mxrenum*4);
+                sprintf(des,"str `s0 , [`s1 , #-%d]",nowcNode->renum+mxrenum*4+8);
                 AS_instr y=OI(String(des),NULL,TL(r(ptrnum),T(fp)),NULL);
                 list->tail=AS_InstrList(y,list->tail);
                 list=list->tail;
