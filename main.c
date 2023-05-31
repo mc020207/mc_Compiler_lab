@@ -69,6 +69,7 @@ int main(int argc, const char * argv[]) {
         printf(".global %s\n",fl->head->name);
         il=registerAllocation(il,ig);
         AS_printInstrList(stdout,il,Temp_name());
+        printf(".section	.rodata\n");
         fl=fl->tail;
     }
     // fprintf(stdout, "declare ptr @malloc(i64)\n");
