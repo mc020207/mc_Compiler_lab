@@ -194,5 +194,22 @@ AS_instrList registerAllocation(AS_instrList il,G_nodeList ig){
     simplify(ig);
     selectColor();
     mxrenum=mxrenum<=4?0:mxrenum-1;
-    return renameColor(il);
+    il=renameColor(il);
+    AS_instrList prolog=I(OI("push {`s0,`s1}",NULL,TL(fp,T(lr)),NULL));
+    prolog=AS_splice(prolog,I(OI("add `d0, `s0, #4",T(fp),T(sp),NULL)));
+    for (int i=4;i<=mxrenum;i++){
+        prolog=AS_splice(prolog,I(OI("push {`s0}",NULL,T(r(i)),NULL)));
+    }
+    sprintf(des,"sub `d0, `s0, #%d",spillOffset);
+    prolog=AS_splice(prolog,I(OI(String(des),T(sp),T(sp),NULL)));
+    sprintf(des,"add `d0, `s0, #%d",spillOffset);
+    AS_instrList epilog=I(OI(String(des),T(sp),T(sp),NULL));
+    for (int i=mxrenum;i>=4;i--){
+        epilog=AS_splice(epilog,I(OI("pop {`d0}",T(r(i)),NULL,NULL)));
+    }
+    epilog=AS_splice(epilog,I(OI("pop {`d0,`d1}",TL(fp,T(lr)),NULL,NULL)));
+    epilog=AS_splice(epilog,I(OI("bx `s0",NULL,T(lr),NULL)));
+    il->tail=AS_splice(prolog,il->tail);
+    il=AS_splice(il,epilog);
+    return il;
 }
