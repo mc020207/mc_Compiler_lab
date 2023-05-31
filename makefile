@@ -16,6 +16,11 @@ $(TESTCASE_DIR)/%.s: $(TESTCASE_DIR)/%.fmj a.out libsysy.s
 	@arm-linux-gnueabihf-gcc -mcpu=cortex-a72 $@ libsysy.s --static -o out
 	@qemu-arm -B 0x1000 out; echo $$?
 
+run_a: a.out
+	./a.out <a.txt >a.s
+	arm-linux-gnueabihf-gcc -mcpu=cortex-a72 a.s libsysy.s --static -o out
+	qemu-arm -B 0x1000 out
+
 a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o typecheck.o treep.o temp.o ast2treep.o canon.o pr_linearized.o printtreep.o canon.o assem.o assemblock.o treep2assem.o bg.o graph.o liveness.o ig.o flowgraph.o ssa.o registerAllocation.o
 	cc -g $^ -o a.out
 

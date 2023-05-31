@@ -173,7 +173,8 @@ AS_instrList treep2llvmExp(T_exp x,Temp_temp* rettemp,bool canMiss){
             Temp_temp tempfuci64=NULL,tempfucptr=Temp_newtemp();
             ans=treep2llvmExp(x->u.CALL.obj,&tempfuci64,TRUE);
             ans=AS_splice(ans,I(OI("%`d0 = inttoptr i64 %`s0 to ptr",T(tempfucptr),T(tempfuci64),NULL)));
-            string des2=String("%`d0 = call i64 %`s0(");
+            string des2=checked_malloc(1000);
+            sprintf(des2,"%%`d0 = call i64 %%`s0(");
             string tempstring=checked_malloc(1000);
             Temp_tempList args;
             ans=AS_splice(ans,getargs(x->u.CALL.args,tempstring,&args,1,1));
