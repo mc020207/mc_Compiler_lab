@@ -9,7 +9,7 @@ public int main() {
     class c1 x;
     x=new c1();
     x.maxn=10010;
-    x.init();
+    x.init(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21);
     while (T>0){
         ans=ans+x.solve(a/k,b/k)-x.solve((c-1)/k,b/k)-x.solve(a/k,(d-1)/k)+x.solve((c-1)/k,(d-1)/k);
         if (T==T/100*100){
@@ -26,9 +26,52 @@ public class c1 {
     int[] pri;
     int cnt;
     int maxn;
-    public int init(){
+    public int init(int x1,int x2,int x3,int x4,int x5,int x6,int x7,int x8,int x9,int x10,int x11,int x12,int x13,int x14,int x15,int x16,int x17,int x18,int x19,int x20,int x21){
+        int []array;
         int i;
         int j;
+        putint(x1);
+        putch(10);
+        putint(x2);
+        putch(10);
+        putint(x3);
+        putch(10);
+        putint(x4);
+        putch(10);
+        putint(x5);
+        putch(10);
+        putint(x6);
+        putch(10);
+        putint(x7);
+        putch(10);
+        putint(x8);
+        putch(10);
+        putint(x9);
+        putch(10);
+        putint(x10);
+        putch(10);
+        putint(x11);
+        putch(10);
+        putint(x12);
+        putch(10);
+        putint(x13);
+        putch(10);
+        putint(x14);
+        putch(10);
+        putint(x15);
+        putch(10);
+        putint(x16);
+        putch(10);
+        putint(x17);
+        putch(10);
+        putint(x18);
+        putch(10);
+        putint(x19);
+        putch(10);
+        putint(x20);
+        putch(10);
+        putint(x21);
+        putch(10);
         this.vis=new int[this.maxn+10];
         this.mu=new int[this.maxn+10];
         this.pri=new int[this.maxn+10];

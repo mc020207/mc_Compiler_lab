@@ -61,8 +61,8 @@ AS_instrList renameColor(AS_instrList il){
         for (;srcList;srcList=srcList->tail){
             colorNode nowcNode=(colorNode)TAB_look(colorTable,srcList->head);
             if (nowcNode->isSpill){
-                sprintf(des,"ldr `d0 , [`s0 , #%d]",nowcNode->renum);
-                AS_instr y=OI(String(des),T(r(ptrnum)),T(sp),NULL);
+                sprintf(des,"ldr `d0 , [`s0 , #-%d]",nowcNode->renum+mxrenum*4);
+                AS_instr y=OI(String(des),T(r(ptrnum)),T(fp),NULL);
                 if (pre==NULL){
                     pre=il=AS_InstrList(y,list);
                     pre->tail=list;
@@ -71,7 +71,6 @@ AS_instrList renameColor(AS_instrList il){
                     pre=pre->tail;
                 }
                 srcList->head=r(ptrnum);
-                mxrenum=mxrenum>ptrnum?mxrenum:ptrnum;
                 ptrnum++;
             }else{
                 srcList->head=r(nowcNode->renum);
@@ -80,14 +79,11 @@ AS_instrList renameColor(AS_instrList il){
         for (;desList;desList=desList->tail){
             colorNode nowcNode=(colorNode)TAB_look(colorTable,desList->head);
             if (nowcNode->isSpill){
-                sprintf(des,"str `s0 , [`s1 , #%d]",nowcNode->renum);
-                // printf("%s\n",des);
-                AS_instr y=OI(String(des),NULL,TL(r(ptrnum),T(sp)),NULL);
-                // AS_printInstrList(stdout,I(y),Temp_name());
+                sprintf(des,"str `s0 , [`s1 , #-%d]",nowcNode->renum+mxrenum*4);
+                AS_instr y=OI(String(des),NULL,TL(r(ptrnum),T(fp)),NULL);
                 list->tail=AS_InstrList(y,list->tail);
                 list=list->tail;
                 desList->head=r(ptrnum);
-                mxrenum=mxrenum>ptrnum?mxrenum:ptrnum;
                 ptrnum++;
             }else{
                 desList->head=r(nowcNode->renum);
@@ -126,7 +122,6 @@ void selectColor(){
             spillOffset+=OFFSETSTEP;
         }
         TAB_enter(colorTable,xTemp,nowcNode);
-        // printf("%s -> %d %d\n",Temp_look(Temp_name(),xTemp),nowcNode->isSpill,nowcNode->renum);
     }
 }
 void simplify(G_nodeList ig){
@@ -196,17 +191,23 @@ AS_instrList registerAllocation(AS_instrList il,G_nodeList ig){
     }
     simplify(ig);
     selectColor();
-    mxrenum=mxrenum<=4?0:mxrenum-1;
+    mxrenum=mxrenum<=4?3:mxrenum-1;
     il=renameColor(il);
     AS_instrList prolog=I(OI("push {`s0,`s1}",NULL,TL(fp,T(lr)),NULL));
     prolog=AS_splice(prolog,I(OI("add `d0, `s0, #4",T(fp),T(sp),NULL)));
     for (int i=4;i<=mxrenum;i++){
         prolog=AS_splice(prolog,I(OI("push {`s0}",NULL,T(r(i)),NULL)));
     }
+    for (int i=8;i<=10;i++){
+        prolog=AS_splice(prolog,I(OI("push {`s0}",NULL,T(r(i)),NULL)));
+    }
     sprintf(des,"sub `d0, `s0, #%d",spillOffset);
     prolog=AS_splice(prolog,I(OI(String(des),T(sp),T(sp),NULL)));
     sprintf(des,"add `d0, `s0, #%d",spillOffset);
     AS_instrList epilog=I(OI(String(des),T(sp),T(sp),NULL));
+    for (int i=10;i>=8;i--){
+        epilog=AS_splice(epilog,I(OI("pop {`d0}",T(r(i)),NULL,NULL)));
+    }
     for (int i=mxrenum;i>=4;i--){
         epilog=AS_splice(epilog,I(OI("pop {`d0}",T(r(i)),NULL,NULL)));
     }
