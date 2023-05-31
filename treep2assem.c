@@ -37,9 +37,10 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss);
 AS_instr AS_Label2(Temp_label lable){
     return AS_Label(String(strcat(String(S_name(lable)),":")),lable);
 }
-Temp_temp r(int i){
-    sprintf(des, "t%d", i);
-    return TC(String(des));
+static Temp_temp r(int i){
+    char des2[1000];
+    sprintf(des2, "t%d", i);
+    return TC(String(des2));
 }
 AS_instrList getargs(T_expList list){
     AS_instrList ans=NULL;
@@ -74,23 +75,24 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
         case T_BINOP:{
             Temp_temp temp1=NULL,temp2=NULL;
             free(ans);
-            bool canmiss=!(x->u.BINOP.op==T_mul||x->u.BINOP.op==T_div);
+            // bool canmiss=!(x->u.BINOP.op==T_mul||x->u.BINOP.op==T_div);
+            bool canmiss=1;
             if (x->u.BINOP.left->kind==T_CONST&&x->u.BINOP.op!=T_div){
                 Temp_temp temp1=NULL;
                 ans=treep2assemExp(x->u.BINOP.right,&temp1,canmiss);
                 if (x->u.BINOP.op==T_minus) sprintf(des,"rsb `d0 `s0,#%d",x->u.BINOP.left->u.CONST);
-                else sprintf(des,"%s `d0 `s0,#%d",strbinop[x->u.BINOP.op],x->u.BINOP.left->u.CONST);
+                else sprintf(des,"%s `d0, `s0,#%d",strbinop[x->u.BINOP.op],x->u.BINOP.left->u.CONST);
                 ans=AS_splice(ans,I(OI(String(des),T(ret),T(temp1),NULL)));
             }else if (x->u.BINOP.right->kind==T_CONST){
                 Temp_temp temp1=NULL;
                 ans=treep2assemExp(x->u.BINOP.left,&temp1,canmiss);
-                sprintf(des,"%s `d0 `s0,#%d",strbinop[x->u.BINOP.op],x->u.BINOP.right->u.CONST);
+                sprintf(des,"%s `d0, `s0,#%d",strbinop[x->u.BINOP.op],x->u.BINOP.right->u.CONST);
                 ans=AS_splice(ans,I(OI(String(des),T(ret),T(temp1),NULL)));
             }else{
                 Temp_temp temp1=NULL,temp2=NULL;
                 ans=treep2assemExp(x->u.BINOP.left,&temp1,canmiss);
                 ans=AS_splice(ans,treep2assemExp(x->u.BINOP.right,&temp2,canmiss));
-                sprintf(des,"%s `d0 `s0, `s1",strbinop[x->u.BINOP.op]);
+                sprintf(des,"%s `d0, `s0, `s1",strbinop[x->u.BINOP.op]);
                 ans=AS_splice(ans,I(OI(String(des), T(ret), TL(temp1, T(temp2)), NULL)));
             }
             break;
@@ -112,6 +114,8 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
             break;
         }
         case T_NAME:{
+            sprintf(des,"ldr `d0 , = %s",S_name(x->u.NAME));
+            ans->head=OI(String(des),T(ret),NULL,NULL);
             break;
         }
         case T_CONST:{
@@ -124,14 +128,14 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
             Temp_temp tempfucptr=NULL;
             ans=treep2assemExp(x->u.CALL.obj,&tempfucptr,TRUE);
             ans=AS_splice(ans,getargs(x->u.CALL.args));
-            ans=AS_splice(ans,I(OI("blx `s0",NULL,T(tempfucptr),NULL)));
+            ans=AS_splice(ans,I(OI("blx `s0",TL(lr,TL(r0,TL(r1,TL(r2,T(r3))))),T(tempfucptr),NULL)));
             ans=AS_splice(ans,I(OI("mov `d0 `s0",T(ret),T(r(0)),NULL)));
             break;
         }
         case T_ExtCALL:{
             ans=getargs(x->u.ExtCALL.args);
             sprintf(des,"bl %s",x->u.ExtCALL.extfun);
-            ans=AS_splice(ans,I(OI(String(des),NULL,NULL,NULL)));
+            ans=AS_splice(ans,I(OI(String(des),TL(r0,TL(r1,TL(r2,T(r3)))),NULL,NULL)));
             ans=AS_splice(ans,I(OI("mov `d0 `s0",T(ret),T(r(0)),NULL)));
         }
     }
@@ -186,13 +190,8 @@ AS_instrList treep2assemStm(T_stm x){
             }else if (x->u.MOVE.dst->kind==T_MEM){
                 Temp_temp tempsrc=NULL,tempdst=NULL;
                 ans=treep2assemExp(x->u.MOVE.dst->u.MEM,&tempdst,TRUE);
-                if (x->u.MOVE.src->kind==T_NAME){
-                    sprintf(des,"str %s, [`s0]",S_name(x->u.MOVE.src->u.NAME));
-                    ans=AS_splice(ans,I(OI(String(des),NULL,T(tempdst),NULL)));
-                }else{
-                    ans=AS_splice(ans,treep2assemExp(x->u.MOVE.src,&tempsrc,TRUE));
-                    ans=AS_splice(ans,I(OI("str `s0, [`s1]",NULL,TL(tempsrc,T(tempdst)),NULL)));
-                }
+                ans=AS_splice(ans,treep2assemExp(x->u.MOVE.src,&tempsrc,TRUE));
+                ans=AS_splice(ans,I(OI("str `s0, [`s1]",NULL,TL(tempsrc,T(tempdst)),NULL)));
             }else{
                 assert(0);
             }

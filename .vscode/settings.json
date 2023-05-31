@@ -27,6 +27,7 @@
         "temp.h": "c",
         "table.h": "c",
         "symbol.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "liveness.h": "c"
     }
 }

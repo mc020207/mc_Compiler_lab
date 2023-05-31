@@ -37,10 +37,11 @@ AS_instr AS_Label(string a, Temp_label label) {
 
 AS_instr AS_Move(string a, Temp_tempList d, Temp_tempList s) {
   AS_instr p = (AS_instr) checked_malloc (sizeof *p);
-  p->kind = I_MOVE;
-  p->u.MOVE.assem=a; 
-  p->u.MOVE.dst=d; 
-  p->u.MOVE.src=s; 
+  p->kind = I_OPER;
+  p->u.OPER.assem=a; 
+  p->u.OPER.dst=d; 
+  p->u.OPER.src=s; 
+  p->u.OPER.jumps=NULL;
   return p;
 }
 
@@ -87,14 +88,14 @@ static void format(char *result, string assem,
       switch(*(++p)) {
       case 's': {int n = atoi(++p);
 		 string s = Temp_look(m, nthTemp(src,n));
-		 strcpy(result+i, "t");
+		 strcpy(result+i, "r");
 		 strcpy(result+i+1, s);
 		 i += (strlen(s)+1);
 	       }
 	break;
       case 'd': {int n = atoi(++p);
 		 string s = Temp_look(m, nthTemp(dst,n));
-		 strcpy(result+i, "t");
+		 strcpy(result+i, "r");
 		 strcpy(result+i+1, s);
 		 i += (strlen(s)+1);
 	       }
