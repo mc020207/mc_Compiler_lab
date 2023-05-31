@@ -6,6 +6,6 @@ public int main() {
 public class c1 {
     public int a(int x) {
         int[] b={10,10,10,10,10};
-        return b[5];
+        return b[4];
     }
 }

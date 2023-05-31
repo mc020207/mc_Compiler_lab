@@ -52,7 +52,10 @@ AS_instrList renameColor(AS_instrList il){
     AS_instrList pre=NULL;
     for (AS_instrList list=il;list;list=list->tail){
         AS_instr x=list->head;
-        if (x->kind==I_LABEL) continue;
+        if (x->kind==I_LABEL){
+            pre=list;
+            continue;
+        }
         Temp_tempList desList=x->u.OPER.dst,srcList=x->u.OPER.src;
         int ptrnum=8;
         for (;srcList;srcList=srcList->tail){

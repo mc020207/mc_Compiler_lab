@@ -2,19 +2,19 @@
 #include"libsysy.h"
 #include<sys/time.h>
 /* Input & output functions */
-long long getint(){long long t; scanf("%lld",&t); return t; }
-long long getch(){char c; scanf("%c",&c); return (long long)c; }
-long long getarray(long long a[]){
-    long long n;
-    scanf("%lld",&n);
-    for(long long i=0;i<n;i++) scanf("%lld",&a[i]);
+int getint(){int t; scanf("%d",&t); return t; }
+int getch(){char c; scanf("%c",&c); return (int)c; }
+int getarray(int a[]){
+    int n;
+    scanf("%d",&n);
+    for(int i=0;i<n;i++) scanf("%d",&a[i]);
     return n;
 }
-void putint(long long a){ printf("%lld",a);}
-void putch(long long a){ printf("%c",(int)a); }
-void putarray(long long n,long long a[]){
-    printf("%lld:",n);
-    for(long long i=0;i<n;i++)printf(" %lld",a[i]);
+void putint(int a){ printf("%d",a);}
+void putch(int a){ printf("%c",(int)a); }
+void putarray(int n,int a[]){
+    printf("%d:",n);
+    for(int i=0;i<n;i++)printf(" %d",a[i]);
     printf("\n");
 }
 /* Timing function implementation */

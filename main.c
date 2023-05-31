@@ -66,7 +66,7 @@ int main(int argc, const char * argv[]) {
         // ssa(aslist,bg,lg);
         // AS_printInstrList(stdout, il, Temp_name());
         // printf("------~Final traced StmList3---------\n");
-        
+        printf(".global %s\n",fl->head->name);
         il=registerAllocation(il,ig);
         AS_printInstrList(stdout,il,Temp_name());
         fl=fl->tail;

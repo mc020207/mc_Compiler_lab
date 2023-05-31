@@ -5,8 +5,8 @@
 #include<stdarg.h>
 #include<sys/time.h>
 /* Input & output functions */
-long long getint(),getch(),getarray(long long a[]);
-void putint(long long a),putch(long long a),putarray(long long n,long long a[]);
+int getint(),getch(),getarray(int a[]);
+void putint(int a),putch(int a),putarray(int n,int a[]);
 /* Timing function implementation */
 
 

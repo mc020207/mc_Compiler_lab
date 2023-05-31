@@ -8,18 +8,18 @@ OUTPUTS = $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.output,$(TESTCASES)
 LLFILES = $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.ll,$(TESTCASES))
 
 .SECONDARY: $(LLFILES)
-runcomp: $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.output,$(TESTCASES))
+runcomp: $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.s,$(TESTCASES))
 
-$(TESTCASE_DIR)/%.output: $(TESTCASE_DIR)/%.fmj a.out lib.ll
+$(TESTCASE_DIR)/%.s: $(TESTCASE_DIR)/%.fmj a.out libsysy.s
 	@echo test $*
 	@./a.out < $(word 1,$^) >$@
-	@#llvm-link-14 --opaque-pointers $@ lib.ll -S -o out.ll
-	@#lli-14 --opaque-pointers out.ll;echo $$?
+	@arm-linux-gnueabihf-gcc -mcpu=cortex-a72 $@ libsysy.s --static -o out
+	@qemu-arm -B 0x1000 out; echo $$?
 
 a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o typecheck.o treep.o temp.o ast2treep.o canon.o pr_linearized.o printtreep.o canon.o assem.o assemblock.o treep2assem.o bg.o graph.o liveness.o ig.o flowgraph.o ssa.o registerAllocation.o
 	cc -g $^ -o a.out
 
-main.o: main.c y.tab.h y.tab.c lex.yy.o y.tab.o lib.ll
+main.o: main.c y.tab.h y.tab.c lex.yy.o y.tab.o libsysy.s
 	cc -g -c main.c -o main.o
 
 lex.yy.c: lexer.lex y.tab.h y.tab.c
@@ -78,11 +78,14 @@ treep.o: treep.c treep.h
 lib.ll: libsysy.c libsysy.h
 	clang -S -emit-llvm libsysy.c -o lib.ll -O0
 
+libsysy.s:
+	arm-linux-gnueabihf-gcc -mcpu=cortex-a72 -S libsysy.c
+
 y.output:
 	yacc -v parser.yacc
 
 clean: 
-	@rm -f a.out b.out ./*.o lex.yy.c y.tab.c y.tab.h y.output ./*.ll
+	@rm -f a.out b.out ./*.o lex.yy.c y.tab.c y.tab.h y.output ./*.ll ./*.s out
 
 clean2:
-	@rm -f ./tests/*.output
+	@rm -f ./tests/*.s
