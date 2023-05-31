@@ -29,7 +29,8 @@
 #define lbegin Temp_namedlabel(String("lbegin"))
 #define lend Temp_namedlabel(String("lend"))
 
-Temp_temp return_temp=NULL;
+// Temp_temp return_temp=NULL;
+Temp_label return_label=NULL;
 char des[1000];
 static char strbinop[][5]={"add","sub","mul","sdiv"};
 static char stricomp[][5]={"beq", "bne", "blt", "bgt", "ble", "bge"};
@@ -207,9 +208,9 @@ AS_instrList treep2assemStm(T_stm x){
             free(ans);
             Temp_temp temp=r(0);
             ans=treep2assemExp(x->u.EXP,&temp,TRUE);
-            ans=AS_splice(ans,I(OI(String("mov `d0, `s0"),T(sp) , T(fp), NULL)));
-            ans=AS_splice(ans,I(OI(String("pop {`s0}"),NULL , T(fp), NULL)));
-            ans=AS_splice(ans,I(OI(String("bx `s0"),NULL , T(return_temp), NULL)));
+            // ans=AS_splice(ans,I(OI(String("mov `d0, `s0"),T(sp) , T(fp), NULL)));
+            // ans=AS_splice(ans,I(OI(String("pop {`s0}"),NULL , T(fp), NULL)));
+            ans=AS_splice(ans,I(OI(String("b `j0"),NULL , NULL, AS_Targets(L(return_label)))));
             break;
          }
     }
@@ -222,7 +223,8 @@ AS_instrList treep2assemStmList(T_stmList list){
 }
 AS_blockList treep2assemblcok(struct C_block block){
     if (!block.stmLists) return NULL;
-    if (!return_temp) return_temp=Temp_newtemp();
+    // if (!return_temp) return_temp=Temp_newtemp();
+    if (!return_label) return_label=Temp_newlabel();
     AS_instrList now1 = treep2assemStmList(block.stmLists->head);
     AS_block now=AS_Block(now1);
     block.stmLists=block.stmLists->tail;
@@ -231,25 +233,27 @@ AS_blockList treep2assemblcok(struct C_block block){
 AS_instrList treep2assemfuction(AS_blockList aslist,T_funcDecl x){
     sprintf(des,"%s: ",x->name);
     AS_instrList prolog=I(LI(String(des),Temp_namedlabel(String(x->name))));
-    prolog=AS_splice(prolog,I(OI("push {`s0}", NULL, T(fp), NULL)));
-    prolog=AS_splice(prolog,I(MI("mov `d0, `s0", T(fp), T(sp))));
-    prolog=AS_splice(prolog,I(MI("mov `d0, `s0", T(return_temp), T(lr))));
+    // prolog=AS_splice(prolog,I(OI("push {`s0}", NULL, T(fp), NULL)));
+    // prolog=AS_splice(prolog,I(MI("mov `d0, `s0", T(fp), T(sp))));
+    // prolog=AS_splice(prolog,I(MI("mov `d0, `s0", T(return_temp), T(lr))));
     // prolog=AS_splice(prolog,I(OI("push {`s0}", NULL, T(fp), NULL)));
     Temp_tempList list=x->args;
     for (int i=0;list;list=list->tail,i++){
         if (i<4){
             prolog=AS_splice(prolog,I(MI("mov `d0, `s0",T(list->head),T(r(i)))));
         }else{
-            sprintf(des,"ldr `d0, [fp, #%d]",4*(i+1));
+            sprintf(des,"ldr `d0, [fp, #%d]",4*(i-3));
             prolog=AS_splice(prolog,I(OI(String(des),T(list->head),NULL,NULL)));
         }
     }
-    AS_instrList epilog= NULL;
+    AS_instrList epilog=I(AS_Label2(return_label));
     /* I(LI("lend:", lend));
     epilog=AS_splice(epilog,I(OI("mov `d0, #-2", T(r0), NULL, NULL)));
     epilog=AS_splice(epilog,I(MI("mov `d0, `s0", T(sp), T(fp))));
     epilog=AS_splice(epilog,I(OI("pop {`d0}", T(fp), NULL, NULL)));
     epilog=AS_splice(epilog,I(OI("bx `s0", NULL, T(return_temp), NULL))); */
     AS_instrList il = AS_traceSchedule(aslist, prolog, epilog, FALSE);
+    // return_temp=NULL;
+    return_label=NULL;
     return il;
 }

@@ -48,6 +48,7 @@ int main(int argc, const char * argv[]) {
         // printStmList_linearized(stdout,sl,0);
         c=C_basicBlocks(sl);
         AS_blockList aslist=treep2assemblcok(c);
+        // printf("222\n");
         G_nodeList bg=Create_bg(aslist);
         // printf("------Basic Block Graph---------\n");
         // Show_bg(stdout, bg);
@@ -65,7 +66,9 @@ int main(int argc, const char * argv[]) {
         // ssa(aslist,bg,lg);
         // AS_printInstrList(stdout, il, Temp_name());
         // printf("------~Final traced StmList3---------\n");
-        AS_printInstrList(stdout,registerAllocation(il,ig),Temp_name());
+        
+        il=registerAllocation(il,ig);
+        AS_printInstrList(stdout,il,Temp_name());
         fl=fl->tail;
     }
     // fprintf(stdout, "declare ptr @malloc(i64)\n");

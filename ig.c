@@ -59,13 +59,15 @@ G_nodeList Create_ig(G_nodeList flowgraph) {
         } else use=NULL;
         
         //for each instruction, find the conflict from def to liveout
-        for (Temp_tempList tl1=FG_def(n); tl1!=NULL; tl1=tl1->tail)
+        for (Temp_tempList tl1=FG_def(n); tl1!=NULL; tl1=tl1->tail){
+            Look_ig(tl1->head);
             for (Temp_tempList tl2=FG_Out(n); tl2!=NULL; tl2=tl2->tail) {
                 if ((!(is_m && tl2->head == use->head)) && (tl2->head != tl1->head)) {
                     Enter_ig(tl1->head, tl2->head);
                     Enter_ig(tl2->head, tl1->head);
                 }
             }
+        }
         flg=flg->tail;
     }
     return G_nodes(RA_ig);
