@@ -1,12 +1,19 @@
 // the superclass don't have function b at (5,int a21)
 public int main() {
-    class c1 my_class;
-    my_class=new c1();
-    return my_class.a(1,2,3,4,5,6,7);
+    int a=2;
+    class c1 c;
+    c=new c1();
+    if ((1||c.hhh(1))&&c.hhh(2)) a=3;
+    else a=4;
+    putint(c.a);
+    putch(10);
+    return a;
 }
 
 public class c1 {
-    public int a(int a1,int a2,int a3,int a4,int a5,int a6,int a7) {
-        return a1+a2+a3+a4+a5+a6+a7;
+    int a=1;
+    public int hhh(int x){
+        this.a=this.a+x;
+        return 0;
     }
 }

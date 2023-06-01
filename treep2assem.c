@@ -127,7 +127,7 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
             ans=treep2assemExp(x->u.CALL.obj,&tempfucptr,TRUE);
             int addnum=0;
             ans=AS_splice(ans,getargs(x->u.CALL.args,&addnum));
-            ans=AS_splice(ans,I(OI("blx `s0",TL(lr,TL(r0,TL(r1,TL(r2,T(r3))))),T(tempfucptr),NULL)));
+            ans=AS_splice(ans,I(OI("blx `s0",TL(lr,TL(r0,TL(r1,TL(r2,T(r3))))),TL(tempfucptr,TL(lr,TL(r0,TL(r1,TL(r2,T(r3)))))),NULL)));
             if (addnum){
                 sprintf(des,"add `d0, `s0, #%d",addnum);
                 ans=AS_splice(ans,I(OI(String(des),T(sp),T(sp),NULL)));
@@ -139,7 +139,7 @@ AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss){
             int addnum=0;
             ans=getargs(x->u.ExtCALL.args,&addnum);
             sprintf(des,"bl %s",x->u.ExtCALL.extfun);
-            ans=AS_splice(ans,I(OI(String(des),TL(lr,TL(r0,TL(r1,TL(r2,T(r3))))),NULL,NULL)));
+            ans=AS_splice(ans,I(OI(String(des),TL(lr,TL(r0,TL(r1,TL(r2,T(r3))))),TL(lr,TL(r0,TL(r1,TL(r2,T(r3))))),NULL)));
             if (addnum){
                 sprintf(des,"add `d0, `s0, #%d",addnum);
                 ans=AS_splice(ans,I(OI(String(des),T(sp),T(sp),NULL)));
