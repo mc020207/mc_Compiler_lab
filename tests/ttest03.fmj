@@ -1,0 +1,16 @@
+public int main() {
+    int i=0; 
+    int[] a; 
+
+    a=new int[8];
+    while (({a[i]=i; i=i+1;} i)<8);
+    putarray(8,a);
+    return new c1().m(0).t;
+}
+
+public class c0 {int t=11;}
+public class c1 extends c0 {
+    public class c1 m(int x) {
+       return new c1();
+    }
+}

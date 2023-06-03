@@ -1,0 +1,20 @@
+public int main() {
+    return new c2().m1(1).m2(10);
+}
+
+public class c1 {
+    int c1m1;
+
+    public class c2 m1(int x) {
+        this.c1m1=x;
+        return new c2();
+    }
+}
+
+public class c2 extends c1 {
+    int i2;
+    public int m2(int x) {
+        return (this.m1(x)).c1m1;
+    }
+}
+

@@ -1,0 +1,47 @@
+public int main() {
+    int i=0; 
+    int[] a; 
+    class c1 o1;
+    class c2 o2;
+    class c3 o3;
+    class c4 o4;
+
+    starttime();
+    a=new int[8];
+    while (!({a[i]=i; i=i+1;} 0))
+      if (i>=8) break;
+    putarray(8,a);
+    while (true) {
+      i=getint();
+      if (i) break;
+      if (!i) break;
+    }
+    stoptime();
+
+    o1=new c1();
+    o2=new c2();
+    o3=new c3();
+    o4=new c4();
+
+    o1.x1=1;
+    o2.x2=2;
+    o3.x3=3;
+    o4.x4=4;
+    return a[7];
+}
+
+public class c4 extends c3 {
+    int x4;
+}
+
+public class c3 {
+    int x3;
+}
+
+public class c2 extends c1 {
+    int x2;
+}
+
+public class c1 {
+    int x1;
+}
