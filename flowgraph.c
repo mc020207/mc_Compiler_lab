@@ -98,7 +98,7 @@ bool FG_isMove(G_node n) {
 void FG_Showinfo(FILE *out, AS_instr instr, Temp_map map) {
 	char* cs;
 	char* lb;
-    char r[200]; /* result */
+    char r[2000]; /* result */
 	switch(instr->kind) {
 	case I_OPER:
 		cs = instr->u.OPER.assem;

@@ -33,8 +33,8 @@
 A_prog root;
 int OFFSETSTEP;
 extern int yyparse();
-void show(AS_instr ins) {
-    FG_Showinfo(stdout, ins, Temp_name());
+void show(FILE* out,AS_instr ins) {
+    FG_Showinfo(out, ins, Temp_name());
 }
 int main(int argc, char * argv[]) {
     assert(argc==3);
