@@ -91,6 +91,7 @@ static void format(char *result, string assem,
 		 strcpy(result+i, "r");
 		 strcpy(result+i+1, s);
 		 i += (strlen(s)+1);
+     if (n>=10) p++;
 	       }
 	break;
       case 'd': {int n = atoi(++p);

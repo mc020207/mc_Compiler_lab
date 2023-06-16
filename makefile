@@ -8,20 +8,22 @@ OUTPUTS = $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.output,$(TESTCASES)
 LLFILES = $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.ll,$(TESTCASES))
 
 .SECONDARY: $(LLFILES)
-runcomp: $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.s,$(TESTCASES))
-
+run: runllvm runarm 
+runllvm: $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.ll,$(TESTCASES))
+runarm: $(patsubst $(TESTCASE_DIR)/%.fmj,$(TESTCASE_DIR)/%.s,$(TESTCASES))
 $(TESTCASE_DIR)/%.s: $(TESTCASE_DIR)/%.fmj a.out libsysy.s
-	@echo test $*
-	@./a.out < $(word 1,$^) >$@
+	@echo test in arm $*
+	@./a.out  $(word 1,$^) arm
 	@arm-linux-gnueabihf-gcc -mcpu=cortex-a72 $@ libsysy.s --static -o out
 	@qemu-arm -B 0x1000 out; echo $$?
 
-run_a: a.out
-	./a.out <a.txt >a.s
-	arm-linux-gnueabihf-gcc -mcpu=cortex-a72 a.s libsysy.s --static -o out
-	qemu-arm -B 0x1000 out
+$(TESTCASE_DIR)/%.ll: $(TESTCASE_DIR)/%.fmj a.out lib.ll
+	@echo test in llvm $*
+	@./a.out  $(word 1,$^) llvm
+	@llvm-link-14 --opaque-pointers $@ lib.ll -S -o out.ll
+	@lli-14 --opaque-pointers out.ll;echo $$?
 
-a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o typecheck.o treep.o temp.o ast2treep.o canon.o pr_linearized.o printtreep.o canon.o assem.o assemblock.o treep2assem.o bg.o graph.o liveness.o ig.o flowgraph.o ssa.o registerAllocation.o
+a.out: main.o lex.yy.o y.tab.o fdmjast.o util.o printast.o table.o types.o symbol.o typecheck.o treep.o temp.o ast2treep.o canon.o pr_linearized.o printtreep.o canon.o assem.o assemblock.o treep2assem.o treep2llvm.o bg.o graph.o liveness.o ig.o flowgraph.o ssa.o registerAllocation.o
 	cc -g $^ -o a.out
 
 main.o: main.c y.tab.h y.tab.c lex.yy.o y.tab.o libsysy.s
@@ -80,11 +82,11 @@ registerAllocation.o: registerAllocation.c registerAllocation.h
 
 treep.o: treep.c treep.h
 
-lib.ll: libsysy.c libsysy.h
-	clang -S -emit-llvm libsysy.c -o lib.ll -O0
-
 libsysy.s:
 	arm-linux-gnueabihf-gcc -mcpu=cortex-a72 -S libsysy.c
+
+lib.ll: libsysyll.c libsysyll.h
+	clang -S -emit-llvm libsysyll.c -o lib.ll -O0
 
 y.output:
 	yacc -v parser.yacc
@@ -93,4 +95,4 @@ clean:
 	@rm -f a.out b.out ./*.o lex.yy.c y.tab.c y.tab.h y.output ./*.ll ./*.s out
 
 clean2:
-	@rm -f ./tests/*.s
+	@rm -f ./tests/*.s ./tests/*.ast ./tests/*.ll ./tests/*.irp ./tests/*.stm ./tests/*.liv

@@ -35,7 +35,7 @@ char des[1000];
 static char strbinop[][5]={"add","sub","mul","sdiv"};
 static char stricomp[][5]={"beq", "bne", "blt", "bgt", "ble", "bge"};
 AS_instrList treep2assemExp(T_exp x,Temp_temp* rettemp,bool canMiss);
-AS_instr AS_Label2(Temp_label lable){
+static AS_instr AS_Label2(Temp_label lable){
     return AS_Label(String(strcat(String(S_name(lable)),":")),lable);
 }
 static Temp_temp r(int i){
@@ -43,7 +43,7 @@ static Temp_temp r(int i){
     sprintf(des2, "t%d", i);
     return TC(String(des2));
 }
-AS_instrList getargs(T_expList list,int *addnum){
+static AS_instrList getargs(T_expList list,int *addnum){
     AS_instrList ans=NULL;
     Temp_tempList arglist=NULL;
     int i=-1;

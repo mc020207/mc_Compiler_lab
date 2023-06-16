@@ -73,8 +73,8 @@ G_nodeList Create_ig(G_nodeList flowgraph) {
     return G_nodes(RA_ig);
 }
 
-static void show_temp(Temp_temp t) {
-    fprintf(stdout, "%s, ", Temp_look(Temp_name(), t));
+static void show_temp(FILE*out,Temp_temp t) {
+    fprintf(out, "%s, ", Temp_look(Temp_name(), t));
 }
 
 void Show_ig(FILE* out, G_nodeList l) {

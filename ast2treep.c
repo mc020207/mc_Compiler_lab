@@ -1,7 +1,7 @@
 #include "ast2treep.h"
 #include "stdlib.h"
 #include <string.h>
-#define OFFSETSTEP 4
+extern int OFFSETSTEP;
 S_table temp_table;
 extern S_table tempFunctionName;
 extern S_table classElementsOffset;

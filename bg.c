@@ -69,8 +69,8 @@ G_nodeList Create_bg(AS_blockList bl) {
     return G_nodes(RA_bg);
 }
 
-static void show_AS_Block(AS_block b) {
-    fprintf(stdout, "%s, ", Temp_labelstring(b->label));
+static void show_AS_Block(FILE*out, AS_block b) {
+    fprintf(out, "%s, ", Temp_labelstring(b->label));
 }
 
 void Show_bg(FILE* out, G_nodeList l) {
