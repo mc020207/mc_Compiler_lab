@@ -72,6 +72,15 @@
     $ clang -v # 查看版本，若出现版本信息则说明安装成功
     $ lli --version # 查看版本，若出现版本信息则说明安装成功
     ```
+
+    安装llvm14
+   ```shell
+   $ wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+   $ sudo add-apt-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
+   $ sudo apt-get update
+   $ sudo apt-get install llvm-14-dev
+   ```
+
 2. Lex & Yacc：执行以下命令安装
 
     ```shell
